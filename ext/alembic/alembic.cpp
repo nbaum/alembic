@@ -183,7 +183,7 @@ static char *do_vaporise (char *fmt, char *&str, unsigned int &idx,
         return fmt;
       case '[':
         num = strtol(fmt, &fmt, 10);
-        num = NUM2INT(rb_ary_entry(array, num - 1));
+        num = num == 0 ? 1 : NUM2INT(rb_ary_entry(array, num - 1));
         subarray = rb_ary_new();
         subarray2 = rb_ary_new();
         for (int i = 0; i < num; ++i) {
@@ -220,11 +220,14 @@ VALUE vaporise (VALUE self, VALUE format, VALUE string, VALUE use_hash) {
   Check_Type(string, T_STRING);
   str = RSTRING_PTR(string);
   array = rb_ary_new();
-  hash = rb_hash_new();
+  if (use_hash)
+    hash = rb_hash_new();
+  else
+    hash = rb_ary_new();
   char *fmt = rb_string_value_cstr(&format);
   unsigned int idx = 0, len = RSTRING_LEN(string);
   do_vaporise(fmt, str, idx, len, array, hash);
-  return use_hash ? hash : array;
+  return hash;
 }
 
 VALUE mAlembic;

@@ -88,9 +88,6 @@ class Connection
                          }]
                      }]
                  }]", read(len * 4))
-    ap hdec("L<xid_base>L<xid_mask>LLSSCCCCCCCCp4a5p[8{CCCp5}]<screens>[7{
-             <root>LL<white>L<black>LL<width>S<height>SSSSSLCCCC[16{Cp1Sp4[2{
-             LCCSLLLp4}]}]}]", read(len * 4))
   end
   
   def create_window (wid, parent, x, y, width, height, border_width, klass,
