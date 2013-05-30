@@ -67,68 +67,85 @@ Alembic was designed specifically for {en,de}coding the X11 protocol.
   Here is a specification for the "additional data" of an X11 server connection
   response.
   
-         1  L                (release number)
-         2  <xid_base>L      (resource-id-base)
-         3  <xid_mask>L      (resource-id-mask)
-         4  L                (motion-buffer-size)
-         5  S                (length of vendor)
-         6  S                (maximum-request-length)
-         7  C                (number of roots)
-         8  C                (number of formats)
-         9  C                (image-byte-order)
-         10 C                (bitmap-format-byte-order)
-         11 C                (bitmap-format-scanline-unit)
-         12 C                (bitmap-format-scanline-pad)
-         13 C                (min-keycode)
-         14 C                (max-keycode)
-            p4               (unused)
-         15 a5               (vendor)
-            p                (unused)
-         17 [8{              (pixmap-formats)
-              1 C            (depth)
-              2 C            (bits-per-pixel)
-              3 C            (scanline-pad)
-                p5           (unused)
-            }]
-         18 <screens>[7{     (roots)
-              1  <root>L     (root)
-              2  L           (default-colormap)
-              3  <white>L    (white-pixel)
-              4  <black>L    (black-pixel)
-              5  L           (current-input-mask)
-              6  <width>S    (width-in-pixels)
-              7  <height>S   (height-in-pixels)
-              8  S           (width-in-mm)
-              9  S           (height-in-mm)
-              10 S           (min-installed-maps)
-              11 S           (max-installed-maps)
-              12 L           (root-visual)
-              13 C           (backing-stores)
-              14 C           (save-unders)
-              15 C           (root-depth)
-              16 C           (number of allowed depths)
-              17 [16{        (allowed-depths)
-                   1 C       (depth)
-                     p1
-                   2 S       (number of visuals)
-                     p4
-                   3 [2{     (visuals)
-                        1 L  (visual-id)
-                        2 C  (class)
-                        3 C  (bits-per-rgb-value)
-                        4 S  (colormap-entries)
-                        5 L  (red-mask)
-                        6 L  (green-mask)
-                        7 L  (blue-mask)
-                          p4
-                     }]
+     1  L                (release number)
+     2  <xid_base>L      (resource-id-base)
+     3  <xid_mask>L      (resource-id-mask)
+     4  L                (motion-buffer-size)
+     5  S                (length of vendor)
+     6  S                (maximum-request-length)
+     7  C                (number of roots)
+     8  C                (number of formats)
+     9  C                (image-byte-order)
+     10 C                (bitmap-format-byte-order)
+     11 C                (bitmap-format-scanline-unit)
+     12 C                (bitmap-format-scanline-pad)
+     13 C                (min-keycode)
+     14 C                (max-keycode)
+        p4               (unused)
+     15 a5               (vendor)
+        p                (unused)
+     17 [8{              (pixmap-formats)
+          1 C            (depth)
+          2 C            (bits-per-pixel)
+          3 C            (scanline-pad)
+            p5           (unused)
+        }]
+     18 <screens>[7{     (roots)
+          1  <root>L     (root)
+          2  L           (default-colormap)
+          3  <white>L    (white-pixel)
+          4  <black>L    (black-pixel)
+          5  L           (current-input-mask)
+          6  <width>S    (width-in-pixels)
+          7  <height>S   (height-in-pixels)
+          8  S           (width-in-mm)
+          9  S           (height-in-mm)
+          10 S           (min-installed-maps)
+          11 S           (max-installed-maps)
+          12 L           (root-visual)
+          13 C           (backing-stores)
+          14 C           (save-unders)
+          15 C           (root-depth)
+          16 C           (number of allowed depths)
+          17 [16{        (allowed-depths)
+               1 C       (depth)
+                 p1
+               2 S       (number of visuals)
+                 p4
+               3 [2{     (visuals)
+                    1 L  (visual-id)
+                    2 C  (class)
+                    3 C  (bits-per-rgb-value)
+                    4 S  (colormap-entries)
+                    5 L  (red-mask)
+                    6 L  (green-mask)
+                    7 L  (blue-mask)
+                      p4
                  }]
              }]
+         }]
 
   The above specification produces the same result as the far more compact:
   
-        L<xid_base>L<xid_mask>LLSSCCCCCCCCp4a5p[8{CCCp5}]<screens>[7{<root>LL
-        <white>L<black>LL<width>S<height>SSSSSLCCCC[16{Cp1Sp4[2{LCCSLLLp4}]}]}]
+    L<xid_base>L<xid_mask>LLSSCCCCCCCCp4a5p[8{CCCp5}]<screens>[7{<root>LL
+    <white>L<black>LL<width>S<height>SSSSSLCCCC[16{Cp1Sp4[2{LCCSLLLp4}]}]}]
+
+  Parsing an X11 server's response produces something similar to:
+
+    {
+        "xid_base" => 2097152,
+        "xid_mask" => 2097151,
+         "screens" => [
+            {
+                  "root" => 99,
+                 "white" => 16777215,
+                 "black" => 0,
+                 "width" => 640,
+                "height" => 480
+            }
+        ]
+    }
+
 
 ### Example
 
