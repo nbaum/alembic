@@ -193,7 +193,6 @@ module Connection::GeneratedAPI
 
   def query_keymap ()
     req "Cp1S", 44, 0
-""
     reply "p1<keys>[c]"
   end
 
@@ -219,7 +218,6 @@ module Connection::GeneratedAPI
 
   def list_fonts (max_names, pattern_len, pattern)
     req "Cp1SSSa", 49, 0, max_names, pattern_len, pattern
-"names_len"
     reply "p1<names_len>Sp22<names>[1A]"
   end
 
@@ -236,7 +234,6 @@ module Connection::GeneratedAPI
 
   def get_font_path ()
     req "Cp1S", 52, 0
-"path_len"
     reply "p1<path_len>Sp22<path>[1A]"
   end
 
@@ -322,7 +319,6 @@ module Connection::GeneratedAPI
 
   def get_image (format, drawable, x, y, width, height, plane_mask)
     req "CCSLssSSL", 73, format, 0, drawable, x, y, width, height, plane_mask
-"length"
     reply "<depth>C<visual>Lp20<data>a"
   end
 
@@ -364,7 +360,6 @@ module Connection::GeneratedAPI
 
   def list_installed_colormaps (window)
     req "Cp1SL", 83, 0, window
-"cmaps_len"
     reply "p1<cmaps_len>Sp22<cmaps>[1L]"
   end
 
@@ -380,14 +375,11 @@ module Connection::GeneratedAPI
 
   def alloc_color_cells (contiguous, cmap, colors, planes)
     req "CCSLSS", 86, contiguous, 0, cmap, colors, planes
-"pixels_len"
-"masks_len"
     reply "p1<pixels_len>S<masks_len>Sp20<pixels>[1L]<masks>[2L]"
   end
 
   def alloc_color_planes (contiguous, cmap, colors, reds, greens, blues)
     req "CCSLSSSS", 87, contiguous, 0, cmap, colors, reds, greens, blues
-"pixels_len"
     reply "p1<pixels_len>Sp2<red_mask>L<green_mask>L<blue_mask>Lp8<pixels>[1L]"
   end
 
@@ -405,7 +397,6 @@ module Connection::GeneratedAPI
 
   def query_colors (cmap, pixels)
     req "Cp1SL[L]", 91, 0, cmap, pixels
-"colors_len"
     reply "p1<colors_len>Sp22<colors>[1{<red>S<green>S<blue>Sp2}]"
   end
 
@@ -442,7 +433,6 @@ module Connection::GeneratedAPI
 
   def list_extensions ()
     req "Cp1S", 99, 0
-"names_len"
     reply "<names_len>Cp24<names>[1A]"
   end
 
@@ -452,7 +442,6 @@ module Connection::GeneratedAPI
 
   def get_keyboard_mapping (first_keycode, count)
     req "Cp1SCC", 101, 0, first_keycode, count
-"length"
     reply "<keysyms_per_keycode>Cp24<keysyms>[L]"
   end
 
@@ -462,7 +451,6 @@ module Connection::GeneratedAPI
 
   def get_keyboard_control ()
     req "Cp1S", 103, 0
-""
     reply "<global_auto_repeat>C<led_mask>L<key_click_percent>C<bell_percent>C<bell_pitch>S<bell_duration>Sp2<auto_repeats>[c]"
   end
 
@@ -494,7 +482,6 @@ module Connection::GeneratedAPI
 
   def list_hosts ()
     req "Cp1S", 110, 0
-"hosts_len"
     reply "<mode>C<hosts_len>Sp22<hosts>[2{<family>Cp1<address_len>Sa2}]"
   end
 
@@ -525,7 +512,6 @@ module Connection::GeneratedAPI
 
   def get_pointer_mapping ()
     req "Cp1S", 117, 0
-"map_len"
     reply "<map_len>Cp24<map>[1c]"
   end
 
@@ -536,7 +522,6 @@ module Connection::GeneratedAPI
 
   def get_modifier_mapping ()
     req "Cp1S", 119, 0
-"keycodes_per_modifier"
     reply "<keycodes_per_modifier>Cp24<keycodes>[1c]"
   end
 
