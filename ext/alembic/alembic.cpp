@@ -39,7 +39,12 @@ static char *do_condense (char *fmt, VALUE dest, VALUE array) {
       #define PACKER(c,k) \
         case c: \
           val = shift(array); \
-          k = NUM2INT(val); \
+          if (val == Qtrue) \
+            k = 1; \
+          else if (val == Qfalse || val == Qnil) \
+            k = 0; \
+          else \
+            k = NUM2INT(val); \
           rb_str_cat(dest, (char *) &k, sizeof(k)); \
           break
       PACKER('C', C);
