@@ -2,21 +2,48 @@ module Proto
   
   class Struct
     
-    def generate
-      <<EOF
-struct #{name} {
-  #{fields.map(&:generate).join("\n  ")}
-};
-EOF
+    def reader
+      fields = self.fields
+      [
+        "def read_#{name.snake_case} (io)",
+        [
+          "hash = {}",
+          *fields.flat_map do |field|
+            if field.name
+              a = field.read()
+              ["hash[:#{field.name}] = #{a[0]}", *a[1..-1]]
+            else
+              field.read()
+            end
+          end,
+          "hash",
+        ],
+        "end",
+      ]
     end
     
-    def format
-      "[#{fields.map(&:format).join}]"
+    def read
+      [
+        "{}.tap do |hash|",
+        fields.flat_map do |field|
+          if field.name
+            a = field.read()
+            ["hash[:#{field.name}] = #{a[0]}", *a[1..-1]]
+          else
+            field.read()
+          end
+        end,
+        "end"
+      ]
     end
     
-    def cat_to_str var
+    def write (var)
       fields.flat_map do |field|
-        field.cat_to_str "#{var}."
+        if field.name
+          field.write("#{var}[:#{field.name}]")
+        else
+          field.write(nil)
+        end
       end
     end
     
@@ -24,21 +51,36 @@ EOF
   
   class Union
     
-    def generate
-      <<EOF
-union #{name} {
-  #{fields.map(&:generate).join("\n  ")}
-};
-EOF
+    def read
+      [
+        "wildcat do",
+        [
+          "{}.tap do |hash|",
+          fields.flat_map do |field|
+            if field.name
+              a = field.read()
+              ["hash[:#{field.name}] = #{a[0]}", *a[1..-1]]
+            else
+              field.read()
+            end
+          end,
+          "end"
+        ],
+        "end",
+      ]
     end
     
-    def cat_to_str var
+    def write (var)
       [
-        "deunionize do",
+        "wildcat do",
         fields.flat_map do |field|
-          field.cat_to_str "#{var}."
+          if field.name
+            field.write("#{var}[:#{field.name}]")
+          else
+            field.write(nil)
+          end
         end,
-        "end"
+        "end",
       ]
     end
     

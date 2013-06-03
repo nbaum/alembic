@@ -1,51 +1,73 @@
 module Proto
   
   class Request
-    def generate
+    
+    def writer
       fields = self.fields
       fields = [Padding.new(1)] if fields.empty?
       fields[1,0] = [Padding.new(2)]
-      [
-        "def #{name.snake_case}_request (#{["target", *fields.map(&:argument)].compact.join(", ")})",
-        [
-          "target << \"\\x%02d\"" % [opcode],
-          *fields.flat_map(&:cat_to_str).compact
-        ],
-        "end"
-      ]
-    end
-    def generate
-      fields = self.fields
-      fields = [Padding.new(1)] if fields.empty?
-      fields[1,0] = [Padding.new(2)]
-      targets = fields.map(&:argument).compact
-      format = fields.map(&:format).join
+      args = fields.map(&:name).compact.map{|x|x.gsub("class", "klass")}.join(", ")
       rfields = self.reply
-      rfields = [Padding.new(1)] if rfields.empty?
-      rfields[1,0] = [Padding.new(2)]
-      rtargets = rfields.map(&:argument).compact
-      rformat = rfields.map(&:format).join
-      a = [
-        "def #{name.snake_case} (#{targets.join(", ")})",
+      [
+        "def #{name.snake_case}_async (#{args})",
         [
-          "args = [#{opcode}, #{targets.join(", ")}]",
-          "request(args.pack(#{("C" + format).inspect}))",
-          *if self.reply.empty?
+          "request do |io|",
+          [
+            "io.write_ubyte(#{opcode})",
+            *fields.flat_map do |field|
+              field.write()
+            end,
+          ],
+          "end",
+          *if rfields.empty?
             []
           else
             [
-              "#{rtargets.join(", ")} = reply.unpack(#{rformat.inspect})",
-              "{",
-              rtargets.map do |t|
-                "#{t}: #{t},"
-              end,
-              "}",
+              "reply do |io|",
+              [
+                "#{name.snake_case}_reply(io)"
+              ],
+              "end"
             ]
           end
         ],
         "end",
+        "",
+        * if rfields.empty?
+          [
+            "def #{name.snake_case} (*args)",
+            [
+              "#{name.snake_case}_async(*args)"
+            ],
+            "end",
+          ]
+        else
+          [
+            "def #{name.snake_case} (*args)",
+            [
+              "#{name.snake_case}_async(*args).wait"
+            ],
+            "end",
+            "",
+            "def #{name.snake_case}_reply (io)",
+            [
+              "hash = {}",
+              *rfields.flat_map do |field|
+                if field.name
+                  a = field.read()
+                  ["hash[:#{field.name}] = #{a[0]}", *a[1..-1]]
+                else
+                  field.read()
+                end
+              end,
+              "hash",
+            ],
+            "end",
+          ]
+        end
       ]
     end
+    
   end
   
 end

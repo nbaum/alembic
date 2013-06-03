@@ -15,6 +15,7 @@ module Proto
   Union   = ::Struct.new(:name, :fields)
   Error   = ::Struct.new(:name, :fields, :number)
   Request = ::Struct.new(:name, :fields, :opcode, :reply)
+  Prim    = ::Struct.new(:name, :type)
   
   require 'struct'
   require 'alias'
@@ -28,6 +29,16 @@ module Proto
   
   def initialize
     @things = {}
+    @things["BOOL"] = Prim.new("BOOL",     "bool")
+    @things["BYTE"] = Prim.new("BYTE",     "byte")
+    @things["CARD8"] = Prim.new("CARD8",   "ubyte")
+    @things["INT8"] = Prim.new("INT8",     "byte")
+    @things["CARD16"] = Prim.new("CARD16", "uwyde")
+    @things["INT16"] = Prim.new("INT16",   "wyde")
+    @things["CARD32"] = Prim.new("CARD32", "utetra")
+    @things["INT32"] = Prim.new("INT32",   "tetra")
+    @things["ID"] = Alias.new("ID", "CARD32")
+    @things["VALUE"] = Alias.new("VALUE", "CARD32")
   end
   
   def import path, types_only = false
@@ -49,7 +60,9 @@ module Proto
           when 'pad'
             s.fields << Padding.new(xml['bytes'].to_i)
           when 'list'
-            s.fields << List.new(xml['name'], xml['type'], xml.xpath('.//fieldref').text)
+            len = xml.xpath('.//fieldref').text
+            len = xml.xpath('.//value').text.to_i if len.empty?
+            s.fields << List.new(xml['name'], xml['type'], len)
           else
             puts "Don't know what to do with #{xml.name}"
           end
@@ -64,7 +77,9 @@ module Proto
           when 'pad'
             s.fields << Padding.new(xml['bytes'].to_i)
           when 'list'
-            s.fields << List.new(xml['name'], xml['type'], xml.xpath('.//fieldref').text)
+            len = xml.xpath('.//fieldref').text
+            len = xml.xpath('.//value').text.to_i if len.empty?
+            s.fields << List.new(xml['name'], xml['type'], len)
           else
             puts "Don't know what to do with #{xml.name}"
           end
@@ -89,7 +104,9 @@ module Proto
           when 'pad'
             e.fields << Padding.new(xml['bytes'].to_i)
           when 'list'
-            e.fields << List.new(xml['name'], xml['type'], xml.xpath('.//fieldref').text)
+            len = xml.xpath('.//fieldref').text
+            len = xml.xpath('.//value').text.to_i if len.empty?
+            e.fields << List.new(xml['name'], xml['type'], len)
           else
             puts "Don't know what to do with #{xml.name}"
           end
@@ -108,7 +125,9 @@ module Proto
           when 'pad'
             e.fields << Padding.new(xml['bytes'].to_i)
           when 'list'
-            e.fields << List.new(xml['name'], xml['type'], xml.xpath('.//fieldref').text)
+            len = xml.xpath('.//fieldref').text
+            len = xml.xpath('.//value').text.to_i if len.empty?
+            e.fields << List.new(xml['name'], xml['type'], len)
           else
             puts "Don't know what to do with #{xml.name}"
           end
@@ -130,7 +149,9 @@ module Proto
           when 'pad'
             e.fields << Padding.new(xml['bytes'].to_i)
           when 'list'
-            e.fields << List.new(xml['name'], xml['type'], xml.xpath('.//fieldref').text)
+            len = xml.xpath('.//fieldref').text
+            len = xml.xpath('.//value').text.to_i if len.empty?
+            e.fields << List.new(xml['name'], xml['type'], len)
           when 'exprfield'
             e.fields << Scalar.new(xml['name'], xml['type'])
           when 'reply'
@@ -142,7 +163,9 @@ module Proto
               when 'pad'
                 reply << Padding.new(xml['bytes'].to_i)
               when 'list'
-                reply << List.new(xml['name'], xml['type'], xml.xpath('.//fieldref').text)
+                len = xml.xpath('.//fieldref').text
+                len = xml.xpath('.//value').text.to_i if len.empty?
+                reply << List.new(xml['name'], xml['type'], len)
               else
                 puts "Don't know what to do with #{xml.name}"
                 puts xml
@@ -168,7 +191,7 @@ module Proto
       case @things[type]
       when Alias
         type = @things[type].base
-      when Struct, Union
+      when Struct, Union, Prim
         return @things[type]
       else
         raise @things[type].inspect
@@ -180,7 +203,7 @@ module Proto
   def format *xs
     xs.map do |x|
       if Array === x
-        "  " + x.map{|y|format y}.join("\n").gsub("\n", "\n  ")
+        "  " + x.map{|y|format(y)}.join("\n").split("\n").join("\n  ")
       else
         x
       end
@@ -191,13 +214,29 @@ module Proto
   initialize
   import ARGV[0]
   
-  puts "module X11::API"
+  puts "module Alembic; end"
+  puts "module Alembic::Protocol; end"
+  puts "module Alembic::Protocol::Core"
+  puts
+  
+  puts format(@things["Setup"].reader)
   puts
   
   things.each do |name, t|
-    next unless Request === t #or Event === t
-    puts format(t.generate)
-    puts
+    case t
+    when Event
+      puts format(t.writer)
+      puts
+      puts format(t.reader)
+      puts
+      puts "  Alembic::Protocol.register_event #{t.number}, :#{t.name.snake_case}"
+      puts
+    when Request
+      puts format(t.writer)
+      puts
+      puts "  Alembic::Protocol.register_opcode #{t.opcode}, :#{t.name.snake_case}"
+      puts
+    end
   end
   
   puts "end"
