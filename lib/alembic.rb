@@ -2,17 +2,19 @@ require 'socket'
 require 'stringio'
 
 module Alembic
+  module Constants
+  end
   module Protocol
     class << self
       attr_reader :events, :opcodes
     end
-    def self.register_event (number, name)
+    def self.register_event (extension = nil, number, name)
       @events ||= []
-      @events[number] = name
+      @events[number] ||= name
     end
     def self.register_opcode (extension = nil, number, name)
       @opcodes ||= []
-      @opcodes[number] = name
+      @opcodes[number] ||= name
     end
   end
 end
@@ -129,6 +131,7 @@ module Alembic
     include Protocol::Core
     include Protocol::Xinerama
     include Protocol::Patches
+    include Constants
     
     attr_reader :roots, :data
     

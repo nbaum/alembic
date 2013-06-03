@@ -6,7 +6,7 @@ require 'pp'
 module Proto
   
   Struct  = ::Struct.new(:name, :fields)
-  Scalar  = ::Struct.new(:name, :type)
+  Scalar  = ::Struct.new(:name, :type, :mask, :enum)
   Padding = ::Struct.new(:length)
   List    = ::Struct.new(:name, :type, :length)
   Event   = ::Struct.new(:name, :fields, :number)
@@ -60,7 +60,7 @@ module Proto
           case xml.name
           when 'doc'
           when 'field'
-            s.fields << Scalar.new(xml['name'], xml['type'])
+            s.fields << Scalar.new(xml['name'], xml['type'], xml['mask'], xml['enum'])
           when 'pad'
             s.fields << Padding.new(xml['bytes'].to_i)
           when 'list'
@@ -77,7 +77,7 @@ module Proto
           case xml.name
           when 'doc'
           when 'field'
-            s.fields << Scalar.new(xml['name'], xml['type'])
+            s.fields << Scalar.new(xml['name'], xml['type'], xml['mask'], xml['enum'])
           when 'pad'
             s.fields << Padding.new(xml['bytes'].to_i)
           when 'list'
@@ -93,9 +93,15 @@ module Proto
       when 'typedef'
         things[xml['newname']] = Alias.new(xml['newname'], xml['oldname'])
       when 'enum'
+        next if types_only
         things[xml['name']] = e = Enum.new(xml['name'], {})
         xml.xpath('item').each do |xml|
-            e.values[xml['name']] = xml['value']
+          val = xml.xpath('./value').text
+          if val.empty?
+            val = xml.xpath('./bit').text
+            val = 1 << val.to_i unless val.empty?
+          end
+          e.values[xml['name']] = val.to_i
         end
       when 'event'
         next if types_only
@@ -104,7 +110,7 @@ module Proto
           case xml.name
           when 'doc'
           when 'field'
-            e.fields << Scalar.new(xml['name'], xml['type'])
+            e.fields << Scalar.new(xml['name'], xml['type'], xml['mask'], xml['enum'])
           when 'pad'
             e.fields << Padding.new(xml['bytes'].to_i)
           when 'list'
@@ -125,7 +131,7 @@ module Proto
           case xml.name
           when 'doc'
           when 'field'
-            e.fields << Scalar.new(xml['name'], xml['type'])
+            e.fields << Scalar.new(xml['name'], xml['type'], xml['mask'], xml['enum'])
           when 'pad'
             e.fields << Padding.new(xml['bytes'].to_i)
           when 'list'
@@ -146,7 +152,7 @@ module Proto
           case xml.name
           when 'doc'
           when 'field', 'exprfield'
-            e.fields << Scalar.new(xml['name'], xml['type'])
+            e.fields << Scalar.new(xml['name'], xml['type'], xml['mask'], xml['enum'])
           when 'valueparam'
             e.fields << Scalar.new(xml['value-mask-name'], xml['value-mask-type'])
             e.fields << List.new(xml['value-list-name'], 'VALUE', nil)
@@ -163,7 +169,7 @@ module Proto
               case xml.name
               when 'doc'
               when 'field'
-                reply << Scalar.new(xml['name'], xml['type'])
+                reply << Scalar.new(xml['name'], xml['type'], xml['mask'], xml['enum'])
               when 'pad'
                 reply << Padding.new(xml['bytes'].to_i)
               when 'list'
@@ -225,13 +231,21 @@ module Proto
   puts "module Alembic::Protocol::#{@extension || 'Core'}"
   puts
   
-  unless @extension
-    puts format(@things["Setup"].reader)
-    puts
-  end
-  
   things.each do |name, t|
     case t
+    when Enum
+      t.values.each_with_index do |(name, value), i|
+        value ||= i
+        puts "  Alembic::Constants::#{t.name.snake_case.upcase}_#{name.snake_case.upcase} = #{value}"
+      end
+      puts
+      puts "  Alembic::Constants::#{t.name.snake_case.pluralize.upcase} = {"
+      t.values.each_with_index do |(name, value), i|
+        value ||= i
+        puts "    #{value} => #{name.snake_case.upcase.inspect},"
+      end
+      puts "  }"
+      puts
     when Event
       puts format(t.writer)
       puts
@@ -245,6 +259,11 @@ module Proto
       puts "  Alembic::Protocol.register_opcode #{@xname.inspect}, #{t.opcode}, :#{t.name.snake_case}"
       puts
     end
+  end
+  
+  unless @extension
+    puts format(@things["Setup"].reader)
+    puts
   end
   
   puts "end"
