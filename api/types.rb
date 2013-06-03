@@ -28,6 +28,10 @@ module Proto
     
     def write (var = name)
       case t = Proto.resolve_type(type)
+      when "CHAR2B"
+        [
+          "io.write(#{var.to_s}.encode('UTF-16BE').force_encoding('BINARY'))"
+        ]
       when "char", "void"
         [
           "io.write(#{var.to_s})"

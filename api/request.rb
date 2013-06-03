@@ -4,8 +4,8 @@ module Proto
     
     def writer
       fields = self.fields
-      fields = [Padding.new(1)] if fields.empty?
-      fields[1,0] = [Padding.new(2)]
+      fields = [Padding.new(1)] if fields.empty? and !Proto.extension
+      fields[0, 0] = [Padding.new(2)]
       args = fields.map(&:name).compact.map{|x|x.gsub("class", "klass")}.join(", ")
       rfields = self.reply
       [
@@ -13,6 +13,13 @@ module Proto
         [
           "request do |io|",
           [
+            *if Proto.extension
+              [
+                "io.write_ubyte(extension(#{Proto.xname.inspect}))",
+              ]
+            else
+              []
+            end,
             "io.write_ubyte(#{opcode})",
             *fields.flat_map do |field|
               field.write()

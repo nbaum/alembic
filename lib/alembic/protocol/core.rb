@@ -77,9 +77,10 @@ module Alembic::Protocol::Core
   end
 
   def encode_key_press_event (hash = {})
-    io = XIO.new
+    io = Alembic::XIO.new
     io.write_ubyte(2)
     io.write_ubyte(hash[:detail])
+    io.write("\0\0")
     io.write_utetra(hash[:time])
     io.write_utetra(hash[:root])
     io.write_utetra(hash[:event])
@@ -95,9 +96,10 @@ module Alembic::Protocol::Core
   end
 
   def decode_key_press_event (string)
-    io = XIO.new(string)
+    io = Alembic::XIO.new(string)
     hash = {}
     hash[:detail] = io.read_ubyte
+    io.skip(2)
     hash[:time] = io.read_utetra
     hash[:root] = io.read_utetra
     hash[:event] = io.read_utetra
@@ -115,9 +117,11 @@ module Alembic::Protocol::Core
   Alembic::Protocol.register_event 2, :key_press
 
   def encode_key_release_event (hash = {})
-    io = XIO.new
+    io = Alembic::XIO.new
     io.write_ubyte(3)
     io.write_ubyte(hash[:detail])
+    io.write("\0\0")
+    io.write("\0\0")
     io.write_utetra(hash[:time])
     io.write_utetra(hash[:root])
     io.write_utetra(hash[:event])
@@ -133,9 +137,11 @@ module Alembic::Protocol::Core
   end
 
   def decode_key_release_event (string)
-    io = XIO.new(string)
+    io = Alembic::XIO.new(string)
     hash = {}
     hash[:detail] = io.read_ubyte
+    io.skip(2)
+    io.skip(2)
     hash[:time] = io.read_utetra
     hash[:root] = io.read_utetra
     hash[:event] = io.read_utetra
@@ -153,9 +159,10 @@ module Alembic::Protocol::Core
   Alembic::Protocol.register_event 3, :key_release
 
   def encode_button_press_event (hash = {})
-    io = XIO.new
+    io = Alembic::XIO.new
     io.write_ubyte(4)
     io.write_ubyte(hash[:detail])
+    io.write("\0\0")
     io.write_utetra(hash[:time])
     io.write_utetra(hash[:root])
     io.write_utetra(hash[:event])
@@ -171,9 +178,10 @@ module Alembic::Protocol::Core
   end
 
   def decode_button_press_event (string)
-    io = XIO.new(string)
+    io = Alembic::XIO.new(string)
     hash = {}
     hash[:detail] = io.read_ubyte
+    io.skip(2)
     hash[:time] = io.read_utetra
     hash[:root] = io.read_utetra
     hash[:event] = io.read_utetra
@@ -191,9 +199,11 @@ module Alembic::Protocol::Core
   Alembic::Protocol.register_event 4, :button_press
 
   def encode_button_release_event (hash = {})
-    io = XIO.new
+    io = Alembic::XIO.new
     io.write_ubyte(5)
     io.write_ubyte(hash[:detail])
+    io.write("\0\0")
+    io.write("\0\0")
     io.write_utetra(hash[:time])
     io.write_utetra(hash[:root])
     io.write_utetra(hash[:event])
@@ -209,9 +219,11 @@ module Alembic::Protocol::Core
   end
 
   def decode_button_release_event (string)
-    io = XIO.new(string)
+    io = Alembic::XIO.new(string)
     hash = {}
     hash[:detail] = io.read_ubyte
+    io.skip(2)
+    io.skip(2)
     hash[:time] = io.read_utetra
     hash[:root] = io.read_utetra
     hash[:event] = io.read_utetra
@@ -229,9 +241,10 @@ module Alembic::Protocol::Core
   Alembic::Protocol.register_event 5, :button_release
 
   def encode_motion_notify_event (hash = {})
-    io = XIO.new
+    io = Alembic::XIO.new
     io.write_ubyte(6)
     io.write_byte(hash[:detail])
+    io.write("\0\0")
     io.write_utetra(hash[:time])
     io.write_utetra(hash[:root])
     io.write_utetra(hash[:event])
@@ -247,9 +260,10 @@ module Alembic::Protocol::Core
   end
 
   def decode_motion_notify_event (string)
-    io = XIO.new(string)
+    io = Alembic::XIO.new(string)
     hash = {}
     hash[:detail] = io.read_byte
+    io.skip(2)
     hash[:time] = io.read_utetra
     hash[:root] = io.read_utetra
     hash[:event] = io.read_utetra
@@ -267,9 +281,10 @@ module Alembic::Protocol::Core
   Alembic::Protocol.register_event 6, :motion_notify
 
   def encode_enter_notify_event (hash = {})
-    io = XIO.new
+    io = Alembic::XIO.new
     io.write_ubyte(7)
     io.write_byte(hash[:detail])
+    io.write("\0\0")
     io.write_utetra(hash[:time])
     io.write_utetra(hash[:root])
     io.write_utetra(hash[:event])
@@ -285,9 +300,10 @@ module Alembic::Protocol::Core
   end
 
   def decode_enter_notify_event (string)
-    io = XIO.new(string)
+    io = Alembic::XIO.new(string)
     hash = {}
     hash[:detail] = io.read_byte
+    io.skip(2)
     hash[:time] = io.read_utetra
     hash[:root] = io.read_utetra
     hash[:event] = io.read_utetra
@@ -305,9 +321,11 @@ module Alembic::Protocol::Core
   Alembic::Protocol.register_event 7, :enter_notify
 
   def encode_leave_notify_event (hash = {})
-    io = XIO.new
+    io = Alembic::XIO.new
     io.write_ubyte(8)
     io.write_byte(hash[:detail])
+    io.write("\0\0")
+    io.write("\0\0")
     io.write_utetra(hash[:time])
     io.write_utetra(hash[:root])
     io.write_utetra(hash[:event])
@@ -323,9 +341,11 @@ module Alembic::Protocol::Core
   end
 
   def decode_leave_notify_event (string)
-    io = XIO.new(string)
+    io = Alembic::XIO.new(string)
     hash = {}
     hash[:detail] = io.read_byte
+    io.skip(2)
+    io.skip(2)
     hash[:time] = io.read_utetra
     hash[:root] = io.read_utetra
     hash[:event] = io.read_utetra
@@ -343,9 +363,10 @@ module Alembic::Protocol::Core
   Alembic::Protocol.register_event 8, :leave_notify
 
   def encode_focus_in_event (hash = {})
-    io = XIO.new
+    io = Alembic::XIO.new
     io.write_ubyte(9)
     io.write_byte(hash[:detail])
+    io.write("\0\0")
     io.write_utetra(hash[:event])
     io.write_byte(hash[:mode])
     io.write("\0\0\0")
@@ -353,9 +374,10 @@ module Alembic::Protocol::Core
   end
 
   def decode_focus_in_event (string)
-    io = XIO.new(string)
+    io = Alembic::XIO.new(string)
     hash = {}
     hash[:detail] = io.read_byte
+    io.skip(2)
     hash[:event] = io.read_utetra
     hash[:mode] = io.read_byte
     io.skip(3)
@@ -365,9 +387,11 @@ module Alembic::Protocol::Core
   Alembic::Protocol.register_event 9, :focus_in
 
   def encode_focus_out_event (hash = {})
-    io = XIO.new
+    io = Alembic::XIO.new
     io.write_ubyte(10)
     io.write_byte(hash[:detail])
+    io.write("\0\0")
+    io.write("\0\0")
     io.write_utetra(hash[:event])
     io.write_byte(hash[:mode])
     io.write("\0\0\0")
@@ -375,9 +399,11 @@ module Alembic::Protocol::Core
   end
 
   def decode_focus_out_event (string)
-    io = XIO.new(string)
+    io = Alembic::XIO.new(string)
     hash = {}
     hash[:detail] = io.read_byte
+    io.skip(2)
+    io.skip(2)
     hash[:event] = io.read_utetra
     hash[:mode] = io.read_byte
     io.skip(3)
@@ -387,29 +413,32 @@ module Alembic::Protocol::Core
   Alembic::Protocol.register_event 10, :focus_out
 
   def encode_keymap_notify_event (hash = {})
-    io = XIO.new
+    io = Alembic::XIO.new
     io.write_ubyte(11)
     hash[:keys].each do |item|
       io.write_ubyte(item)
     end
+    io.write("\0\0")
     io.string
   end
 
   def decode_keymap_notify_event (string)
-    io = XIO.new(string)
+    io = Alembic::XIO.new(string)
     hash = {}
     hash[:keys] = 31.times.map do
       io.read_ubyte
     end
+    io.skip(2)
     hash
   end
 
   Alembic::Protocol.register_event 11, :keymap_notify
 
   def encode_expose_event (hash = {})
-    io = XIO.new
+    io = Alembic::XIO.new
     io.write_ubyte(12)
     io.write("\0")
+    io.write("\0\0")
     io.write_utetra(hash[:window])
     io.write_uwyde(hash[:x])
     io.write_uwyde(hash[:y])
@@ -421,9 +450,10 @@ module Alembic::Protocol::Core
   end
 
   def decode_expose_event (string)
-    io = XIO.new(string)
+    io = Alembic::XIO.new(string)
     hash = {}
     io.skip(1)
+    io.skip(2)
     hash[:window] = io.read_utetra
     hash[:x] = io.read_uwyde
     hash[:y] = io.read_uwyde
@@ -437,9 +467,10 @@ module Alembic::Protocol::Core
   Alembic::Protocol.register_event 12, :expose
 
   def encode_graphics_exposure_event (hash = {})
-    io = XIO.new
+    io = Alembic::XIO.new
     io.write_ubyte(13)
     io.write("\0")
+    io.write("\0\0")
     io.write_utetra(hash[:drawable])
     io.write_uwyde(hash[:x])
     io.write_uwyde(hash[:y])
@@ -453,9 +484,10 @@ module Alembic::Protocol::Core
   end
 
   def decode_graphics_exposure_event (string)
-    io = XIO.new(string)
+    io = Alembic::XIO.new(string)
     hash = {}
     io.skip(1)
+    io.skip(2)
     hash[:drawable] = io.read_utetra
     hash[:x] = io.read_uwyde
     hash[:y] = io.read_uwyde
@@ -471,9 +503,10 @@ module Alembic::Protocol::Core
   Alembic::Protocol.register_event 13, :graphics_exposure
 
   def encode_no_exposure_event (hash = {})
-    io = XIO.new
+    io = Alembic::XIO.new
     io.write_ubyte(14)
     io.write("\0")
+    io.write("\0\0")
     io.write_utetra(hash[:drawable])
     io.write_uwyde(hash[:minor_opcode])
     io.write_ubyte(hash[:major_opcode])
@@ -482,9 +515,10 @@ module Alembic::Protocol::Core
   end
 
   def decode_no_exposure_event (string)
-    io = XIO.new(string)
+    io = Alembic::XIO.new(string)
     hash = {}
     io.skip(1)
+    io.skip(2)
     hash[:drawable] = io.read_utetra
     hash[:minor_opcode] = io.read_uwyde
     hash[:major_opcode] = io.read_ubyte
@@ -495,9 +529,10 @@ module Alembic::Protocol::Core
   Alembic::Protocol.register_event 14, :no_exposure
 
   def encode_visibility_notify_event (hash = {})
-    io = XIO.new
+    io = Alembic::XIO.new
     io.write_ubyte(15)
     io.write("\0")
+    io.write("\0\0")
     io.write_utetra(hash[:window])
     io.write_byte(hash[:state])
     io.write("\0\0\0")
@@ -505,9 +540,10 @@ module Alembic::Protocol::Core
   end
 
   def decode_visibility_notify_event (string)
-    io = XIO.new(string)
+    io = Alembic::XIO.new(string)
     hash = {}
     io.skip(1)
+    io.skip(2)
     hash[:window] = io.read_utetra
     hash[:state] = io.read_byte
     io.skip(3)
@@ -517,9 +553,10 @@ module Alembic::Protocol::Core
   Alembic::Protocol.register_event 15, :visibility_notify
 
   def encode_create_notify_event (hash = {})
-    io = XIO.new
+    io = Alembic::XIO.new
     io.write_ubyte(16)
     io.write("\0")
+    io.write("\0\0")
     io.write_utetra(hash[:parent])
     io.write_utetra(hash[:window])
     io.write_wyde(hash[:x])
@@ -533,9 +570,10 @@ module Alembic::Protocol::Core
   end
 
   def decode_create_notify_event (string)
-    io = XIO.new(string)
+    io = Alembic::XIO.new(string)
     hash = {}
     io.skip(1)
+    io.skip(2)
     hash[:parent] = io.read_utetra
     hash[:window] = io.read_utetra
     hash[:x] = io.read_wyde
@@ -551,18 +589,20 @@ module Alembic::Protocol::Core
   Alembic::Protocol.register_event 16, :create_notify
 
   def encode_destroy_notify_event (hash = {})
-    io = XIO.new
+    io = Alembic::XIO.new
     io.write_ubyte(17)
     io.write("\0")
+    io.write("\0\0")
     io.write_utetra(hash[:event])
     io.write_utetra(hash[:window])
     io.string
   end
 
   def decode_destroy_notify_event (string)
-    io = XIO.new(string)
+    io = Alembic::XIO.new(string)
     hash = {}
     io.skip(1)
+    io.skip(2)
     hash[:event] = io.read_utetra
     hash[:window] = io.read_utetra
     hash
@@ -571,9 +611,10 @@ module Alembic::Protocol::Core
   Alembic::Protocol.register_event 17, :destroy_notify
 
   def encode_unmap_notify_event (hash = {})
-    io = XIO.new
+    io = Alembic::XIO.new
     io.write_ubyte(18)
     io.write("\0")
+    io.write("\0\0")
     io.write_utetra(hash[:event])
     io.write_utetra(hash[:window])
     io.write_bool(hash[:from_configure])
@@ -582,9 +623,10 @@ module Alembic::Protocol::Core
   end
 
   def decode_unmap_notify_event (string)
-    io = XIO.new(string)
+    io = Alembic::XIO.new(string)
     hash = {}
     io.skip(1)
+    io.skip(2)
     hash[:event] = io.read_utetra
     hash[:window] = io.read_utetra
     hash[:from_configure] = io.read_bool
@@ -595,9 +637,10 @@ module Alembic::Protocol::Core
   Alembic::Protocol.register_event 18, :unmap_notify
 
   def encode_map_notify_event (hash = {})
-    io = XIO.new
+    io = Alembic::XIO.new
     io.write_ubyte(19)
     io.write("\0")
+    io.write("\0\0")
     io.write_utetra(hash[:event])
     io.write_utetra(hash[:window])
     io.write_bool(hash[:override_redirect])
@@ -606,9 +649,10 @@ module Alembic::Protocol::Core
   end
 
   def decode_map_notify_event (string)
-    io = XIO.new(string)
+    io = Alembic::XIO.new(string)
     hash = {}
     io.skip(1)
+    io.skip(2)
     hash[:event] = io.read_utetra
     hash[:window] = io.read_utetra
     hash[:override_redirect] = io.read_bool
@@ -619,18 +663,20 @@ module Alembic::Protocol::Core
   Alembic::Protocol.register_event 19, :map_notify
 
   def encode_map_request_event (hash = {})
-    io = XIO.new
+    io = Alembic::XIO.new
     io.write_ubyte(20)
     io.write("\0")
+    io.write("\0\0")
     io.write_utetra(hash[:parent])
     io.write_utetra(hash[:window])
     io.string
   end
 
   def decode_map_request_event (string)
-    io = XIO.new(string)
+    io = Alembic::XIO.new(string)
     hash = {}
     io.skip(1)
+    io.skip(2)
     hash[:parent] = io.read_utetra
     hash[:window] = io.read_utetra
     hash
@@ -639,9 +685,10 @@ module Alembic::Protocol::Core
   Alembic::Protocol.register_event 20, :map_request
 
   def encode_reparent_notify_event (hash = {})
-    io = XIO.new
+    io = Alembic::XIO.new
     io.write_ubyte(21)
     io.write("\0")
+    io.write("\0\0")
     io.write_utetra(hash[:event])
     io.write_utetra(hash[:window])
     io.write_utetra(hash[:parent])
@@ -653,9 +700,10 @@ module Alembic::Protocol::Core
   end
 
   def decode_reparent_notify_event (string)
-    io = XIO.new(string)
+    io = Alembic::XIO.new(string)
     hash = {}
     io.skip(1)
+    io.skip(2)
     hash[:event] = io.read_utetra
     hash[:window] = io.read_utetra
     hash[:parent] = io.read_utetra
@@ -669,9 +717,10 @@ module Alembic::Protocol::Core
   Alembic::Protocol.register_event 21, :reparent_notify
 
   def encode_configure_notify_event (hash = {})
-    io = XIO.new
+    io = Alembic::XIO.new
     io.write_ubyte(22)
     io.write("\0")
+    io.write("\0\0")
     io.write_utetra(hash[:event])
     io.write_utetra(hash[:window])
     io.write_utetra(hash[:above_sibling])
@@ -686,9 +735,10 @@ module Alembic::Protocol::Core
   end
 
   def decode_configure_notify_event (string)
-    io = XIO.new(string)
+    io = Alembic::XIO.new(string)
     hash = {}
     io.skip(1)
+    io.skip(2)
     hash[:event] = io.read_utetra
     hash[:window] = io.read_utetra
     hash[:above_sibling] = io.read_utetra
@@ -705,9 +755,10 @@ module Alembic::Protocol::Core
   Alembic::Protocol.register_event 22, :configure_notify
 
   def encode_configure_request_event (hash = {})
-    io = XIO.new
+    io = Alembic::XIO.new
     io.write_ubyte(23)
     io.write_byte(hash[:stack_mode])
+    io.write("\0\0")
     io.write_utetra(hash[:parent])
     io.write_utetra(hash[:window])
     io.write_utetra(hash[:sibling])
@@ -721,9 +772,10 @@ module Alembic::Protocol::Core
   end
 
   def decode_configure_request_event (string)
-    io = XIO.new(string)
+    io = Alembic::XIO.new(string)
     hash = {}
     hash[:stack_mode] = io.read_byte
+    io.skip(2)
     hash[:parent] = io.read_utetra
     hash[:window] = io.read_utetra
     hash[:sibling] = io.read_utetra
@@ -739,9 +791,10 @@ module Alembic::Protocol::Core
   Alembic::Protocol.register_event 23, :configure_request
 
   def encode_gravity_notify_event (hash = {})
-    io = XIO.new
+    io = Alembic::XIO.new
     io.write_ubyte(24)
     io.write("\0")
+    io.write("\0\0")
     io.write_utetra(hash[:event])
     io.write_utetra(hash[:window])
     io.write_wyde(hash[:x])
@@ -750,9 +803,10 @@ module Alembic::Protocol::Core
   end
 
   def decode_gravity_notify_event (string)
-    io = XIO.new(string)
+    io = Alembic::XIO.new(string)
     hash = {}
     io.skip(1)
+    io.skip(2)
     hash[:event] = io.read_utetra
     hash[:window] = io.read_utetra
     hash[:x] = io.read_wyde
@@ -763,9 +817,10 @@ module Alembic::Protocol::Core
   Alembic::Protocol.register_event 24, :gravity_notify
 
   def encode_resize_request_event (hash = {})
-    io = XIO.new
+    io = Alembic::XIO.new
     io.write_ubyte(25)
     io.write("\0")
+    io.write("\0\0")
     io.write_utetra(hash[:window])
     io.write_uwyde(hash[:width])
     io.write_uwyde(hash[:height])
@@ -773,9 +828,10 @@ module Alembic::Protocol::Core
   end
 
   def decode_resize_request_event (string)
-    io = XIO.new(string)
+    io = Alembic::XIO.new(string)
     hash = {}
     io.skip(1)
+    io.skip(2)
     hash[:window] = io.read_utetra
     hash[:width] = io.read_uwyde
     hash[:height] = io.read_uwyde
@@ -785,9 +841,10 @@ module Alembic::Protocol::Core
   Alembic::Protocol.register_event 25, :resize_request
 
   def encode_circulate_notify_event (hash = {})
-    io = XIO.new
+    io = Alembic::XIO.new
     io.write_ubyte(26)
     io.write("\0")
+    io.write("\0\0")
     io.write_utetra(hash[:event])
     io.write_utetra(hash[:window])
     io.write("\0\0\0\0")
@@ -797,9 +854,10 @@ module Alembic::Protocol::Core
   end
 
   def decode_circulate_notify_event (string)
-    io = XIO.new(string)
+    io = Alembic::XIO.new(string)
     hash = {}
     io.skip(1)
+    io.skip(2)
     hash[:event] = io.read_utetra
     hash[:window] = io.read_utetra
     io.skip(4)
@@ -811,9 +869,11 @@ module Alembic::Protocol::Core
   Alembic::Protocol.register_event 26, :circulate_notify
 
   def encode_circulate_request_event (hash = {})
-    io = XIO.new
+    io = Alembic::XIO.new
     io.write_ubyte(27)
     io.write("\0")
+    io.write("\0\0")
+    io.write("\0\0")
     io.write_utetra(hash[:event])
     io.write_utetra(hash[:window])
     io.write("\0\0\0\0")
@@ -823,9 +883,11 @@ module Alembic::Protocol::Core
   end
 
   def decode_circulate_request_event (string)
-    io = XIO.new(string)
+    io = Alembic::XIO.new(string)
     hash = {}
     io.skip(1)
+    io.skip(2)
+    io.skip(2)
     hash[:event] = io.read_utetra
     hash[:window] = io.read_utetra
     io.skip(4)
@@ -837,9 +899,10 @@ module Alembic::Protocol::Core
   Alembic::Protocol.register_event 27, :circulate_request
 
   def encode_property_notify_event (hash = {})
-    io = XIO.new
+    io = Alembic::XIO.new
     io.write_ubyte(28)
     io.write("\0")
+    io.write("\0\0")
     io.write_utetra(hash[:window])
     io.write_utetra(hash[:atom])
     io.write_utetra(hash[:time])
@@ -849,9 +912,10 @@ module Alembic::Protocol::Core
   end
 
   def decode_property_notify_event (string)
-    io = XIO.new(string)
+    io = Alembic::XIO.new(string)
     hash = {}
     io.skip(1)
+    io.skip(2)
     hash[:window] = io.read_utetra
     hash[:atom] = io.read_utetra
     hash[:time] = io.read_utetra
@@ -863,9 +927,10 @@ module Alembic::Protocol::Core
   Alembic::Protocol.register_event 28, :property_notify
 
   def encode_selection_clear_event (hash = {})
-    io = XIO.new
+    io = Alembic::XIO.new
     io.write_ubyte(29)
     io.write("\0")
+    io.write("\0\0")
     io.write_utetra(hash[:time])
     io.write_utetra(hash[:owner])
     io.write_utetra(hash[:selection])
@@ -873,9 +938,10 @@ module Alembic::Protocol::Core
   end
 
   def decode_selection_clear_event (string)
-    io = XIO.new(string)
+    io = Alembic::XIO.new(string)
     hash = {}
     io.skip(1)
+    io.skip(2)
     hash[:time] = io.read_utetra
     hash[:owner] = io.read_utetra
     hash[:selection] = io.read_utetra
@@ -885,9 +951,10 @@ module Alembic::Protocol::Core
   Alembic::Protocol.register_event 29, :selection_clear
 
   def encode_selection_request_event (hash = {})
-    io = XIO.new
+    io = Alembic::XIO.new
     io.write_ubyte(30)
     io.write("\0")
+    io.write("\0\0")
     io.write_utetra(hash[:time])
     io.write_utetra(hash[:owner])
     io.write_utetra(hash[:requestor])
@@ -898,9 +965,10 @@ module Alembic::Protocol::Core
   end
 
   def decode_selection_request_event (string)
-    io = XIO.new(string)
+    io = Alembic::XIO.new(string)
     hash = {}
     io.skip(1)
+    io.skip(2)
     hash[:time] = io.read_utetra
     hash[:owner] = io.read_utetra
     hash[:requestor] = io.read_utetra
@@ -913,9 +981,10 @@ module Alembic::Protocol::Core
   Alembic::Protocol.register_event 30, :selection_request
 
   def encode_selection_notify_event (hash = {})
-    io = XIO.new
+    io = Alembic::XIO.new
     io.write_ubyte(31)
     io.write("\0")
+    io.write("\0\0")
     io.write_utetra(hash[:time])
     io.write_utetra(hash[:requestor])
     io.write_utetra(hash[:selection])
@@ -925,9 +994,10 @@ module Alembic::Protocol::Core
   end
 
   def decode_selection_notify_event (string)
-    io = XIO.new(string)
+    io = Alembic::XIO.new(string)
     hash = {}
     io.skip(1)
+    io.skip(2)
     hash[:time] = io.read_utetra
     hash[:requestor] = io.read_utetra
     hash[:selection] = io.read_utetra
@@ -939,9 +1009,10 @@ module Alembic::Protocol::Core
   Alembic::Protocol.register_event 31, :selection_notify
 
   def encode_colormap_notify_event (hash = {})
-    io = XIO.new
+    io = Alembic::XIO.new
     io.write_ubyte(32)
     io.write("\0")
+    io.write("\0\0")
     io.write_utetra(hash[:window])
     io.write_utetra(hash[:colormap])
     io.write_bool(hash[:new])
@@ -951,9 +1022,10 @@ module Alembic::Protocol::Core
   end
 
   def decode_colormap_notify_event (string)
-    io = XIO.new(string)
+    io = Alembic::XIO.new(string)
     hash = {}
     io.skip(1)
+    io.skip(2)
     hash[:window] = io.read_utetra
     hash[:colormap] = io.read_utetra
     hash[:new] = io.read_bool
@@ -965,9 +1037,10 @@ module Alembic::Protocol::Core
   Alembic::Protocol.register_event 32, :colormap_notify
 
   def encode_client_message_event (hash = {})
-    io = XIO.new
+    io = Alembic::XIO.new
     io.write_ubyte(33)
     io.write_ubyte(hash[:format])
+    io.write("\0\0")
     io.write_utetra(hash[:window])
     io.write_utetra(hash[:type])
     wildcat do
@@ -985,9 +1058,10 @@ module Alembic::Protocol::Core
   end
 
   def decode_client_message_event (string)
-    io = XIO.new(string)
+    io = Alembic::XIO.new(string)
     hash = {}
     hash[:format] = io.read_ubyte
+    io.skip(2)
     hash[:window] = io.read_utetra
     hash[:type] = io.read_utetra
     hash[:data] = wildcat do
@@ -1009,9 +1083,10 @@ module Alembic::Protocol::Core
   Alembic::Protocol.register_event 33, :client_message
 
   def encode_mapping_notify_event (hash = {})
-    io = XIO.new
+    io = Alembic::XIO.new
     io.write_ubyte(34)
     io.write("\0")
+    io.write("\0\0")
     io.write_byte(hash[:request])
     io.write_ubyte(hash[:first_keycode])
     io.write_ubyte(hash[:count])
@@ -1020,9 +1095,10 @@ module Alembic::Protocol::Core
   end
 
   def decode_mapping_notify_event (string)
-    io = XIO.new(string)
+    io = Alembic::XIO.new(string)
     hash = {}
     io.skip(1)
+    io.skip(2)
     hash[:request] = io.read_byte
     hash[:first_keycode] = io.read_ubyte
     hash[:count] = io.read_ubyte
@@ -2087,10 +2163,7 @@ module Alembic::Protocol::Core
       io.write_bool(odd_length)
       io.write("\0\0")
       io.write_utetra(font)
-      string.each do |item|
-        io.write_ubyte(item[:byte1])
-        io.write_ubyte(item[:byte2])
-      end
+      io.write(string.encode('UTF-16BE').force_encoding('BINARY'))
     end
     reply do |io|
       query_text_extents_reply(io)
@@ -2783,10 +2856,7 @@ module Alembic::Protocol::Core
       io.write_utetra(gc)
       io.write_wyde(x)
       io.write_wyde(y)
-      string.each do |item|
-        io.write_ubyte(item[:byte1])
-        io.write_ubyte(item[:byte2])
-      end
+      io.write(string.encode('UTF-16BE').force_encoding('BINARY'))
     end
   end
   

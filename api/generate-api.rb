@@ -41,8 +41,12 @@ module Proto
     @things["VALUE"] = Alias.new("VALUE", "CARD32")
   end
   
+  attr_accessor :extension, :xname
+  
   def import path, types_only = false
     xml = Nokogiri::XML(File.read(path))
+    @extension ||= xml.xpath("/xcb")[0]['extension-name']
+    @xname ||= xml.xpath("/xcb")[0]['extension-xname']
     ext = xml.xpath("/xcb")[0]['extension-name']
     ext &&= "#{ext}_"
     ext ||= ""
@@ -214,13 +218,17 @@ module Proto
   initialize
   import ARGV[0]
   
+  @things.delete("CHAR2B")
+  
   puts "module Alembic; end"
   puts "module Alembic::Protocol; end"
-  puts "module Alembic::Protocol::Core"
+  puts "module Alembic::Protocol::#{@extension || 'Core'}"
   puts
   
-  puts format(@things["Setup"].reader)
-  puts
+  unless @extension
+    puts format(@things["Setup"].reader)
+    puts
+  end
   
   things.each do |name, t|
     case t
@@ -229,12 +237,12 @@ module Proto
       puts
       puts format(t.reader)
       puts
-      puts "  Alembic::Protocol.register_event #{t.number}, :#{t.name.snake_case}"
+      puts "  Alembic::Protocol.register_event #{@xname.inspect}, #{t.number}, :#{t.name.snake_case}"
       puts
     when Request
       puts format(t.writer)
       puts
-      puts "  Alembic::Protocol.register_opcode #{t.opcode}, :#{t.name.snake_case}"
+      puts "  Alembic::Protocol.register_opcode #{@xname.inspect}, #{t.opcode}, :#{t.name.snake_case}"
       puts
     end
   end

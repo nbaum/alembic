@@ -8,7 +8,7 @@ module Proto
       [
         "def decode_#{name.snake_case}_event (string)",
         [
-          "io = XIO.new(string)",
+          "io = Alembic::XIO.new(string)",
           "hash = {}",
           *fields.flat_map do |field|
             if field.name
@@ -27,11 +27,12 @@ module Proto
     def writer
       fields = self.fields
       fields = [Padding.new(1)] if fields.empty?
+      fields[1,0] = [Padding.new(2)]
       args = fields.map(&:name).compact.join(", ")
       [
         "def encode_#{name.snake_case}_event (hash = {})",
         [
-          "io = XIO.new",
+          "io = Alembic::XIO.new",
           "io.write_ubyte(#{number})",
           *fields.flat_map do |field|
             if field.name
