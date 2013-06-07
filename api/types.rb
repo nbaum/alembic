@@ -48,14 +48,10 @@ module Proto
     def read (*args)
       case Proto.resolve_type(type)
       when "char", "void"
-        ["io.read(hash[:#{length}])"]
+        ["io.read(#{length})"]
       else
         [
-          if Integer === length
-            "#{length}.times.map do"
-          else
-            "hash[:#{length}].times.map do"
-          end,
+          "#{length}.times.map do",
           Proto.resolve_type(type).read(*args),
           "end"
         ]

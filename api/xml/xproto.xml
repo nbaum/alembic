@@ -1675,6 +1675,7 @@ The specified window does not exist.
   <request name="ConfigureWindow" opcode="12">
     <pad bytes="1" />
     <field type="WINDOW" name="window" />
+    <field type="CARD16" name="value_mask" />
     <pad bytes="2" />
     <valueparam value-mask-type="CARD16"
                 value-mask-name="value_mask"

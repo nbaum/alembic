@@ -6,12 +6,12 @@ module Alembic::Protocol::Xinerama
     request do |io|
       io.write_ubyte(extension("XINERAMA"))
       io.write_ubyte(0)
-      io.write("\0\0")
+      io.write("\u0000\u0000")
       io.write_ubyte(major)
       io.write_ubyte(minor)
-    end
-    reply do |io|
-      xinerama_query_version_reply(io)
+      reply do |io|
+        xinerama_query_version_reply(io)
+      end
     end
   end
   
@@ -33,11 +33,11 @@ module Alembic::Protocol::Xinerama
     request do |io|
       io.write_ubyte(extension("XINERAMA"))
       io.write_ubyte(1)
-      io.write("\0\0")
+      io.write("\u0000\u0000")
       io.write_utetra(window)
-    end
-    reply do |io|
-      xinerama_get_state_reply(io)
+      reply do |io|
+        xinerama_get_state_reply(io)
+      end
     end
   end
   
@@ -58,11 +58,11 @@ module Alembic::Protocol::Xinerama
     request do |io|
       io.write_ubyte(extension("XINERAMA"))
       io.write_ubyte(2)
-      io.write("\0\0")
+      io.write("\u0000\u0000")
       io.write_utetra(window)
-    end
-    reply do |io|
-      xinerama_get_screen_count_reply(io)
+      reply do |io|
+        xinerama_get_screen_count_reply(io)
+      end
     end
   end
   
@@ -83,12 +83,12 @@ module Alembic::Protocol::Xinerama
     request do |io|
       io.write_ubyte(extension("XINERAMA"))
       io.write_ubyte(3)
-      io.write("\0\0")
+      io.write("\u0000\u0000")
       io.write_utetra(window)
       io.write_utetra(screen)
-    end
-    reply do |io|
-      xinerama_get_screen_size_reply(io)
+      reply do |io|
+        xinerama_get_screen_size_reply(io)
+      end
     end
   end
   
@@ -112,10 +112,10 @@ module Alembic::Protocol::Xinerama
     request do |io|
       io.write_ubyte(extension("XINERAMA"))
       io.write_ubyte(4)
-      io.write("\0\0")
-    end
-    reply do |io|
-      xinerama_is_active_reply(io)
+      io.write("\u0000\u0000")
+      reply do |io|
+        xinerama_is_active_reply(io)
+      end
     end
   end
   
@@ -136,10 +136,10 @@ module Alembic::Protocol::Xinerama
     request do |io|
       io.write_ubyte(extension("XINERAMA"))
       io.write_ubyte(5)
-      io.write("\0\0")
-    end
-    reply do |io|
-      xinerama_query_screens_reply(io)
+      io.write("\u0000\u0000")
+      reply do |io|
+        xinerama_query_screens_reply(io)
+      end
     end
   end
   

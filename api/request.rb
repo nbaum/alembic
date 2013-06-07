@@ -24,19 +24,21 @@ module Proto
             *fields.flat_map do |field|
               field.write()
             end,
+            *if rfields.empty?
+              [
+                "no_reply"
+              ]
+            else
+              [
+                "reply do |io|",
+                [
+                  "#{name.snake_case}_reply(io)"
+                ],
+                "end"
+              ]
+            end
           ],
           "end",
-          *if rfields.empty?
-            []
-          else
-            [
-              "reply do |io|",
-              [
-                "#{name.snake_case}_reply(io)"
-              ],
-              "end"
-            ]
-          end
         ],
         "end",
         "",

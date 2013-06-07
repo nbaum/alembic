@@ -43,6 +43,21 @@ module Proto
   
   attr_accessor :extension, :xname
   
+  def generate_length xml
+    r = xml && case xml.name
+    when "fieldref"
+      "hash[:#{xml.text}]"
+    when "value"
+      xml.text
+    when "op"
+      a = generate_length(xml.xpath("*")[0])
+      b = generate_length(xml.xpath("*")[1])
+      "(#{a} #{xml['op']} #{b})"
+    else
+      raise xml.name
+    end
+  end
+  
   def import path, types_only = false
     xml = Nokogiri::XML(File.read(path))
     @extension ||= xml.xpath("/xcb")[0]['extension-name']
@@ -64,8 +79,7 @@ module Proto
           when 'pad'
             s.fields << Padding.new(xml['bytes'].to_i)
           when 'list'
-            len = xml.xpath('.//fieldref').text
-            len = xml.xpath('.//value').text.to_i if len.empty?
+            len = generate_length(xml.xpath('*')[0])
             s.fields << List.new(xml['name'], xml['type'], len)
           else
             puts "Don't know what to do with #{xml.name}"
@@ -81,8 +95,7 @@ module Proto
           when 'pad'
             s.fields << Padding.new(xml['bytes'].to_i)
           when 'list'
-            len = xml.xpath('.//fieldref').text
-            len = xml.xpath('.//value').text.to_i if len.empty?
+            len = generate_length(xml.xpath('*')[0])
             s.fields << List.new(xml['name'], xml['type'], len)
           else
             puts "Don't know what to do with #{xml.name}"
@@ -114,8 +127,7 @@ module Proto
           when 'pad'
             e.fields << Padding.new(xml['bytes'].to_i)
           when 'list'
-            len = xml.xpath('.//fieldref').text
-            len = xml.xpath('.//value').text.to_i if len.empty?
+            len = generate_length(xml.xpath('*')[0])
             e.fields << List.new(xml['name'], xml['type'], len)
           else
             puts "Don't know what to do with #{xml.name}"
@@ -135,8 +147,7 @@ module Proto
           when 'pad'
             e.fields << Padding.new(xml['bytes'].to_i)
           when 'list'
-            len = xml.xpath('.//fieldref').text
-            len = xml.xpath('.//value').text.to_i if len.empty?
+            len = generate_length(xml.xpath('*')[0])
             e.fields << List.new(xml['name'], xml['type'], len)
           else
             puts "Don't know what to do with #{xml.name}"
@@ -159,8 +170,7 @@ module Proto
           when 'pad'
             e.fields << Padding.new(xml['bytes'].to_i)
           when 'list'
-            len = xml.xpath('.//fieldref').text
-            len = xml.xpath('.//value').text.to_i if len.empty?
+            len = generate_length(xml.xpath('*')[0])
             e.fields << List.new(xml['name'], xml['type'], len)
           when 'exprfield'
             e.fields << Scalar.new(xml['name'], xml['type'])
@@ -173,8 +183,7 @@ module Proto
               when 'pad'
                 reply << Padding.new(xml['bytes'].to_i)
               when 'list'
-                len = xml.xpath('.//fieldref').text
-                len = xml.xpath('.//value').text.to_i if len.empty?
+                len = generate_length(xml.xpath('*')[0])
                 reply << List.new(xml['name'], xml['type'], len)
               else
                 puts "Don't know what to do with #{xml.name}"

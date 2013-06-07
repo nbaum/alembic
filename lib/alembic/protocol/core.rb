@@ -148,7 +148,7 @@ module Alembic::Protocol::Core
     io = Alembic::XIO.new
     io.write_ubyte(2)
     io.write_ubyte(hash[:detail])
-    io.write("\0\0")
+    io.write("\u0000\u0000")
     io.write_utetra(hash[:time])
     io.write_utetra(hash[:root])
     io.write_utetra(hash[:event])
@@ -159,7 +159,7 @@ module Alembic::Protocol::Core
     io.write_wyde(hash[:event_y])
     io.write_uwyde(hash[:state])
     io.write_bool(hash[:same_screen])
-    io.write("\0")
+    io.write("\u0000")
     io.string
   end
 
@@ -188,8 +188,8 @@ module Alembic::Protocol::Core
     io = Alembic::XIO.new
     io.write_ubyte(3)
     io.write_ubyte(hash[:detail])
-    io.write("\0\0")
-    io.write("\0\0")
+    io.write("\u0000\u0000")
+    io.write("\u0000\u0000")
     io.write_utetra(hash[:time])
     io.write_utetra(hash[:root])
     io.write_utetra(hash[:event])
@@ -200,7 +200,7 @@ module Alembic::Protocol::Core
     io.write_wyde(hash[:event_y])
     io.write_uwyde(hash[:state])
     io.write_bool(hash[:same_screen])
-    io.write("\0")
+    io.write("\u0000")
     io.string
   end
 
@@ -246,7 +246,7 @@ module Alembic::Protocol::Core
     io = Alembic::XIO.new
     io.write_ubyte(4)
     io.write_ubyte(hash[:detail])
-    io.write("\0\0")
+    io.write("\u0000\u0000")
     io.write_utetra(hash[:time])
     io.write_utetra(hash[:root])
     io.write_utetra(hash[:event])
@@ -257,7 +257,7 @@ module Alembic::Protocol::Core
     io.write_wyde(hash[:event_y])
     io.write_uwyde(hash[:state])
     io.write_bool(hash[:same_screen])
-    io.write("\0")
+    io.write("\u0000")
     io.string
   end
 
@@ -286,8 +286,8 @@ module Alembic::Protocol::Core
     io = Alembic::XIO.new
     io.write_ubyte(5)
     io.write_ubyte(hash[:detail])
-    io.write("\0\0")
-    io.write("\0\0")
+    io.write("\u0000\u0000")
+    io.write("\u0000\u0000")
     io.write_utetra(hash[:time])
     io.write_utetra(hash[:root])
     io.write_utetra(hash[:event])
@@ -298,7 +298,7 @@ module Alembic::Protocol::Core
     io.write_wyde(hash[:event_y])
     io.write_uwyde(hash[:state])
     io.write_bool(hash[:same_screen])
-    io.write("\0")
+    io.write("\u0000")
     io.string
   end
 
@@ -336,7 +336,7 @@ module Alembic::Protocol::Core
     io = Alembic::XIO.new
     io.write_ubyte(6)
     io.write_byte(hash[:detail])
-    io.write("\0\0")
+    io.write("\u0000\u0000")
     io.write_utetra(hash[:time])
     io.write_utetra(hash[:root])
     io.write_utetra(hash[:event])
@@ -347,7 +347,7 @@ module Alembic::Protocol::Core
     io.write_wyde(hash[:event_y])
     io.write_uwyde(hash[:state])
     io.write_bool(hash[:same_screen])
-    io.write("\0")
+    io.write("\u0000")
     io.string
   end
 
@@ -408,7 +408,7 @@ module Alembic::Protocol::Core
     io = Alembic::XIO.new
     io.write_ubyte(7)
     io.write_byte(hash[:detail])
-    io.write("\0\0")
+    io.write("\u0000\u0000")
     io.write_utetra(hash[:time])
     io.write_utetra(hash[:root])
     io.write_utetra(hash[:event])
@@ -448,8 +448,8 @@ module Alembic::Protocol::Core
     io = Alembic::XIO.new
     io.write_ubyte(8)
     io.write_byte(hash[:detail])
-    io.write("\0\0")
-    io.write("\0\0")
+    io.write("\u0000\u0000")
+    io.write("\u0000\u0000")
     io.write_utetra(hash[:time])
     io.write_utetra(hash[:root])
     io.write_utetra(hash[:event])
@@ -490,10 +490,10 @@ module Alembic::Protocol::Core
     io = Alembic::XIO.new
     io.write_ubyte(9)
     io.write_byte(hash[:detail])
-    io.write("\0\0")
+    io.write("\u0000\u0000")
     io.write_utetra(hash[:event])
     io.write_byte(hash[:mode])
-    io.write("\0\0\0")
+    io.write("\u0000\u0000\u0000")
     io.string
   end
 
@@ -514,11 +514,11 @@ module Alembic::Protocol::Core
     io = Alembic::XIO.new
     io.write_ubyte(10)
     io.write_byte(hash[:detail])
-    io.write("\0\0")
-    io.write("\0\0")
+    io.write("\u0000\u0000")
+    io.write("\u0000\u0000")
     io.write_utetra(hash[:event])
     io.write_byte(hash[:mode])
-    io.write("\0\0\0")
+    io.write("\u0000\u0000\u0000")
     io.string
   end
 
@@ -542,7 +542,7 @@ module Alembic::Protocol::Core
     hash[:keys].each do |item|
       io.write_ubyte(item)
     end
-    io.write("\0\0")
+    io.write("\u0000\u0000")
     io.string
   end
 
@@ -561,15 +561,15 @@ module Alembic::Protocol::Core
   def encode_expose_event (hash = {})
     io = Alembic::XIO.new
     io.write_ubyte(12)
-    io.write("\0")
-    io.write("\0\0")
+    io.write("\u0000")
+    io.write("\u0000\u0000")
     io.write_utetra(hash[:window])
     io.write_uwyde(hash[:x])
     io.write_uwyde(hash[:y])
     io.write_uwyde(hash[:width])
     io.write_uwyde(hash[:height])
     io.write_uwyde(hash[:count])
-    io.write("\0\0")
+    io.write("\u0000\u0000")
     io.string
   end
 
@@ -593,8 +593,8 @@ module Alembic::Protocol::Core
   def encode_graphics_exposure_event (hash = {})
     io = Alembic::XIO.new
     io.write_ubyte(13)
-    io.write("\0")
-    io.write("\0\0")
+    io.write("\u0000")
+    io.write("\u0000\u0000")
     io.write_utetra(hash[:drawable])
     io.write_uwyde(hash[:x])
     io.write_uwyde(hash[:y])
@@ -603,7 +603,7 @@ module Alembic::Protocol::Core
     io.write_uwyde(hash[:minor_opcode])
     io.write_uwyde(hash[:count])
     io.write_ubyte(hash[:major_opcode])
-    io.write("\0\0\0")
+    io.write("\u0000\u0000\u0000")
     io.string
   end
 
@@ -629,12 +629,12 @@ module Alembic::Protocol::Core
   def encode_no_exposure_event (hash = {})
     io = Alembic::XIO.new
     io.write_ubyte(14)
-    io.write("\0")
-    io.write("\0\0")
+    io.write("\u0000")
+    io.write("\u0000\u0000")
     io.write_utetra(hash[:drawable])
     io.write_uwyde(hash[:minor_opcode])
     io.write_ubyte(hash[:major_opcode])
-    io.write("\0")
+    io.write("\u0000")
     io.string
   end
 
@@ -665,11 +665,11 @@ module Alembic::Protocol::Core
   def encode_visibility_notify_event (hash = {})
     io = Alembic::XIO.new
     io.write_ubyte(15)
-    io.write("\0")
-    io.write("\0\0")
+    io.write("\u0000")
+    io.write("\u0000\u0000")
     io.write_utetra(hash[:window])
     io.write_byte(hash[:state])
-    io.write("\0\0\0")
+    io.write("\u0000\u0000\u0000")
     io.string
   end
 
@@ -689,8 +689,8 @@ module Alembic::Protocol::Core
   def encode_create_notify_event (hash = {})
     io = Alembic::XIO.new
     io.write_ubyte(16)
-    io.write("\0")
-    io.write("\0\0")
+    io.write("\u0000")
+    io.write("\u0000\u0000")
     io.write_utetra(hash[:parent])
     io.write_utetra(hash[:window])
     io.write_wyde(hash[:x])
@@ -699,7 +699,7 @@ module Alembic::Protocol::Core
     io.write_uwyde(hash[:height])
     io.write_uwyde(hash[:border_width])
     io.write_bool(hash[:override_redirect])
-    io.write("\0")
+    io.write("\u0000")
     io.string
   end
 
@@ -725,8 +725,8 @@ module Alembic::Protocol::Core
   def encode_destroy_notify_event (hash = {})
     io = Alembic::XIO.new
     io.write_ubyte(17)
-    io.write("\0")
-    io.write("\0\0")
+    io.write("\u0000")
+    io.write("\u0000\u0000")
     io.write_utetra(hash[:event])
     io.write_utetra(hash[:window])
     io.string
@@ -747,12 +747,12 @@ module Alembic::Protocol::Core
   def encode_unmap_notify_event (hash = {})
     io = Alembic::XIO.new
     io.write_ubyte(18)
-    io.write("\0")
-    io.write("\0\0")
+    io.write("\u0000")
+    io.write("\u0000\u0000")
     io.write_utetra(hash[:event])
     io.write_utetra(hash[:window])
     io.write_bool(hash[:from_configure])
-    io.write("\0\0\0")
+    io.write("\u0000\u0000\u0000")
     io.string
   end
 
@@ -773,12 +773,12 @@ module Alembic::Protocol::Core
   def encode_map_notify_event (hash = {})
     io = Alembic::XIO.new
     io.write_ubyte(19)
-    io.write("\0")
-    io.write("\0\0")
+    io.write("\u0000")
+    io.write("\u0000\u0000")
     io.write_utetra(hash[:event])
     io.write_utetra(hash[:window])
     io.write_bool(hash[:override_redirect])
-    io.write("\0\0\0")
+    io.write("\u0000\u0000\u0000")
     io.string
   end
 
@@ -799,8 +799,8 @@ module Alembic::Protocol::Core
   def encode_map_request_event (hash = {})
     io = Alembic::XIO.new
     io.write_ubyte(20)
-    io.write("\0")
-    io.write("\0\0")
+    io.write("\u0000")
+    io.write("\u0000\u0000")
     io.write_utetra(hash[:parent])
     io.write_utetra(hash[:window])
     io.string
@@ -821,15 +821,15 @@ module Alembic::Protocol::Core
   def encode_reparent_notify_event (hash = {})
     io = Alembic::XIO.new
     io.write_ubyte(21)
-    io.write("\0")
-    io.write("\0\0")
+    io.write("\u0000")
+    io.write("\u0000\u0000")
     io.write_utetra(hash[:event])
     io.write_utetra(hash[:window])
     io.write_utetra(hash[:parent])
     io.write_wyde(hash[:x])
     io.write_wyde(hash[:y])
     io.write_bool(hash[:override_redirect])
-    io.write("\0\0\0")
+    io.write("\u0000\u0000\u0000")
     io.string
   end
 
@@ -853,8 +853,8 @@ module Alembic::Protocol::Core
   def encode_configure_notify_event (hash = {})
     io = Alembic::XIO.new
     io.write_ubyte(22)
-    io.write("\0")
-    io.write("\0\0")
+    io.write("\u0000")
+    io.write("\u0000\u0000")
     io.write_utetra(hash[:event])
     io.write_utetra(hash[:window])
     io.write_utetra(hash[:above_sibling])
@@ -864,7 +864,7 @@ module Alembic::Protocol::Core
     io.write_uwyde(hash[:height])
     io.write_uwyde(hash[:border_width])
     io.write_bool(hash[:override_redirect])
-    io.write("\0")
+    io.write("\u0000")
     io.string
   end
 
@@ -892,7 +892,7 @@ module Alembic::Protocol::Core
     io = Alembic::XIO.new
     io.write_ubyte(23)
     io.write_byte(hash[:stack_mode])
-    io.write("\0\0")
+    io.write("\u0000\u0000")
     io.write_utetra(hash[:parent])
     io.write_utetra(hash[:window])
     io.write_utetra(hash[:sibling])
@@ -927,8 +927,8 @@ module Alembic::Protocol::Core
   def encode_gravity_notify_event (hash = {})
     io = Alembic::XIO.new
     io.write_ubyte(24)
-    io.write("\0")
-    io.write("\0\0")
+    io.write("\u0000")
+    io.write("\u0000\u0000")
     io.write_utetra(hash[:event])
     io.write_utetra(hash[:window])
     io.write_wyde(hash[:x])
@@ -953,8 +953,8 @@ module Alembic::Protocol::Core
   def encode_resize_request_event (hash = {})
     io = Alembic::XIO.new
     io.write_ubyte(25)
-    io.write("\0")
-    io.write("\0\0")
+    io.write("\u0000")
+    io.write("\u0000\u0000")
     io.write_utetra(hash[:window])
     io.write_uwyde(hash[:width])
     io.write_uwyde(hash[:height])
@@ -985,13 +985,13 @@ module Alembic::Protocol::Core
   def encode_circulate_notify_event (hash = {})
     io = Alembic::XIO.new
     io.write_ubyte(26)
-    io.write("\0")
-    io.write("\0\0")
+    io.write("\u0000")
+    io.write("\u0000\u0000")
     io.write_utetra(hash[:event])
     io.write_utetra(hash[:window])
-    io.write("\0\0\0\0")
+    io.write("\u0000\u0000\u0000\u0000")
     io.write_byte(hash[:place])
-    io.write("\0\0\0")
+    io.write("\u0000\u0000\u0000")
     io.string
   end
 
@@ -1013,14 +1013,14 @@ module Alembic::Protocol::Core
   def encode_circulate_request_event (hash = {})
     io = Alembic::XIO.new
     io.write_ubyte(27)
-    io.write("\0")
-    io.write("\0\0")
-    io.write("\0\0")
+    io.write("\u0000")
+    io.write("\u0000\u0000")
+    io.write("\u0000\u0000")
     io.write_utetra(hash[:event])
     io.write_utetra(hash[:window])
-    io.write("\0\0\0\0")
+    io.write("\u0000\u0000\u0000\u0000")
     io.write_byte(hash[:place])
-    io.write("\0\0\0")
+    io.write("\u0000\u0000\u0000")
     io.string
   end
 
@@ -1051,13 +1051,13 @@ module Alembic::Protocol::Core
   def encode_property_notify_event (hash = {})
     io = Alembic::XIO.new
     io.write_ubyte(28)
-    io.write("\0")
-    io.write("\0\0")
+    io.write("\u0000")
+    io.write("\u0000\u0000")
     io.write_utetra(hash[:window])
     io.write_utetra(hash[:atom])
     io.write_utetra(hash[:time])
     io.write_byte(hash[:state])
-    io.write("\0\0\0")
+    io.write("\u0000\u0000\u0000")
     io.string
   end
 
@@ -1079,8 +1079,8 @@ module Alembic::Protocol::Core
   def encode_selection_clear_event (hash = {})
     io = Alembic::XIO.new
     io.write_ubyte(29)
-    io.write("\0")
-    io.write("\0\0")
+    io.write("\u0000")
+    io.write("\u0000\u0000")
     io.write_utetra(hash[:time])
     io.write_utetra(hash[:owner])
     io.write_utetra(hash[:selection])
@@ -1109,8 +1109,8 @@ module Alembic::Protocol::Core
   def encode_selection_request_event (hash = {})
     io = Alembic::XIO.new
     io.write_ubyte(30)
-    io.write("\0")
-    io.write("\0\0")
+    io.write("\u0000")
+    io.write("\u0000\u0000")
     io.write_utetra(hash[:time])
     io.write_utetra(hash[:owner])
     io.write_utetra(hash[:requestor])
@@ -1139,8 +1139,8 @@ module Alembic::Protocol::Core
   def encode_selection_notify_event (hash = {})
     io = Alembic::XIO.new
     io.write_ubyte(31)
-    io.write("\0")
-    io.write("\0\0")
+    io.write("\u0000")
+    io.write("\u0000\u0000")
     io.write_utetra(hash[:time])
     io.write_utetra(hash[:requestor])
     io.write_utetra(hash[:selection])
@@ -1175,13 +1175,13 @@ module Alembic::Protocol::Core
   def encode_colormap_notify_event (hash = {})
     io = Alembic::XIO.new
     io.write_ubyte(32)
-    io.write("\0")
-    io.write("\0\0")
+    io.write("\u0000")
+    io.write("\u0000\u0000")
     io.write_utetra(hash[:window])
     io.write_utetra(hash[:colormap])
     io.write_bool(hash[:new])
     io.write_byte(hash[:state])
-    io.write("\0\0")
+    io.write("\u0000\u0000")
     io.string
   end
 
@@ -1204,7 +1204,7 @@ module Alembic::Protocol::Core
     io = Alembic::XIO.new
     io.write_ubyte(33)
     io.write_ubyte(hash[:format])
-    io.write("\0\0")
+    io.write("\u0000\u0000")
     io.write_utetra(hash[:window])
     io.write_utetra(hash[:type])
     wildcat do
@@ -1259,12 +1259,12 @@ module Alembic::Protocol::Core
   def encode_mapping_notify_event (hash = {})
     io = Alembic::XIO.new
     io.write_ubyte(34)
-    io.write("\0")
-    io.write("\0\0")
+    io.write("\u0000")
+    io.write("\u0000\u0000")
     io.write_byte(hash[:request])
     io.write_ubyte(hash[:first_keycode])
     io.write_ubyte(hash[:count])
-    io.write("\0")
+    io.write("\u0000")
     io.string
   end
 
@@ -1383,7 +1383,7 @@ module Alembic::Protocol::Core
   def create_window_async (depth, wid, parent, x, y, width, height, border_width, klass, visual, value_mask, value_list)
     request do |io|
       io.write_ubyte(1)
-      io.write("\0\0")
+      io.write("\u0000\u0000")
       io.write_ubyte(depth)
       io.write_utetra(wid)
       io.write_utetra(parent)
@@ -1398,6 +1398,7 @@ module Alembic::Protocol::Core
       value_list.each do |item|
         io.write_utetra(item)
       end
+      no_reply
     end
   end
   
@@ -1410,13 +1411,14 @@ module Alembic::Protocol::Core
   def change_window_attributes_async (window, value_mask, value_list)
     request do |io|
       io.write_ubyte(2)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(window)
       io.write_utetra(value_mask)
       value_list.each do |item|
         io.write_utetra(item)
       end
+      no_reply
     end
   end
   
@@ -1439,12 +1441,12 @@ module Alembic::Protocol::Core
   def get_window_attributes_async (window)
     request do |io|
       io.write_ubyte(3)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(window)
-    end
-    reply do |io|
-      get_window_attributes_reply(io)
+      reply do |io|
+        get_window_attributes_reply(io)
+      end
     end
   end
   
@@ -1478,9 +1480,10 @@ module Alembic::Protocol::Core
   def destroy_window_async (window)
     request do |io|
       io.write_ubyte(4)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(window)
+      no_reply
     end
   end
   
@@ -1493,9 +1496,10 @@ module Alembic::Protocol::Core
   def destroy_subwindows_async (window)
     request do |io|
       io.write_ubyte(5)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(window)
+      no_reply
     end
   end
   
@@ -1516,9 +1520,10 @@ module Alembic::Protocol::Core
   def change_save_set_async (mode, window)
     request do |io|
       io.write_ubyte(6)
-      io.write("\0\0")
+      io.write("\u0000\u0000")
       io.write_byte(mode)
       io.write_utetra(window)
+      no_reply
     end
   end
   
@@ -1531,12 +1536,13 @@ module Alembic::Protocol::Core
   def reparent_window_async (window, parent, x, y)
     request do |io|
       io.write_ubyte(7)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(window)
       io.write_utetra(parent)
       io.write_wyde(x)
       io.write_wyde(y)
+      no_reply
     end
   end
   
@@ -1549,9 +1555,10 @@ module Alembic::Protocol::Core
   def map_window_async (window)
     request do |io|
       io.write_ubyte(8)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(window)
+      no_reply
     end
   end
   
@@ -1564,9 +1571,10 @@ module Alembic::Protocol::Core
   def map_subwindows_async (window)
     request do |io|
       io.write_ubyte(9)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(window)
+      no_reply
     end
   end
   
@@ -1579,9 +1587,10 @@ module Alembic::Protocol::Core
   def unmap_window_async (window)
     request do |io|
       io.write_ubyte(10)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(window)
+      no_reply
     end
   end
   
@@ -1594,9 +1603,10 @@ module Alembic::Protocol::Core
   def unmap_subwindows_async (window)
     request do |io|
       io.write_ubyte(11)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(window)
+      no_reply
     end
   end
   
@@ -1641,14 +1651,15 @@ module Alembic::Protocol::Core
   def configure_window_async (window, value_mask, value_list)
     request do |io|
       io.write_ubyte(12)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(window)
-      io.write("\0\0")
       io.write_uwyde(value_mask)
+      io.write("\u0000\u0000")
       value_list.each do |item|
         io.write_utetra(item)
       end
+      no_reply
     end
   end
   
@@ -1669,9 +1680,10 @@ module Alembic::Protocol::Core
   def circulate_window_async (direction, window)
     request do |io|
       io.write_ubyte(13)
-      io.write("\0\0")
+      io.write("\u0000\u0000")
       io.write_ubyte(direction)
       io.write_utetra(window)
+      no_reply
     end
   end
   
@@ -1684,12 +1696,12 @@ module Alembic::Protocol::Core
   def get_geometry_async (drawable)
     request do |io|
       io.write_ubyte(14)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(drawable)
-    end
-    reply do |io|
-      get_geometry_reply(io)
+      reply do |io|
+        get_geometry_reply(io)
+      end
     end
   end
   
@@ -1715,12 +1727,12 @@ module Alembic::Protocol::Core
   def query_tree_async (window)
     request do |io|
       io.write_ubyte(15)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(window)
-    end
-    reply do |io|
-      query_tree_reply(io)
+      reply do |io|
+        query_tree_reply(io)
+      end
     end
   end
   
@@ -1746,14 +1758,14 @@ module Alembic::Protocol::Core
   def intern_atom_async (only_if_exists, name_len, name)
     request do |io|
       io.write_ubyte(16)
-      io.write("\0\0")
+      io.write("\u0000\u0000")
       io.write_bool(only_if_exists)
       io.write_uwyde(name_len)
-      io.write("\0\0")
+      io.write("\u0000\u0000")
       io.write(name)
-    end
-    reply do |io|
-      intern_atom_reply(io)
+      reply do |io|
+        intern_atom_reply(io)
+      end
     end
   end
   
@@ -1773,12 +1785,12 @@ module Alembic::Protocol::Core
   def get_atom_name_async (atom)
     request do |io|
       io.write_ubyte(17)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(atom)
-    end
-    reply do |io|
-      get_atom_name_reply(io)
+      reply do |io|
+        get_atom_name_reply(io)
+      end
     end
   end
   
@@ -1810,15 +1822,16 @@ module Alembic::Protocol::Core
   def change_property_async (mode, window, property, type, format, data_len, data)
     request do |io|
       io.write_ubyte(18)
-      io.write("\0\0")
+      io.write("\u0000\u0000")
       io.write_ubyte(mode)
       io.write_utetra(window)
       io.write_utetra(property)
       io.write_utetra(type)
       io.write_ubyte(format)
-      io.write("\0\0\0")
+      io.write("\u0000\u0000\u0000")
       io.write_utetra(data_len)
       io.write(data)
+      no_reply
     end
   end
   
@@ -1831,10 +1844,11 @@ module Alembic::Protocol::Core
   def delete_property_async (window, property)
     request do |io|
       io.write_ubyte(19)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(window)
       io.write_utetra(property)
+      no_reply
     end
   end
   
@@ -1853,16 +1867,16 @@ module Alembic::Protocol::Core
   def get_property_async (delete, window, property, type, long_offset, long_length)
     request do |io|
       io.write_ubyte(20)
-      io.write("\0\0")
+      io.write("\u0000\u0000")
       io.write_bool(delete)
       io.write_utetra(window)
       io.write_utetra(property)
       io.write_utetra(type)
       io.write_utetra(long_offset)
       io.write_utetra(long_length)
-    end
-    reply do |io|
-      get_property_reply(io)
+      reply do |io|
+        get_property_reply(io)
+      end
     end
   end
   
@@ -1877,7 +1891,7 @@ module Alembic::Protocol::Core
     hash[:bytes_after] = io.read_utetra
     hash[:value_len] = io.read_utetra
     io.skip(12)
-    hash[:value] = io.read(hash[:value_lenformat])
+    hash[:value] = io.read((hash[:value_len] * (hash[:format] / 8)))
     hash
   end
 
@@ -1886,12 +1900,12 @@ module Alembic::Protocol::Core
   def list_properties_async (window)
     request do |io|
       io.write_ubyte(21)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(window)
-    end
-    reply do |io|
-      list_properties_reply(io)
+      reply do |io|
+        list_properties_reply(io)
+      end
     end
   end
   
@@ -1915,11 +1929,12 @@ module Alembic::Protocol::Core
   def set_selection_owner_async (owner, selection, time)
     request do |io|
       io.write_ubyte(22)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(owner)
       io.write_utetra(selection)
       io.write_utetra(time)
+      no_reply
     end
   end
   
@@ -1932,12 +1947,12 @@ module Alembic::Protocol::Core
   def get_selection_owner_async (selection)
     request do |io|
       io.write_ubyte(23)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(selection)
-    end
-    reply do |io|
-      get_selection_owner_reply(io)
+      reply do |io|
+        get_selection_owner_reply(io)
+      end
     end
   end
   
@@ -1957,13 +1972,14 @@ module Alembic::Protocol::Core
   def convert_selection_async (requestor, selection, target, property, time)
     request do |io|
       io.write_ubyte(24)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(requestor)
       io.write_utetra(selection)
       io.write_utetra(target)
       io.write_utetra(property)
       io.write_utetra(time)
+      no_reply
     end
   end
   
@@ -1984,11 +2000,12 @@ module Alembic::Protocol::Core
   def send_event_async (propagate, destination, event_mask, event)
     request do |io|
       io.write_ubyte(25)
-      io.write("\0\0")
+      io.write("\u0000\u0000")
       io.write_bool(propagate)
       io.write_utetra(destination)
       io.write_utetra(event_mask)
       io.write(event)
+      no_reply
     end
   end
   
@@ -2023,7 +2040,7 @@ module Alembic::Protocol::Core
   def grab_pointer_async (owner_events, grab_window, event_mask, pointer_mode, keyboard_mode, confine_to, cursor, time)
     request do |io|
       io.write_ubyte(26)
-      io.write("\0\0")
+      io.write("\u0000\u0000")
       io.write_bool(owner_events)
       io.write_utetra(grab_window)
       io.write_uwyde(event_mask)
@@ -2032,9 +2049,9 @@ module Alembic::Protocol::Core
       io.write_utetra(confine_to)
       io.write_utetra(cursor)
       io.write_utetra(time)
-    end
-    reply do |io|
-      grab_pointer_reply(io)
+      reply do |io|
+        grab_pointer_reply(io)
+      end
     end
   end
   
@@ -2053,9 +2070,10 @@ module Alembic::Protocol::Core
   def ungrab_pointer_async (time)
     request do |io|
       io.write_ubyte(27)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(time)
+      no_reply
     end
   end
   
@@ -2084,7 +2102,7 @@ module Alembic::Protocol::Core
   def grab_button_async (owner_events, grab_window, event_mask, pointer_mode, keyboard_mode, confine_to, cursor, button, modifiers)
     request do |io|
       io.write_ubyte(28)
-      io.write("\0\0")
+      io.write("\u0000\u0000")
       io.write_bool(owner_events)
       io.write_utetra(grab_window)
       io.write_uwyde(event_mask)
@@ -2093,8 +2111,9 @@ module Alembic::Protocol::Core
       io.write_utetra(confine_to)
       io.write_utetra(cursor)
       io.write_ubyte(button)
-      io.write("\0")
+      io.write("\u0000")
       io.write_uwyde(modifiers)
+      no_reply
     end
   end
   
@@ -2107,11 +2126,12 @@ module Alembic::Protocol::Core
   def ungrab_button_async (button, grab_window, modifiers)
     request do |io|
       io.write_ubyte(29)
-      io.write("\0\0")
+      io.write("\u0000\u0000")
       io.write_ubyte(button)
       io.write_utetra(grab_window)
       io.write_uwyde(modifiers)
-      io.write("\0\0")
+      io.write("\u0000\u0000")
+      no_reply
     end
   end
   
@@ -2124,12 +2144,13 @@ module Alembic::Protocol::Core
   def change_active_pointer_grab_async (cursor, time, event_mask)
     request do |io|
       io.write_ubyte(30)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(cursor)
       io.write_utetra(time)
       io.write_uwyde(event_mask)
-      io.write("\0\0")
+      io.write("\u0000\u0000")
+      no_reply
     end
   end
   
@@ -2142,16 +2163,16 @@ module Alembic::Protocol::Core
   def grab_keyboard_async (owner_events, grab_window, time, pointer_mode, keyboard_mode)
     request do |io|
       io.write_ubyte(31)
-      io.write("\0\0")
+      io.write("\u0000\u0000")
       io.write_bool(owner_events)
       io.write_utetra(grab_window)
       io.write_utetra(time)
       io.write_byte(pointer_mode)
       io.write_byte(keyboard_mode)
-      io.write("\0\0")
-    end
-    reply do |io|
-      grab_keyboard_reply(io)
+      io.write("\u0000\u0000")
+      reply do |io|
+        grab_keyboard_reply(io)
+      end
     end
   end
   
@@ -2170,9 +2191,10 @@ module Alembic::Protocol::Core
   def ungrab_keyboard_async (time)
     request do |io|
       io.write_ubyte(32)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(time)
+      no_reply
     end
   end
   
@@ -2191,14 +2213,15 @@ module Alembic::Protocol::Core
   def grab_key_async (owner_events, grab_window, modifiers, key, pointer_mode, keyboard_mode)
     request do |io|
       io.write_ubyte(33)
-      io.write("\0\0")
+      io.write("\u0000\u0000")
       io.write_bool(owner_events)
       io.write_utetra(grab_window)
       io.write_uwyde(modifiers)
       io.write_ubyte(key)
       io.write_ubyte(pointer_mode)
       io.write_ubyte(keyboard_mode)
-      io.write("\0\0\0")
+      io.write("\u0000\u0000\u0000")
+      no_reply
     end
   end
   
@@ -2211,11 +2234,12 @@ module Alembic::Protocol::Core
   def ungrab_key_async (key, grab_window, modifiers)
     request do |io|
       io.write_ubyte(34)
-      io.write("\0\0")
+      io.write("\u0000\u0000")
       io.write_ubyte(key)
       io.write_utetra(grab_window)
       io.write_uwyde(modifiers)
-      io.write("\0\0")
+      io.write("\u0000\u0000")
+      no_reply
     end
   end
   
@@ -2248,9 +2272,10 @@ module Alembic::Protocol::Core
   def allow_events_async (mode, time)
     request do |io|
       io.write_ubyte(35)
-      io.write("\0\0")
+      io.write("\u0000\u0000")
       io.write_ubyte(mode)
       io.write_utetra(time)
+      no_reply
     end
   end
   
@@ -2263,8 +2288,9 @@ module Alembic::Protocol::Core
   def grab_server_async ()
     request do |io|
       io.write_ubyte(36)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
+      no_reply
     end
   end
   
@@ -2277,8 +2303,9 @@ module Alembic::Protocol::Core
   def ungrab_server_async ()
     request do |io|
       io.write_ubyte(37)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
+      no_reply
     end
   end
   
@@ -2291,12 +2318,12 @@ module Alembic::Protocol::Core
   def query_pointer_async (window)
     request do |io|
       io.write_ubyte(38)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(window)
-    end
-    reply do |io|
-      query_pointer_reply(io)
+      reply do |io|
+        query_pointer_reply(io)
+      end
     end
   end
   
@@ -2323,14 +2350,14 @@ module Alembic::Protocol::Core
   def get_motion_events_async (window, start, stop)
     request do |io|
       io.write_ubyte(39)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(window)
       io.write_utetra(start)
       io.write_utetra(stop)
-    end
-    reply do |io|
-      get_motion_events_reply(io)
+      reply do |io|
+        get_motion_events_reply(io)
+      end
     end
   end
   
@@ -2358,15 +2385,15 @@ module Alembic::Protocol::Core
   def translate_coordinates_async (src_window, dst_window, src_x, src_y)
     request do |io|
       io.write_ubyte(40)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(src_window)
       io.write_utetra(dst_window)
       io.write_wyde(src_x)
       io.write_wyde(src_y)
-    end
-    reply do |io|
-      translate_coordinates_reply(io)
+      reply do |io|
+        translate_coordinates_reply(io)
+      end
     end
   end
   
@@ -2388,8 +2415,8 @@ module Alembic::Protocol::Core
   def warp_pointer_async (src_window, dst_window, src_x, src_y, src_width, src_height, dst_x, dst_y)
     request do |io|
       io.write_ubyte(41)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(src_window)
       io.write_utetra(dst_window)
       io.write_wyde(src_x)
@@ -2398,6 +2425,7 @@ module Alembic::Protocol::Core
       io.write_uwyde(src_height)
       io.write_wyde(dst_x)
       io.write_wyde(dst_y)
+      no_reply
     end
   end
   
@@ -2422,10 +2450,11 @@ module Alembic::Protocol::Core
   def set_input_focus_async (revert_to, focus, time)
     request do |io|
       io.write_ubyte(42)
-      io.write("\0\0")
+      io.write("\u0000\u0000")
       io.write_ubyte(revert_to)
       io.write_utetra(focus)
       io.write_utetra(time)
+      no_reply
     end
   end
   
@@ -2438,11 +2467,11 @@ module Alembic::Protocol::Core
   def get_input_focus_async ()
     request do |io|
       io.write_ubyte(43)
-      io.write("\0\0")
-      io.write("\0")
-    end
-    reply do |io|
-      get_input_focus_reply(io)
+      io.write("\u0000\u0000")
+      io.write("\u0000")
+      reply do |io|
+        get_input_focus_reply(io)
+      end
     end
   end
   
@@ -2462,11 +2491,11 @@ module Alembic::Protocol::Core
   def query_keymap_async ()
     request do |io|
       io.write_ubyte(44)
-      io.write("\0\0")
-      io.write("\0")
-    end
-    reply do |io|
-      query_keymap_reply(io)
+      io.write("\u0000\u0000")
+      io.write("\u0000")
+      reply do |io|
+        query_keymap_reply(io)
+      end
     end
   end
   
@@ -2488,12 +2517,13 @@ module Alembic::Protocol::Core
   def open_font_async (fid, name_len, name)
     request do |io|
       io.write_ubyte(45)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(fid)
       io.write_uwyde(name_len)
-      io.write("\0\0")
+      io.write("\u0000\u0000")
       io.write(name)
+      no_reply
     end
   end
   
@@ -2506,9 +2536,10 @@ module Alembic::Protocol::Core
   def close_font_async (font)
     request do |io|
       io.write_ubyte(46)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(font)
+      no_reply
     end
   end
   
@@ -2529,12 +2560,12 @@ module Alembic::Protocol::Core
   def query_font_async (font)
     request do |io|
       io.write_ubyte(47)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(font)
-    end
-    reply do |io|
-      query_font_reply(io)
+      reply do |io|
+        query_font_reply(io)
+      end
     end
   end
   
@@ -2598,13 +2629,13 @@ module Alembic::Protocol::Core
   def query_text_extents_async (odd_length, font, string)
     request do |io|
       io.write_ubyte(48)
-      io.write("\0\0")
+      io.write("\u0000\u0000")
       io.write_bool(odd_length)
       io.write_utetra(font)
       io.write(string.encode('UTF-16BE').force_encoding('BINARY'))
-    end
-    reply do |io|
-      query_text_extents_reply(io)
+      reply do |io|
+        query_text_extents_reply(io)
+      end
     end
   end
   
@@ -2630,14 +2661,14 @@ module Alembic::Protocol::Core
   def list_fonts_async (max_names, pattern_len, pattern)
     request do |io|
       io.write_ubyte(49)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_uwyde(max_names)
       io.write_uwyde(pattern_len)
       io.write(pattern)
-    end
-    reply do |io|
-      list_fonts_reply(io)
+      reply do |io|
+        list_fonts_reply(io)
+      end
     end
   end
   
@@ -2664,14 +2695,14 @@ module Alembic::Protocol::Core
   def list_fonts_with_info_async (max_names, pattern_len, pattern)
     request do |io|
       io.write_ubyte(50)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_uwyde(max_names)
       io.write_uwyde(pattern_len)
       io.write(pattern)
-    end
-    reply do |io|
-      list_fonts_with_info_reply(io)
+      reply do |io|
+        list_fonts_with_info_reply(io)
+      end
     end
   end
   
@@ -2726,14 +2757,15 @@ module Alembic::Protocol::Core
   def set_font_path_async (font_qty, font)
     request do |io|
       io.write_ubyte(51)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_uwyde(font_qty)
-      io.write("\0\0")
+      io.write("\u0000\u0000")
       font.each do |item|
         io.write_ubyte(item[:name_len])
         io.write(item[:name])
       end
+      no_reply
     end
   end
   
@@ -2746,11 +2778,11 @@ module Alembic::Protocol::Core
   def get_font_path_async ()
     request do |io|
       io.write_ubyte(52)
-      io.write("\0\0")
-      io.write("\0")
-    end
-    reply do |io|
-      get_font_path_reply(io)
+      io.write("\u0000\u0000")
+      io.write("\u0000")
+      reply do |io|
+        get_font_path_reply(io)
+      end
     end
   end
   
@@ -2777,12 +2809,13 @@ module Alembic::Protocol::Core
   def create_pixmap_async (depth, pid, drawable, width, height)
     request do |io|
       io.write_ubyte(53)
-      io.write("\0\0")
+      io.write("\u0000\u0000")
       io.write_ubyte(depth)
       io.write_utetra(pid)
       io.write_utetra(drawable)
       io.write_uwyde(width)
       io.write_uwyde(height)
+      no_reply
     end
   end
   
@@ -2795,9 +2828,10 @@ module Alembic::Protocol::Core
   def free_pixmap_async (pixmap)
     request do |io|
       io.write_ubyte(54)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(pixmap)
+      no_reply
     end
   end
   
@@ -2964,14 +2998,15 @@ module Alembic::Protocol::Core
   def create_gc_async (cid, drawable, value_mask, value_list)
     request do |io|
       io.write_ubyte(55)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(cid)
       io.write_utetra(drawable)
       io.write_utetra(value_mask)
       value_list.each do |item|
         io.write_utetra(item)
       end
+      no_reply
     end
   end
   
@@ -2984,13 +3019,14 @@ module Alembic::Protocol::Core
   def change_gc_async (gc, value_mask, value_list)
     request do |io|
       io.write_ubyte(56)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(gc)
       io.write_utetra(value_mask)
       value_list.each do |item|
         io.write_utetra(item)
       end
+      no_reply
     end
   end
   
@@ -3003,11 +3039,12 @@ module Alembic::Protocol::Core
   def copy_gc_async (src_gc, dst_gc, value_mask)
     request do |io|
       io.write_ubyte(57)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(src_gc)
       io.write_utetra(dst_gc)
       io.write_utetra(value_mask)
+      no_reply
     end
   end
   
@@ -3020,14 +3057,15 @@ module Alembic::Protocol::Core
   def set_dashes_async (gc, dash_offset, dashes_len, dashes)
     request do |io|
       io.write_ubyte(58)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(gc)
       io.write_uwyde(dash_offset)
       io.write_uwyde(dashes_len)
       dashes.each do |item|
         io.write_ubyte(item)
       end
+      no_reply
     end
   end
   
@@ -3052,7 +3090,7 @@ module Alembic::Protocol::Core
   def set_clip_rectangles_async (ordering, gc, clip_x_origin, clip_y_origin, rectangles)
     request do |io|
       io.write_ubyte(59)
-      io.write("\0\0")
+      io.write("\u0000\u0000")
       io.write_byte(ordering)
       io.write_utetra(gc)
       io.write_wyde(clip_x_origin)
@@ -3063,6 +3101,7 @@ module Alembic::Protocol::Core
         io.write_uwyde(item[:width])
         io.write_uwyde(item[:height])
       end
+      no_reply
     end
   end
   
@@ -3075,9 +3114,10 @@ module Alembic::Protocol::Core
   def free_gc_async (gc)
     request do |io|
       io.write_ubyte(60)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(gc)
+      no_reply
     end
   end
   
@@ -3090,13 +3130,14 @@ module Alembic::Protocol::Core
   def clear_area_async (exposures, window, x, y, width, height)
     request do |io|
       io.write_ubyte(61)
-      io.write("\0\0")
+      io.write("\u0000\u0000")
       io.write_bool(exposures)
       io.write_utetra(window)
       io.write_wyde(x)
       io.write_wyde(y)
       io.write_uwyde(width)
       io.write_uwyde(height)
+      no_reply
     end
   end
   
@@ -3109,8 +3150,8 @@ module Alembic::Protocol::Core
   def copy_area_async (src_drawable, dst_drawable, gc, src_x, src_y, dst_x, dst_y, width, height)
     request do |io|
       io.write_ubyte(62)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(src_drawable)
       io.write_utetra(dst_drawable)
       io.write_utetra(gc)
@@ -3120,6 +3161,7 @@ module Alembic::Protocol::Core
       io.write_wyde(dst_y)
       io.write_uwyde(width)
       io.write_uwyde(height)
+      no_reply
     end
   end
   
@@ -3132,8 +3174,8 @@ module Alembic::Protocol::Core
   def copy_plane_async (src_drawable, dst_drawable, gc, src_x, src_y, dst_x, dst_y, width, height, bit_plane)
     request do |io|
       io.write_ubyte(63)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(src_drawable)
       io.write_utetra(dst_drawable)
       io.write_utetra(gc)
@@ -3144,6 +3186,7 @@ module Alembic::Protocol::Core
       io.write_uwyde(width)
       io.write_uwyde(height)
       io.write_utetra(bit_plane)
+      no_reply
     end
   end
   
@@ -3164,7 +3207,7 @@ module Alembic::Protocol::Core
   def poly_point_async (coordinate_mode, drawable, gc, points)
     request do |io|
       io.write_ubyte(64)
-      io.write("\0\0")
+      io.write("\u0000\u0000")
       io.write_byte(coordinate_mode)
       io.write_utetra(drawable)
       io.write_utetra(gc)
@@ -3172,6 +3215,7 @@ module Alembic::Protocol::Core
         io.write_wyde(item[:x])
         io.write_wyde(item[:y])
       end
+      no_reply
     end
   end
   
@@ -3184,7 +3228,7 @@ module Alembic::Protocol::Core
   def poly_line_async (coordinate_mode, drawable, gc, points)
     request do |io|
       io.write_ubyte(65)
-      io.write("\0\0")
+      io.write("\u0000\u0000")
       io.write_byte(coordinate_mode)
       io.write_utetra(drawable)
       io.write_utetra(gc)
@@ -3192,6 +3236,7 @@ module Alembic::Protocol::Core
         io.write_wyde(item[:x])
         io.write_wyde(item[:y])
       end
+      no_reply
     end
   end
   
@@ -3204,8 +3249,8 @@ module Alembic::Protocol::Core
   def poly_segment_async (drawable, gc, segments)
     request do |io|
       io.write_ubyte(66)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(drawable)
       io.write_utetra(gc)
       segments.each do |item|
@@ -3214,6 +3259,7 @@ module Alembic::Protocol::Core
         io.write_wyde(item[:x2])
         io.write_wyde(item[:y2])
       end
+      no_reply
     end
   end
   
@@ -3226,8 +3272,8 @@ module Alembic::Protocol::Core
   def poly_rectangle_async (drawable, gc, rectangles)
     request do |io|
       io.write_ubyte(67)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(drawable)
       io.write_utetra(gc)
       rectangles.each do |item|
@@ -3236,6 +3282,7 @@ module Alembic::Protocol::Core
         io.write_uwyde(item[:width])
         io.write_uwyde(item[:height])
       end
+      no_reply
     end
   end
   
@@ -3248,8 +3295,8 @@ module Alembic::Protocol::Core
   def poly_arc_async (drawable, gc, arcs)
     request do |io|
       io.write_ubyte(68)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(drawable)
       io.write_utetra(gc)
       arcs.each do |item|
@@ -3260,6 +3307,7 @@ module Alembic::Protocol::Core
         io.write_wyde(item[:angle1])
         io.write_wyde(item[:angle2])
       end
+      no_reply
     end
   end
   
@@ -3282,17 +3330,18 @@ module Alembic::Protocol::Core
   def fill_poly_async (drawable, gc, shape, coordinate_mode, points)
     request do |io|
       io.write_ubyte(69)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(drawable)
       io.write_utetra(gc)
       io.write_ubyte(shape)
       io.write_ubyte(coordinate_mode)
-      io.write("\0\0")
+      io.write("\u0000\u0000")
       points.each do |item|
         io.write_wyde(item[:x])
         io.write_wyde(item[:y])
       end
+      no_reply
     end
   end
   
@@ -3305,8 +3354,8 @@ module Alembic::Protocol::Core
   def poly_fill_rectangle_async (drawable, gc, rectangles)
     request do |io|
       io.write_ubyte(70)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(drawable)
       io.write_utetra(gc)
       rectangles.each do |item|
@@ -3315,6 +3364,7 @@ module Alembic::Protocol::Core
         io.write_uwyde(item[:width])
         io.write_uwyde(item[:height])
       end
+      no_reply
     end
   end
   
@@ -3327,8 +3377,8 @@ module Alembic::Protocol::Core
   def poly_fill_arc_async (drawable, gc, arcs)
     request do |io|
       io.write_ubyte(71)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(drawable)
       io.write_utetra(gc)
       arcs.each do |item|
@@ -3339,6 +3389,7 @@ module Alembic::Protocol::Core
         io.write_wyde(item[:angle1])
         io.write_wyde(item[:angle2])
       end
+      no_reply
     end
   end
   
@@ -3361,7 +3412,7 @@ module Alembic::Protocol::Core
   def put_image_async (format, drawable, gc, width, height, dst_x, dst_y, left_pad, depth, data)
     request do |io|
       io.write_ubyte(72)
-      io.write("\0\0")
+      io.write("\u0000\u0000")
       io.write_ubyte(format)
       io.write_utetra(drawable)
       io.write_utetra(gc)
@@ -3371,10 +3422,11 @@ module Alembic::Protocol::Core
       io.write_wyde(dst_y)
       io.write_ubyte(left_pad)
       io.write_ubyte(depth)
-      io.write("\0\0")
+      io.write("\u0000\u0000")
       data.each do |item|
         io.write_byte(item)
       end
+      no_reply
     end
   end
   
@@ -3387,7 +3439,7 @@ module Alembic::Protocol::Core
   def get_image_async (format, drawable, x, y, width, height, plane_mask)
     request do |io|
       io.write_ubyte(73)
-      io.write("\0\0")
+      io.write("\u0000\u0000")
       io.write_ubyte(format)
       io.write_utetra(drawable)
       io.write_wyde(x)
@@ -3395,9 +3447,9 @@ module Alembic::Protocol::Core
       io.write_uwyde(width)
       io.write_uwyde(height)
       io.write_utetra(plane_mask)
-    end
-    reply do |io|
-      get_image_reply(io)
+      reply do |io|
+        get_image_reply(io)
+      end
     end
   end
   
@@ -3410,7 +3462,7 @@ module Alembic::Protocol::Core
     hash[:depth] = io.read_ubyte
     hash[:visual] = io.read_utetra
     io.skip(20)
-    hash[:data] = hash[:length].times.map do
+    hash[:data] = (hash[:length] * 4).times.map do
       io.read_byte
     end
     hash
@@ -3421,8 +3473,8 @@ module Alembic::Protocol::Core
   def poly_text8_async (drawable, gc, x, y, items)
     request do |io|
       io.write_ubyte(74)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(drawable)
       io.write_utetra(gc)
       io.write_wyde(x)
@@ -3430,6 +3482,7 @@ module Alembic::Protocol::Core
       items.each do |item|
         io.write_byte(item)
       end
+      no_reply
     end
   end
   
@@ -3442,8 +3495,8 @@ module Alembic::Protocol::Core
   def poly_text16_async (drawable, gc, x, y, items)
     request do |io|
       io.write_ubyte(75)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(drawable)
       io.write_utetra(gc)
       io.write_wyde(x)
@@ -3451,6 +3504,7 @@ module Alembic::Protocol::Core
       items.each do |item|
         io.write_byte(item)
       end
+      no_reply
     end
   end
   
@@ -3463,13 +3517,14 @@ module Alembic::Protocol::Core
   def image_text8_async (string_len, drawable, gc, x, y, string)
     request do |io|
       io.write_ubyte(76)
-      io.write("\0\0")
+      io.write("\u0000\u0000")
       io.write_byte(string_len)
       io.write_utetra(drawable)
       io.write_utetra(gc)
       io.write_wyde(x)
       io.write_wyde(y)
       io.write(string)
+      no_reply
     end
   end
   
@@ -3482,13 +3537,14 @@ module Alembic::Protocol::Core
   def image_text16_async (string_len, drawable, gc, x, y, string)
     request do |io|
       io.write_ubyte(77)
-      io.write("\0\0")
+      io.write("\u0000\u0000")
       io.write_byte(string_len)
       io.write_utetra(drawable)
       io.write_utetra(gc)
       io.write_wyde(x)
       io.write_wyde(y)
       io.write(string.encode('UTF-16BE').force_encoding('BINARY'))
+      no_reply
     end
   end
   
@@ -3509,11 +3565,12 @@ module Alembic::Protocol::Core
   def create_colormap_async (alloc, mid, window, visual)
     request do |io|
       io.write_ubyte(78)
-      io.write("\0\0")
+      io.write("\u0000\u0000")
       io.write_byte(alloc)
       io.write_utetra(mid)
       io.write_utetra(window)
       io.write_utetra(visual)
+      no_reply
     end
   end
   
@@ -3526,9 +3583,10 @@ module Alembic::Protocol::Core
   def free_colormap_async (cmap)
     request do |io|
       io.write_ubyte(79)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(cmap)
+      no_reply
     end
   end
   
@@ -3541,10 +3599,11 @@ module Alembic::Protocol::Core
   def copy_colormap_and_free_async (mid, src_cmap)
     request do |io|
       io.write_ubyte(80)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(mid)
       io.write_utetra(src_cmap)
+      no_reply
     end
   end
   
@@ -3557,9 +3616,10 @@ module Alembic::Protocol::Core
   def install_colormap_async (cmap)
     request do |io|
       io.write_ubyte(81)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(cmap)
+      no_reply
     end
   end
   
@@ -3572,9 +3632,10 @@ module Alembic::Protocol::Core
   def uninstall_colormap_async (cmap)
     request do |io|
       io.write_ubyte(82)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(cmap)
+      no_reply
     end
   end
   
@@ -3587,12 +3648,12 @@ module Alembic::Protocol::Core
   def list_installed_colormaps_async (window)
     request do |io|
       io.write_ubyte(83)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(window)
-    end
-    reply do |io|
-      list_installed_colormaps_reply(io)
+      reply do |io|
+        list_installed_colormaps_reply(io)
+      end
     end
   end
   
@@ -3616,16 +3677,16 @@ module Alembic::Protocol::Core
   def alloc_color_async (cmap, red, green, blue)
     request do |io|
       io.write_ubyte(84)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(cmap)
       io.write_uwyde(red)
       io.write_uwyde(green)
       io.write_uwyde(blue)
-      io.write("\0\0")
-    end
-    reply do |io|
-      alloc_color_reply(io)
+      io.write("\u0000\u0000")
+      reply do |io|
+        alloc_color_reply(io)
+      end
     end
   end
   
@@ -3649,15 +3710,15 @@ module Alembic::Protocol::Core
   def alloc_named_color_async (cmap, name_len, name)
     request do |io|
       io.write_ubyte(85)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(cmap)
       io.write_uwyde(name_len)
-      io.write("\0\0")
+      io.write("\u0000\u0000")
       io.write(name)
-    end
-    reply do |io|
-      alloc_named_color_reply(io)
+      reply do |io|
+        alloc_named_color_reply(io)
+      end
     end
   end
   
@@ -3683,14 +3744,14 @@ module Alembic::Protocol::Core
   def alloc_color_cells_async (contiguous, cmap, colors, planes)
     request do |io|
       io.write_ubyte(86)
-      io.write("\0\0")
+      io.write("\u0000\u0000")
       io.write_bool(contiguous)
       io.write_utetra(cmap)
       io.write_uwyde(colors)
       io.write_uwyde(planes)
-    end
-    reply do |io|
-      alloc_color_cells_reply(io)
+      reply do |io|
+        alloc_color_cells_reply(io)
+      end
     end
   end
   
@@ -3718,16 +3779,16 @@ module Alembic::Protocol::Core
   def alloc_color_planes_async (contiguous, cmap, colors, reds, greens, blues)
     request do |io|
       io.write_ubyte(87)
-      io.write("\0\0")
+      io.write("\u0000\u0000")
       io.write_bool(contiguous)
       io.write_utetra(cmap)
       io.write_uwyde(colors)
       io.write_uwyde(reds)
       io.write_uwyde(greens)
       io.write_uwyde(blues)
-    end
-    reply do |io|
-      alloc_color_planes_reply(io)
+      reply do |io|
+        alloc_color_planes_reply(io)
+      end
     end
   end
   
@@ -3755,13 +3816,14 @@ module Alembic::Protocol::Core
   def free_colors_async (cmap, plane_mask, pixels)
     request do |io|
       io.write_ubyte(88)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(cmap)
       io.write_utetra(plane_mask)
       pixels.each do |item|
         io.write_utetra(item)
       end
+      no_reply
     end
   end
   
@@ -3784,8 +3846,8 @@ module Alembic::Protocol::Core
   def store_colors_async (cmap, items)
     request do |io|
       io.write_ubyte(89)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(cmap)
       items.each do |item|
         io.write_utetra(item[:pixel])
@@ -3793,8 +3855,9 @@ module Alembic::Protocol::Core
         io.write_uwyde(item[:green])
         io.write_uwyde(item[:blue])
         io.write_byte(item[:flags])
-        io.write("\0")
+        io.write("\u0000")
       end
+      no_reply
     end
   end
   
@@ -3807,13 +3870,14 @@ module Alembic::Protocol::Core
   def store_named_color_async (flags, cmap, pixel, name_len, name)
     request do |io|
       io.write_ubyte(90)
-      io.write("\0\0")
+      io.write("\u0000\u0000")
       io.write_ubyte(flags)
       io.write_utetra(cmap)
       io.write_utetra(pixel)
       io.write_uwyde(name_len)
-      io.write("\0\0")
+      io.write("\u0000\u0000")
       io.write(name)
+      no_reply
     end
   end
   
@@ -3826,15 +3890,15 @@ module Alembic::Protocol::Core
   def query_colors_async (cmap, pixels)
     request do |io|
       io.write_ubyte(91)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(cmap)
       pixels.each do |item|
         io.write_utetra(item)
       end
-    end
-    reply do |io|
-      query_colors_reply(io)
+      reply do |io|
+        query_colors_reply(io)
+      end
     end
   end
   
@@ -3863,15 +3927,15 @@ module Alembic::Protocol::Core
   def lookup_color_async (cmap, name_len, name)
     request do |io|
       io.write_ubyte(92)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(cmap)
       io.write_uwyde(name_len)
-      io.write("\0\0")
+      io.write("\u0000\u0000")
       io.write(name)
-    end
-    reply do |io|
-      lookup_color_reply(io)
+      reply do |io|
+        lookup_color_reply(io)
+      end
     end
   end
   
@@ -3896,8 +3960,8 @@ module Alembic::Protocol::Core
   def create_cursor_async (cid, source, mask, fore_red, fore_green, fore_blue, back_red, back_green, back_blue, x, y)
     request do |io|
       io.write_ubyte(93)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(cid)
       io.write_utetra(source)
       io.write_utetra(mask)
@@ -3909,6 +3973,7 @@ module Alembic::Protocol::Core
       io.write_uwyde(back_blue)
       io.write_uwyde(x)
       io.write_uwyde(y)
+      no_reply
     end
   end
   
@@ -3921,8 +3986,8 @@ module Alembic::Protocol::Core
   def create_glyph_cursor_async (cid, source_font, mask_font, source_char, mask_char, fore_red, fore_green, fore_blue, back_red, back_green, back_blue)
     request do |io|
       io.write_ubyte(94)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(cid)
       io.write_utetra(source_font)
       io.write_utetra(mask_font)
@@ -3934,6 +3999,7 @@ module Alembic::Protocol::Core
       io.write_uwyde(back_red)
       io.write_uwyde(back_green)
       io.write_uwyde(back_blue)
+      no_reply
     end
   end
   
@@ -3946,9 +4012,10 @@ module Alembic::Protocol::Core
   def free_cursor_async (cursor)
     request do |io|
       io.write_ubyte(95)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(cursor)
+      no_reply
     end
   end
   
@@ -3961,8 +4028,8 @@ module Alembic::Protocol::Core
   def recolor_cursor_async (cursor, fore_red, fore_green, fore_blue, back_red, back_green, back_blue)
     request do |io|
       io.write_ubyte(96)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(cursor)
       io.write_uwyde(fore_red)
       io.write_uwyde(fore_green)
@@ -3970,6 +4037,7 @@ module Alembic::Protocol::Core
       io.write_uwyde(back_red)
       io.write_uwyde(back_green)
       io.write_uwyde(back_blue)
+      no_reply
     end
   end
   
@@ -3992,14 +4060,14 @@ module Alembic::Protocol::Core
   def query_best_size_async (klass, drawable, width, height)
     request do |io|
       io.write_ubyte(97)
-      io.write("\0\0")
+      io.write("\u0000\u0000")
       io.write_ubyte(klass)
       io.write_utetra(drawable)
       io.write_uwyde(width)
       io.write_uwyde(height)
-    end
-    reply do |io|
-      query_best_size_reply(io)
+      reply do |io|
+        query_best_size_reply(io)
+      end
     end
   end
   
@@ -4020,14 +4088,14 @@ module Alembic::Protocol::Core
   def query_extension_async (name_len, name)
     request do |io|
       io.write_ubyte(98)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_uwyde(name_len)
-      io.write("\0\0")
+      io.write("\u0000\u0000")
       io.write(name)
-    end
-    reply do |io|
-      query_extension_reply(io)
+      reply do |io|
+        query_extension_reply(io)
+      end
     end
   end
   
@@ -4050,11 +4118,11 @@ module Alembic::Protocol::Core
   def list_extensions_async ()
     request do |io|
       io.write_ubyte(99)
-      io.write("\0\0")
-      io.write("\0")
-    end
-    reply do |io|
-      list_extensions_reply(io)
+      io.write("\u0000\u0000")
+      io.write("\u0000")
+      reply do |io|
+        list_extensions_reply(io)
+      end
     end
   end
   
@@ -4080,14 +4148,15 @@ module Alembic::Protocol::Core
   def change_keyboard_mapping_async (keycode_count, first_keycode, keysyms_per_keycode, keysyms)
     request do |io|
       io.write_ubyte(100)
-      io.write("\0\0")
+      io.write("\u0000\u0000")
       io.write_ubyte(keycode_count)
       io.write_ubyte(first_keycode)
       io.write_ubyte(keysyms_per_keycode)
-      io.write("\0\0")
+      io.write("\u0000\u0000")
       keysyms.each do |item|
         io.write_utetra(item)
       end
+      no_reply
     end
   end
   
@@ -4100,13 +4169,13 @@ module Alembic::Protocol::Core
   def get_keyboard_mapping_async (first_keycode, count)
     request do |io|
       io.write_ubyte(101)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_ubyte(first_keycode)
       io.write_ubyte(count)
-    end
-    reply do |io|
-      get_keyboard_mapping_reply(io)
+      reply do |io|
+        get_keyboard_mapping_reply(io)
+      end
     end
   end
   
@@ -4167,12 +4236,13 @@ module Alembic::Protocol::Core
   def change_keyboard_control_async (value_mask, value_list)
     request do |io|
       io.write_ubyte(102)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(value_mask)
       value_list.each do |item|
         io.write_utetra(item)
       end
+      no_reply
     end
   end
   
@@ -4185,11 +4255,11 @@ module Alembic::Protocol::Core
   def get_keyboard_control_async ()
     request do |io|
       io.write_ubyte(103)
-      io.write("\0\0")
-      io.write("\0")
-    end
-    reply do |io|
-      get_keyboard_control_reply(io)
+      io.write("\u0000\u0000")
+      io.write("\u0000")
+      reply do |io|
+        get_keyboard_control_reply(io)
+      end
     end
   end
   
@@ -4217,8 +4287,9 @@ module Alembic::Protocol::Core
   def bell_async (percent)
     request do |io|
       io.write_ubyte(104)
-      io.write("\0\0")
+      io.write("\u0000\u0000")
       io.write_byte(percent)
+      no_reply
     end
   end
   
@@ -4231,13 +4302,14 @@ module Alembic::Protocol::Core
   def change_pointer_control_async (acceleration_numerator, acceleration_denominator, threshold, do_acceleration, do_threshold)
     request do |io|
       io.write_ubyte(105)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_wyde(acceleration_numerator)
       io.write_wyde(acceleration_denominator)
       io.write_wyde(threshold)
       io.write_bool(do_acceleration)
       io.write_bool(do_threshold)
+      no_reply
     end
   end
   
@@ -4250,11 +4322,11 @@ module Alembic::Protocol::Core
   def get_pointer_control_async ()
     request do |io|
       io.write_ubyte(106)
-      io.write("\0\0")
-      io.write("\0")
-    end
-    reply do |io|
-      get_pointer_control_reply(io)
+      io.write("\u0000\u0000")
+      io.write("\u0000")
+      reply do |io|
+        get_pointer_control_reply(io)
+      end
     end
   end
   
@@ -4297,12 +4369,13 @@ module Alembic::Protocol::Core
   def set_screen_saver_async (timeout, interval, prefer_blanking, allow_exposures)
     request do |io|
       io.write_ubyte(107)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_wyde(timeout)
       io.write_wyde(interval)
       io.write_ubyte(prefer_blanking)
       io.write_ubyte(allow_exposures)
+      no_reply
     end
   end
   
@@ -4315,11 +4388,11 @@ module Alembic::Protocol::Core
   def get_screen_saver_async ()
     request do |io|
       io.write_ubyte(108)
-      io.write("\0\0")
-      io.write("\0")
-    end
-    reply do |io|
-      get_screen_saver_reply(io)
+      io.write("\u0000\u0000")
+      io.write("\u0000")
+      reply do |io|
+        get_screen_saver_reply(io)
+      end
     end
   end
   
@@ -4365,14 +4438,15 @@ module Alembic::Protocol::Core
   def change_hosts_async (mode, family, address_len, address)
     request do |io|
       io.write_ubyte(109)
-      io.write("\0\0")
+      io.write("\u0000\u0000")
       io.write_ubyte(mode)
       io.write_ubyte(family)
-      io.write("\0")
+      io.write("\u0000")
       io.write_uwyde(address_len)
       address.each do |item|
         io.write_byte(item)
       end
+      no_reply
     end
   end
   
@@ -4385,11 +4459,11 @@ module Alembic::Protocol::Core
   def list_hosts_async ()
     request do |io|
       io.write_ubyte(110)
-      io.write("\0\0")
-      io.write("\0")
-    end
-    reply do |io|
-      list_hosts_reply(io)
+      io.write("\u0000\u0000")
+      io.write("\u0000")
+      reply do |io|
+        list_hosts_reply(io)
+      end
     end
   end
   
@@ -4428,8 +4502,9 @@ module Alembic::Protocol::Core
   def set_access_control_async (mode)
     request do |io|
       io.write_ubyte(111)
-      io.write("\0\0")
+      io.write("\u0000\u0000")
       io.write_ubyte(mode)
+      no_reply
     end
   end
   
@@ -4452,8 +4527,9 @@ module Alembic::Protocol::Core
   def set_close_down_mode_async (mode)
     request do |io|
       io.write_ubyte(112)
-      io.write("\0\0")
+      io.write("\u0000\u0000")
       io.write_ubyte(mode)
+      no_reply
     end
   end
   
@@ -4472,9 +4548,10 @@ module Alembic::Protocol::Core
   def kill_client_async (resource)
     request do |io|
       io.write_ubyte(113)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(resource)
+      no_reply
     end
   end
   
@@ -4487,14 +4564,15 @@ module Alembic::Protocol::Core
   def rotate_properties_async (window, atoms_len, delta, atoms)
     request do |io|
       io.write_ubyte(114)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
       io.write_utetra(window)
       io.write_uwyde(atoms_len)
       io.write_wyde(delta)
       atoms.each do |item|
         io.write_utetra(item)
       end
+      no_reply
     end
   end
   
@@ -4515,8 +4593,9 @@ module Alembic::Protocol::Core
   def force_screen_saver_async (mode)
     request do |io|
       io.write_ubyte(115)
-      io.write("\0\0")
+      io.write("\u0000\u0000")
       io.write_ubyte(mode)
+      no_reply
     end
   end
   
@@ -4539,14 +4618,14 @@ module Alembic::Protocol::Core
   def set_pointer_mapping_async (map_len, map)
     request do |io|
       io.write_ubyte(116)
-      io.write("\0\0")
+      io.write("\u0000\u0000")
       io.write_ubyte(map_len)
       map.each do |item|
         io.write_ubyte(item)
       end
-    end
-    reply do |io|
-      set_pointer_mapping_reply(io)
+      reply do |io|
+        set_pointer_mapping_reply(io)
+      end
     end
   end
   
@@ -4565,11 +4644,11 @@ module Alembic::Protocol::Core
   def get_pointer_mapping_async ()
     request do |io|
       io.write_ubyte(117)
-      io.write("\0\0")
-      io.write("\0")
-    end
-    reply do |io|
-      get_pointer_mapping_reply(io)
+      io.write("\u0000\u0000")
+      io.write("\u0000")
+      reply do |io|
+        get_pointer_mapping_reply(io)
+      end
     end
   end
   
@@ -4612,14 +4691,14 @@ module Alembic::Protocol::Core
   def set_modifier_mapping_async (keycodes_per_modifier, keycodes)
     request do |io|
       io.write_ubyte(118)
-      io.write("\0\0")
+      io.write("\u0000\u0000")
       io.write_ubyte(keycodes_per_modifier)
       keycodes.each do |item|
         io.write_ubyte(item)
       end
-    end
-    reply do |io|
-      set_modifier_mapping_reply(io)
+      reply do |io|
+        set_modifier_mapping_reply(io)
+      end
     end
   end
   
@@ -4638,11 +4717,11 @@ module Alembic::Protocol::Core
   def get_modifier_mapping_async ()
     request do |io|
       io.write_ubyte(119)
-      io.write("\0\0")
-      io.write("\0")
-    end
-    reply do |io|
-      get_modifier_mapping_reply(io)
+      io.write("\u0000\u0000")
+      io.write("\u0000")
+      reply do |io|
+        get_modifier_mapping_reply(io)
+      end
     end
   end
   
@@ -4654,7 +4733,7 @@ module Alembic::Protocol::Core
     hash = {}
     hash[:keycodes_per_modifier] = io.read_ubyte
     io.skip(24)
-    hash[:keycodes] = hash[:keycodes_per_modifier].times.map do
+    hash[:keycodes] = (hash[:keycodes_per_modifier] * 8).times.map do
       io.read_ubyte
     end
     hash
@@ -4665,8 +4744,9 @@ module Alembic::Protocol::Core
   def no_operation_async ()
     request do |io|
       io.write_ubyte(127)
-      io.write("\0\0")
-      io.write("\0")
+      io.write("\u0000\u0000")
+      io.write("\u0000")
+      no_reply
     end
   end
   

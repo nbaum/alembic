@@ -36,7 +36,13 @@ module Proto
           "io.write_ubyte(#{number})",
           *fields.flat_map do |field|
             if field.name
-              field.write("hash[:#{field.name}]")
+              #["begin",
+                field.write("hash[:#{field.name}]") #,
+               #"rescue => e",
+               #[
+               #  "raise \"#{field.name}: \#{e.class}: \#{e.message}\""
+               #],
+               #"end"]
             else
               field.write
             end
