@@ -33,6 +33,16 @@ authorization from the authors.
     <field type="CARD8" name="byte2" />
   </struct>
   
+  <xidunion name="DRAWABLE">
+    <type>WINDOW</type>
+    <type>PIXMAP</type>
+  </xidunion>
+  
+  <xidunion name="FONTABLE">
+    <type>FONT</type>
+    <type>GCONTEXT</type>
+  </xidunion>
+  
   <xidtype name="WINDOW" />
   
   <xidtype name="PIXMAP" />
@@ -46,16 +56,6 @@ authorization from the authors.
   <xidtype name="COLORMAP" />
   
   <xidtype name="ATOM" />
-  
-  <xidunion name="DRAWABLE">
-    <type>WINDOW</type>
-    <type>PIXMAP</type>
-  </xidunion>
-  
-  <xidunion name="FONTABLE">
-    <type>FONT</type>
-    <type>GCONTEXT</type>
-  </xidunion>
   
   <typedef oldname="CARD32" newname="VISUALID" />
 
@@ -108,7 +108,7 @@ authorization from the authors.
 
   <struct name="VISUALTYPE">
     <field type="VISUALID" name="visual_id" />
-    <field type="CARD8" name="class" enum="VisualClass" />
+    <field type="CARD8" name="klass" enum="VisualClass" />
     <field type="CARD8" name="bits_per_rgb_value" />
     <field type="CARD16" name="colormap_entries" />
     <field type="CARD32" name="red_mask" />
@@ -185,8 +185,7 @@ authorization from the authors.
   </struct>
 
   <struct name="SetupRequest">
-    <field type="CARD8" name="byte_order" />
-    <pad bytes="1" />
+    <field type="CARD16" name="byte_order" />
     <field type="CARD16" name="protocol_major_version" />
     <field type="CARD16" name="protocol_minor_version" />
     <field type="CARD16" name="authorization_protocol_name_len" />
@@ -195,6 +194,7 @@ authorization from the authors.
     <list type="char" name="authorization_protocol_name">
       <fieldref>authorization_protocol_name_len</fieldref>
     </list>
+    <pad/>
     <list type="char" name="authorization_protocol_data">
       <fieldref>authorization_protocol_data_len</fieldref>
     </list>
@@ -1268,7 +1268,7 @@ parent's cursor will cause an immediate change in the displayed cursor.
     <item name="Static">   <value>10</value></item>
   </enum>
 
-  <request name="CreateWindow" opcode="1">
+  <request name="CreateWindow" opcode="1" this="parent">
     <field type="CARD8" name="depth" />
     <field type="WINDOW" name="wid" />
     <field type="WINDOW" name="parent" />
@@ -1277,9 +1277,10 @@ parent's cursor will cause an immediate change in the displayed cursor.
     <field type="CARD16" name="width" />
     <field type="CARD16" name="height" />
     <field type="CARD16" name="border_width" />
-    <field type="CARD16" name="class" enum="WindowClass" />
+    <field type="CARD16" name="klass" enum="WindowClass" />
     <field type="VISUALID" name="visual" />
     <valueparam value-mask-type="CARD32"
+                enum="CW"
                 value-mask-name="value_mask"
                 value-list-name="value_list" />
     <doc>
@@ -1357,7 +1358,7 @@ The X server could not allocate the requested resources (no memory?).
 
   </request>
 
-  <request name="ChangeWindowAttributes" opcode="2">
+  <request name="ChangeWindowAttributes" opcode="2" this="window">
     <pad bytes="1" />
     <field type="WINDOW" name="window" />
     <valueparam value-mask-type="CARD32"
@@ -1408,7 +1409,7 @@ The specified `window` does not exist.
     <item name="Viewable">  <value>2</value></item>
   </enum>
 
-  <request name="GetWindowAttributes" opcode="3">
+  <request name="GetWindowAttributes" opcode="3" this="window">
     <pad bytes="1" />
     <field type="WINDOW" name="window" />
     <reply>
@@ -1480,7 +1481,7 @@ TODO: reasons?
 
   </request>
 
-  <request name="DestroyWindow" opcode="4">
+  <request name="DestroyWindow" opcode="4" this="window">
     <pad bytes="1" />
     <field type="WINDOW" name="window" />
     <doc>
@@ -1503,7 +1504,7 @@ The specified window does not exist.
     </doc>
   </request>
 
-  <request name="DestroySubwindows" opcode="5">
+  <request name="DestroySubwindows" opcode="5" this="window">
     <pad bytes="1" />
     <field type="WINDOW" name="window" />
   </request>
@@ -1513,7 +1514,7 @@ The specified window does not exist.
     <item name="Delete"><value>1</value></item>
   </enum>
 
-  <request name="ChangeSaveSet" opcode="6">
+  <request name="ChangeSaveSet" opcode="6" this="window">
     <field type="BYTE" name="mode" enum="SetMode" />
     <field type="WINDOW" name="window" />
     <doc>
@@ -1540,7 +1541,7 @@ The specified window does not exist.
     </doc>
   </request>
 
-  <request name="ReparentWindow" opcode="7">
+  <request name="ReparentWindow" opcode="7" this="window">
     <pad bytes="1" />
     <field type="WINDOW" name="window" />
     <field type="WINDOW" name="parent" />
@@ -1582,7 +1583,7 @@ The specified window does not exist.
     </doc>
   </request>
 
-  <request name="MapWindow" opcode="8">
+  <request name="MapWindow" opcode="8" this="window">
     <pad bytes="1" />
     <field type="WINDOW" name="window" />
     <doc>
@@ -1620,12 +1621,12 @@ The specified window does not exist.
     </doc>
   </request>
 
-  <request name="MapSubwindows" opcode="9">
+  <request name="MapSubwindows" opcode="9" this="window">
     <pad bytes="1" />
     <field type="WINDOW" name="window" />
   </request>
 
-  <request name="UnmapWindow" opcode="10">
+  <request name="UnmapWindow" opcode="10" this="window">
     <pad bytes="1" />
     <field type="WINDOW" name="window" />
     <doc>
@@ -1649,7 +1650,7 @@ The specified window does not exist.
     </doc>
   </request>
 
-  <request name="UnmapSubwindows" opcode="11">
+  <request name="UnmapSubwindows" opcode="11" this="window">
     <pad bytes="1" />
     <field type="WINDOW" name="window" />
   </request>
@@ -1672,7 +1673,7 @@ The specified window does not exist.
     <item name="Opposite"><value>4</value></item>
   </enum>
 
-  <request name="ConfigureWindow" opcode="12">
+  <request name="ConfigureWindow" opcode="12" this="window">
     <pad bytes="1" />
     <field type="WINDOW" name="window" />
     <field type="CARD16" name="value_mask" />
@@ -1736,7 +1737,7 @@ TODO: reasons?
     <item name="LowerHighest"><value>1</value></item>
   </enum>
 
-  <request name="CirculateWindow" opcode="13">
+  <request name="CirculateWindow" opcode="13" this="window">
     <field type="CARD8" name="direction" enum="Circulate" />
     <field type="WINDOW" name="window" />
     <doc>
@@ -1762,7 +1763,7 @@ The specified `direction` is invalid.
     </doc>
   </request>
 
-  <request name="GetGeometry" opcode="14">
+  <request name="GetGeometry" opcode="14" this="drawable">
     <pad bytes="1" />
     <field type="DRAWABLE" name="drawable" />
     <reply>
@@ -1837,7 +1838,7 @@ TODO: reasons?
     </doc>
   </request>
 
-  <request name="QueryTree" opcode="15">
+  <request name="QueryTree" opcode="15" this="window">
     <pad bytes="1" />
     <field type="WINDOW" name="window" />
     <reply>
@@ -1903,7 +1904,7 @@ The `window` to query.
     <list type="char" name="name">
       <fieldref>name_len</fieldref>
     </list>
-    <reply>
+    <reply return="atom">
       <pad bytes="1" />
       <field type="ATOM" name="atom" altenum="Atom" />
     </reply>
@@ -1956,10 +1957,10 @@ A value other than 0 or 1 was specified for `only_if_exists`.
 
   </request>
 
-  <request name="GetAtomName" opcode="17">
+  <request name="GetAtomName" opcode="17" this="atom">
     <pad bytes="1" />
     <field type="ATOM" name="atom" />
-    <reply>
+    <reply return="name">
       <pad bytes="1" />
       <field type="CARD16" name="name_len" />
       <pad bytes="22" />
@@ -1990,7 +1991,7 @@ defined with the correct type and format with zero-length data.
     </doc>
   </enum>
 
-  <request name="ChangeProperty" opcode="18">
+  <request name="ChangeProperty" opcode="18" this="window">
     <field type="CARD8" name="mode" enum="PropMode" />
     <field type="WINDOW" name="window" />
     <field type="ATOM" name="property" />
@@ -2074,7 +2075,7 @@ The X server could not store the property (no memory?).
     </doc>
   </request>
 
-  <request name="DeleteProperty" opcode="19">
+  <request name="DeleteProperty" opcode="19" this="window">
     <pad bytes="1" />
     <field type="WINDOW" name="window" />
     <field type="ATOM" name="property" />
@@ -2084,7 +2085,7 @@ The X server could not store the property (no memory?).
     <item name="Any"><value>0</value></item>
   </enum>
 
-  <request name="GetProperty" opcode="20">
+  <request name="GetProperty" opcode="20" this="window">
     <field type="BOOL" name="delete" />
     <field type="WINDOW" name="window" />
     <field type="ATOM" name="property" />
@@ -2204,10 +2205,10 @@ resulting in a byte offset of 4).
     </doc>
   </request>
 
-  <request name="ListProperties" opcode="21">
+  <request name="ListProperties" opcode="21" this="window">
     <pad bytes="1" />
     <field type="WINDOW" name="window" />
-    <reply>
+    <reply return="atoms">
       <pad bytes="1" />
       <field type="CARD16" name="atoms_len" />
       <pad bytes="22" />
@@ -2217,7 +2218,7 @@ resulting in a byte offset of 4).
     </reply>
   </request>
 
-  <request name="SetSelectionOwner" opcode="22">
+  <request name="SetSelectionOwner" opcode="22" this="window">
     <pad bytes="1" />
     <field type="WINDOW" name="owner" altenum="Window" />
     <field type="ATOM" name="selection" />
@@ -2256,7 +2257,7 @@ time.
 
   </request>
 
-  <request name="GetSelectionOwner" opcode="23">
+  <request name="GetSelectionOwner" opcode="23" this="selection">
     <pad bytes="1" />
     <field type="ATOM" name="selection" />
     <reply>
@@ -2285,7 +2286,7 @@ The selection.
     </doc>
   </request>
 
-  <request name="ConvertSelection" opcode="24">
+  <request name="ConvertSelection" opcode="24" this="selection">
     <pad bytes="1" />
     <field type="WINDOW" name="requestor" />
     <field type="ATOM" name="selection" />
@@ -2299,7 +2300,7 @@ The selection.
     <item name="ItemFocus">    <value>1</value></item>
   </enum>
 
-  <request name="SendEvent" opcode="25">
+  <request name="SendEvent" opcode="25" this="destination">
     <field type="BOOL" name="propagate" />
     <field type="WINDOW" name="destination" altenum="SendEventDest" />
     <field type="CARD32" name="event_mask" mask="EventMask" />
@@ -2409,7 +2410,7 @@ Keyboard event processing continues normally.
     <item name="None"> <value>0</value></item>
   </enum>
 
-  <request name="GrabPointer" opcode="26">
+  <request name="GrabPointer" opcode="26" this="grab_window">
     <field type="BOOL" name="owner_events" />
     <field type="WINDOW" name="grab_window" />
     <field type="CARD16" name="event_mask" mask="EventMask" />
@@ -2564,7 +2565,7 @@ Scroll wheel. TODO: direction?
     </doc>
   </enum>
 
-  <request name="GrabButton" opcode="28">
+  <request name="GrabButton" opcode="28" this="grab_window">
     <field type="BOOL" name="owner_events" />
     <field type="WINDOW" name="grab_window" />
     <field type="CARD16" name="event_mask" mask="EventMask" />
@@ -2663,7 +2664,7 @@ The specified `window` does not exist.
     </doc>
   </request>
 
-  <request name="UngrabButton" opcode="29">
+  <request name="UngrabButton" opcode="29" this="grab_window">
     <field type="CARD8" name="button" enum="ButtonIndex" />
     <field type="WINDOW" name="grab_window" />
     <field type="CARD16" name="modifiers" mask="ModMask" />
@@ -2678,7 +2679,7 @@ The specified `window` does not exist.
     <pad bytes="2" />
   </request>
 
-  <request name="GrabKeyboard" opcode="31">
+  <request name="GrabKeyboard" opcode="31" this="grab_window">
     <field type="BOOL" name="owner_events" />
     <field type="WINDOW" name="grab_window" />
     <field type="TIMESTAMP" name="time" altenum="Time" />
@@ -2764,7 +2765,7 @@ The specified `window` does not exist.
     <item name="Any"><value>0</value></item>
   </enum>
 
-  <request name="GrabKey" opcode="33">
+  <request name="GrabKey" opcode="33" this="grab_window">
     <field type="BOOL" name="owner_events" />
     <field type="WINDOW" name="grab_window" />
     <field type="CARD16" name="modifiers" mask="ModMask" />
@@ -2846,7 +2847,7 @@ The specified `window` does not exist.
     </doc>
   </request>
 
-  <request name="UngrabKey" opcode="34">
+  <request name="UngrabKey" opcode="34" this="grab_window">
     <field type="KEYCODE" name="key" altenum="Grab" />
     <field type="WINDOW" name="grab_window" />
     <field type="CARD16" name="modifiers" mask="ModMask" />
@@ -2997,7 +2998,7 @@ You specified an invalid `mode`.
 
   <request name="UngrabServer" opcode="37" />
 
-  <request name="QueryPointer" opcode="38">
+  <request name="QueryPointer" opcode="38" this="window">
     <pad bytes="1" />
     <field type="WINDOW" name="window" />
     <reply>
@@ -3068,7 +3069,7 @@ The specified `window` does not exist.
     <field type="INT16" name="y" />
   </struct>
 
-  <request name="GetMotionEvents" opcode="39">
+  <request name="GetMotionEvents" opcode="39" this="window">
     <pad bytes="1" />
     <field type="WINDOW" name="window" />
     <field type="TIMESTAMP" name="start" altenum="Time" />
@@ -3083,7 +3084,7 @@ The specified `window` does not exist.
     </reply>
   </request>
 
-  <request name="TranslateCoordinates" opcode="40">
+  <request name="TranslateCoordinates" opcode="40" this="dst_window">
     <pad bytes="1" />
     <field type="WINDOW" name="src_window" />
     <field type="WINDOW" name="dst_window" />
@@ -3097,7 +3098,7 @@ The specified `window` does not exist.
     </reply>
   </request>
 
-  <request name="WarpPointer" opcode="41">
+  <request name="WarpPointer" opcode="41" this="dst_window">
     <pad bytes="1" />
     <field type="WINDOW" name="src_window" altenum="Window" />
     <field type="WINDOW" name="dst_window" altenum="Window" />
@@ -3166,7 +3167,7 @@ NOT YET DOCUMENTED. Only relevant for the xinput extension.
     </doc>
   </enum>
 
-  <request name="SetInputFocus" opcode="42">
+  <request name="SetInputFocus" opcode="42" this="focus">
     <field type="CARD8" name="revert_to" enum="InputFocus" />
     <field type="WINDOW" name="focus" altenum="InputFocus" />
     <field type="TIMESTAMP" name="time" altenum="Time" />
@@ -3214,7 +3215,7 @@ TODO: Reasons?
 
   </request>
 
-  <request name="GetInputFocus" opcode="43">
+  <request name="GetInputFocus" opcode="43" this="focus">
     <reply>
       <field type="CARD8" name="revert_to" enum="InputFocus" />
       <field type="WINDOW" name="focus" altenum="InputFocus" />
@@ -4018,7 +4019,7 @@ The specified graphics context does not exist.
     </doc>
   </request>
 
-  <request name="ClearArea" opcode="61">
+  <request name="ClearArea" opcode="61" this="window">
     <field type="BOOL" name="exposures" />
     <field type="WINDOW" name="window" />
     <field type="INT16" name="x" />

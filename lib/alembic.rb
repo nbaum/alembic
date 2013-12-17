@@ -1,4 +1,6 @@
-require 'alembic/xio'
-require 'alembic/protocol'
-require 'alembic/errors'
-require 'alembic/connection'
+module Alembic; end
+module Alembic::Enumerants; end
+
+require 'alembic/xcb'
+require 'alembic/x11'
+
