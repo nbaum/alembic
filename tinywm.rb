@@ -25,7 +25,9 @@ loop do
     ev.child.configure_window(CONFIG_WINDOW_STACK_MODE, STACK_MODE_ABOVE)
   when ButtonPressEvent
     if ev.child
-      ev.child.grab_pointer(true, EVENT_MASK_POINTER_MOTION | EVENT_MASK_BUTTON_RELEASE, GRAB_MODE_ASYNC, GRAB_MODE_ASYNC, 0, 0, ev.time)
+      ev.child.grab_pointer(true, EVENT_MASK_POINTER_MOTION |
+                                  EVENT_MASK_BUTTON_RELEASE,
+                            GRAB_MODE_ASYNC, GRAB_MODE_ASYNC, 0, 0, ev.time)
       attr = ev.child.get_geometry
       start = ev
     end
@@ -36,9 +38,12 @@ loop do
     dx = ev.root_x - start.root_x
     dy = ev.root_y - start.root_y
     if start.detail == 1
-      start.child.configure_window(CONFIG_WINDOW_X | CONFIG_WINDOW_Y, attr.x + dx, attr.y + dy)
+      start.child.configure_window(CONFIG_WINDOW_X | CONFIG_WINDOW_Y,
+                                   attr.x + dx, attr.y + dy)
     else
-      start.child.configure_window(CONFIG_WINDOW_WIDTH | CONFIG_WINDOW_HEIGHT, [0, attr.width + dx].max, [attr.height + dy, 0].max)
+      start.child.configure_window(CONFIG_WINDOW_WIDTH | CONFIG_WINDOW_HEIGHT,
+                                   [0, attr.width + dx].max,
+                                   [0, attr.height + dy].max)
     end
   end
 end
