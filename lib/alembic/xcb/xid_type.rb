@@ -11,6 +11,14 @@ class Alembic::XCB::XidType < Alembic::XCB::Primitive
     "#{class_name}.to_xid(connection, #{expr})"
   end
   
+  def unpack_post (expr)
+    if expr
+      "x.#{expr} = #{class_name}[connection, x.#{expr}]"
+    else
+      "#{class_name}[connection, x]"
+    end
+  end
+  
   def type
     "uint"
   end

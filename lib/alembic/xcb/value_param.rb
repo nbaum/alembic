@@ -9,6 +9,12 @@ class Alembic::XCB::ValueParam < Alembic::XCB::List
   
   alias name value_list_name
   
+  def params
+    [
+      "*#{name}"
+    ]
+  end
+  
   def lengther
     []
   end

@@ -1,9 +1,4 @@
-require 'stringio'
-require 'alembic'
-require 'socket'
-require 'pp'
-
-module Alembic::X11; end
+require 'alembic/xcb'
 
 ms = Alembic::XCB::ModuleSet.new
 ms.load "xproto"

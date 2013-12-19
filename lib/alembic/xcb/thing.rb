@@ -11,6 +11,10 @@ class Alembic::XCB::Thing
     false
   end
   
+  def unpackable? at_end = false
+    false
+  end
+  
   def upcast
     self
   end

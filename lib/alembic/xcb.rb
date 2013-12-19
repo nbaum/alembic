@@ -1,0 +1,35 @@
+module Alembic; end
+module Alembic::XCB; end
+
+require 'alembic/xcb/thing'
+require 'alembic/xcb/record'
+
+require 'alembic/xcb/bit'
+require 'alembic/xcb/enum'
+require 'alembic/xcb/error'
+require 'alembic/xcb/error_copy'
+require 'alembic/xcb/event'
+require 'alembic/xcb/event_copy'
+require 'alembic/xcb/expr_field'
+require 'alembic/xcb/field_ref'
+require 'alembic/xcb/import'
+require 'alembic/xcb/list'
+require 'alembic/xcb/op'
+require 'alembic/xcb/ox'
+require 'alembic/xcb/package'
+require 'alembic/xcb/pad'
+require 'alembic/xcb/primitive'
+require 'alembic/xcb/reply'
+require 'alembic/xcb/request'
+require 'alembic/xcb/scalar'
+require 'alembic/xcb/string'
+require 'alembic/xcb/struct'
+require 'alembic/xcb/typedef'
+require 'alembic/xcb/union'
+require 'alembic/xcb/value_param'
+require 'alembic/xcb/value'
+require 'alembic/xcb/xid_type'
+
+require 'alembic/xcb/module'
+require 'alembic/xcb/module_set'
+
