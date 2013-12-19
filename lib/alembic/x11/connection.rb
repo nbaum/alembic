@@ -38,8 +38,8 @@ module Alembic
         @host = nil
         @port = $1.to_i
       elsif @display =~ /^([^:]+):(\d+)$/
-        @host = nil
-        @port = 6000 + $1.to_i
+        @host = $1
+        @port = 6000 + $2.to_i
       else
         raise "Couldn't parse $DISPLAY"
       end

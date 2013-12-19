@@ -16,7 +16,7 @@ module Alembic::X11
       @keycodes = {}
       @keysyms.each_with_index do |kss, kc|
         kss.each do |ks|
-          @keycodes[ks] = kc
+          @keycodes[ks] = kc + first
         end
       end
     end

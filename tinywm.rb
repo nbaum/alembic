@@ -22,7 +22,7 @@ start = nil
 loop do
   case ev = c.next_event
   when KeyPressEvent
-    p ev
+    ev.child.configure_window(CONFIG_WINDOW_STACK_MODE, STACK_MODE_ABOVE)
   when ButtonPressEvent
     if ev.child
       ev.child.grab_pointer(true, EVENT_MASK_POINTER_MOTION | EVENT_MASK_BUTTON_RELEASE, GRAB_MODE_ASYNC, GRAB_MODE_ASYNC, 0, 0, ev.time)
