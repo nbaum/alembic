@@ -182,15 +182,19 @@ module Alembic
           if !et
             read(31)
           elsif et[1]
-            __send__(et[0], read(31) + synth)
+            record_event __send__(et[0], read(31) + synth)
           else
             detail, _ = read(3).unpack('aS')
-            @event_monitor.synchronize do
-              events << __send__(et[0], detail + read(28) + synth)
-              @event_condition.broadcast
-            end
+            record_event __send__(et[0], detail + read(28) + synth)
           end
         end
+      end
+    end
+    
+    def record_event (event)
+      @event_monitor.synchronize do
+        events << event
+        @event_condition.broadcast
       end
     end
     
