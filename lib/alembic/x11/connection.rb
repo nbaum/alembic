@@ -158,6 +158,7 @@ module Alembic
     def event_loop
       loop do
         code = read(1).ord
+        p code
         case code
         when 1
           extra, seq, len = read(7).unpack('aSL')
