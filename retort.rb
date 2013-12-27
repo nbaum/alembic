@@ -1,5 +1,5 @@
 require 'retort'
 
-r = Retort::Reactor.new
+r = Retort::Reactor.instance
 r.run_once
 

@@ -3,6 +3,8 @@ module Retort
   
   class Reactor < Alembic::Reactor
     
+    attr_accessor :current_workspace
+    
     def post_init
       @screens = []
       @current_workspace = 1
@@ -29,8 +31,10 @@ module Retort
           c.set_selection_owner(w, "WM_S#{i + 1}", 0)
         end
         1.upto(9) do |i|
-          c.grab_key true, root, *c.chord_to_keymask("A-#{i}"), GRAB_MODE_ASYNC, GRAB_MODE_ASYNC
-          c.grab_key true, root, *c.chord_to_keymask("A-S-#{i}"), GRAB_MODE_ASYNC, GRAB_MODE_ASYNC
+          c.grab_key true, root, *c.chord_to_keymask("M-#{i}"), GRAB_MODE_ASYNC, GRAB_MODE_ASYNC
+          c.grab_key true, root, *c.chord_to_keymask("M-S-#{i}"), GRAB_MODE_ASYNC, GRAB_MODE_ASYNC
+          c.grab_key true, root, *c.chord_to_keymask("M-C-#{i}"), GRAB_MODE_ASYNC, GRAB_MODE_ASYNC
+          c.grab_key true, root, *c.chord_to_keymask("M-q"), GRAB_MODE_ASYNC, GRAB_MODE_ASYNC
         end
       end
     end
@@ -101,23 +105,32 @@ module Retort
     def show_workspace (n)
       return if @current_workspace == n
       ObjectSpace.each_object(Client) do |cl|
-        cl.unmap if cl.workspace == @current_workspace
+        cl.change_workspaces([], [], n)
       end
       @current_workspace = n
-      ObjectSpace.each_object(Client) do |cl|
-        cl.map if cl.workspace == @current_workspace
-      end
+    end
+    
+    def key_release_event (e)
     end
     
     def key_press_event (e)
       1.upto(9).each do |i|
-        if c.keyevent_matches_chord("A-#{i}", e)
+        if c.keyevent_matches_chord("M-#{i}", e)
           show_workspace(i)
-        elsif c.keyevent_matches_chord("A-S-#{i}", e)
+        elsif c.keyevent_matches_chord("M-S-#{i}", e)
           if f = Client.focused and i != @current_workspace
-            f.workspace = i
-            f.unmap
+            f.change_workspaces([i], [@current_workspace], @current_workspace)
           end
+        elsif c.keyevent_matches_chord("M-C-#{i}", e)
+          if f = Client.focused
+            if f.workspaces.member?(i)
+              f.change_workspaces([], [i], @current_workspace)
+            else
+              f.change_workspaces([i], [], @current_workspace)
+            end
+          end
+        elsif c.keyevent_matches_chord("M-q", e)
+          exit
         end
       end
     end

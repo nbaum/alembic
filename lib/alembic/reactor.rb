@@ -1,11 +1,15 @@
 require 'rack/reloader'
+require 'singleton'
 
 module Alembic
 
   class Reactor
+    include Singleton
+    
+    @@running = false
     
     def run_once
-      unless @running
+      unless @@running
         run
       end
     end
@@ -26,7 +30,7 @@ module Alembic
     end
     
     def run
-      @running = true
+      @@running = true
       @connection = Alembic::Connection.new
       @thread = Thread.new do
         reloader = Rack::Reloader.new(->env{}, 0)

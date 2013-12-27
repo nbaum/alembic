@@ -3,7 +3,7 @@ module Retort
   
   class Client
     
-    attr_accessor :child, :frame, :workspace
+    attr_accessor :child, :frame, :workspaces, :workspace_geoms
     
     def self.focused
       @@focused
@@ -20,7 +20,8 @@ module Retort
       @attrs = c.get_window_attributes(child)
       @geom = c.get_geometry(child)
       @geom[:border_width] = 3
-      @workspace = 1
+      @workspaces = [reactor.current_workspace]
+      @workspace_geoms = {}
       c.create_window(0, @frame = c.alloc_window, @geom[:root], @geom[:x], @geom[:y], @geom[:width], @geom[:height], @geom[:border_width], WINDOW_CLASS_INPUT_OUTPUT, 0, *CW.param(border_pixel: 0x444488, override_redirect: true))
       @frame.client = self
       c.change_window_attributes(@frame, *CW.param(event_mask: EVENT_MASK_BUTTON_PRESS | EVENT_MASK_EXPOSURE | EVENT_MASK_ENTER_WINDOW | EVENT_MASK_SUBSTRUCTURE_NOTIFY | EVENT_MASK_SUBSTRUCTURE_REDIRECT))
@@ -34,13 +35,15 @@ module Retort
         handle_property prop.name, val[:type].name, val[:value]
       end
       c.create_gc(@gc = c.alloc_gcontext, frame, 0)
-      c.grab_button true, frame, EVENT_MASK_BUTTON_PRESS, GRAB_MODE_ASYNC, GRAB_MODE_ASYNC, 0, 0, *c.chord_to_buttonmask("A-1")
-      c.grab_button true, frame, EVENT_MASK_BUTTON_PRESS, GRAB_MODE_ASYNC, GRAB_MODE_ASYNC, 0, 0, *c.chord_to_buttonmask("A-3")
-      c.grab_button true, frame, EVENT_MASK_BUTTON_PRESS, GRAB_MODE_ASYNC, GRAB_MODE_ASYNC, 0, 0, *c.chord_to_buttonmask("A-4")
-      c.grab_button true, frame, EVENT_MASK_BUTTON_PRESS, GRAB_MODE_ASYNC, GRAB_MODE_ASYNC, 0, 0, *c.chord_to_buttonmask("A-5")
+      c.grab_button true, frame, EVENT_MASK_BUTTON_PRESS, GRAB_MODE_ASYNC, GRAB_MODE_ASYNC, 0, 0, *c.chord_to_buttonmask("M-1")
+      c.grab_button true, frame, EVENT_MASK_BUTTON_PRESS, GRAB_MODE_ASYNC, GRAB_MODE_ASYNC, 0, 0, *c.chord_to_buttonmask("M-3")
+      c.grab_button true, frame, EVENT_MASK_BUTTON_PRESS, GRAB_MODE_ASYNC, GRAB_MODE_ASYNC, 0, 0, *c.chord_to_buttonmask("M-4")
+      c.grab_button true, frame, EVENT_MASK_BUTTON_PRESS, GRAB_MODE_ASYNC, GRAB_MODE_ASYNC, 0, 0, *c.chord_to_buttonmask("M-5")
     end
     
     def configure (e = {})
+      workspace_geoms[reactor.current_workspace] = @geom.dup
+      return unless e
       e = @geom.merge(e)
       @geom[:x] = e[:x]
       @geom[:y] = e[:y]
@@ -49,7 +52,21 @@ module Retort
       c.configure_window(child, *CONFIG_WINDOW.param(@geom.merge(x: 0, y: 20, border_width: 0)))
       c.configure_window(frame, *CONFIG_WINDOW.param(@geom.merge(height: @geom[:height] + 20)))
       c.send_event(false, child, EVENT_MASK_STRUCTURE_NOTIFY, c.encode_configure_notify_event(child, child, 0, @geom[:x], @geom[:y] + 20, @geom[:width], @geom[:height], 1, false))
-      map()
+    end
+    
+    def change_workspaces (add, remove, current)
+      ws = @workspaces = (@workspaces + add - remove).sort
+      if !ws.member?(current)
+        unmap
+      else ws.member?(current)
+        map
+        configure workspace_geoms[current]
+        render_frame
+      end
+    end
+    
+    def reactor
+      Reactor.instance
     end
     
     def destroy
@@ -62,19 +79,26 @@ module Retort
       c.map_window(child)
       c.map_window(frame)
       c.change_property(PROP_MODE_REPLACE, child, "WM_STATE", "WM_STATE", 32, [1, 0])
+      @attrs[:map_state] = MAP_STATE_VIEWABLE
     end
     
     def unmap
       c.unmap_window(frame)
       c.unmap_window(child)
       c.delete_property(child, "WM_STATE")
+      @attrs[:map_state] = MAP_STATE_UNMAPPED
     end
     
     def frame_title
-      "#{@name}"
+      "#{@name} #{@workspaces}"
+    end
+    
+    def viewable?
+      @attrs[:map_state] == MAP_STATE_VIEWABLE
     end
     
     def render_frame
+      return unless viewable?
       if @@focused == self
         c.change_gc(@gc, GC_FOREGROUND, 0x444488)
         c.change_gc(@gc, GC_BACKGROUND, 0x444488)
@@ -133,7 +157,7 @@ module Retort
       if @protocols.member?("WM_TAKE_FOCUS") and e
         c.send_event(false, child, 0, c.encode_client_message_event(32, child, "WM_PROTOCOLS", [atom("WM_TAKE_FOCUS"), e[:time]]))
       else
-        c.set_input_focus(INPUT_FOCUS_PARENT, child, 0);
+        c.set_input_focus(INPUT_FOCUS_POINTER_ROOT, child, 0);
       end
       @@focused = self
       render_frame
