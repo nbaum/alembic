@@ -38,6 +38,7 @@ module Alembic
     def initialize (display)
       @sequence_no = 0
       @tickets = {}
+      @tickets.extend MonitorMixin
       @event_monitor = Monitor.new
       @event_condition = @event_monitor.new_cond
       @event_queue = []
@@ -96,9 +97,11 @@ module Alembic
     end
     
     def sweep_tickets (maxseq)
-      @tickets.each do |seq, ticket|
-        break if seq > maxseq
-        ticket.succeed(true)
+      @tickets.synchronize do
+        @tickets.each do |seq, ticket|
+          break if seq > maxseq
+          ticket.succeed(true)
+        end
       end
     end
     
@@ -109,13 +112,17 @@ module Alembic
         when 1
           extra, seq, len = read(7).unpack('aSL')
           data = extra + read(24 + len * 4)
-          q = @tickets.delete(seq)
+          q = @tickets.synchronize do
+            @tickets.delete(seq)
+          end
           sweep_tickets(seq - 1)
           q.succeed(data) if q
         when 0
           code, seq = read(3).unpack("CS")
           data = read(28)
-          q = @tickets.delete(seq)
+          q = @tickets.synchronize do
+            @tickets.delete(seq)
+          end
           sweep_tickets(seq - 1)
           if q
             q.fail(errors[code].new(data.inspect))
@@ -147,7 +154,10 @@ module Alembic
       sync = true
       data = pad(data, 2)
       data[2, 0] = [(data.length + 2) / 4].pack("S")
-      @tickets[@sequence_no += 1] = t = Ticket.new(self, block, caller[0])
+      t = Ticket.new(self, block, caller[0])
+      @tickets.synchronize do
+        @tickets[@sequence_no += 1] = t
+      end
       write(data)
       t
     end
