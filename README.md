@@ -4,6 +4,15 @@ Alembic is a pure Ruby implementation of X11, based on bindings automatically ge
 
 It is designed for implementing a Window Manager, and may not be useful for anything, or even for that.
 
+Retort
+==
+
+Retort is the Window Manager. It is very far from finished, but is in principle usable, if you are comfortable with minimalist window managers in the style of evilwm.
+
+```bash
+ruby -Ilib retort.rb
+```
+
 Using
 ==
 
