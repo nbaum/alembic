@@ -22,7 +22,8 @@ module Retort
         c.query_tree(root)[:children].each do |child|
           wa = c.get_window_attributes(child)
           unless wa[:override_redirect] or wa[:class] == WINDOW_CLASS_INPUT_ONLY
-            Client.find(child)
+            cl = Client.find(child)
+            #cl.configure(x: 0, y: 0)
           end
         end
         # Set up manager selections.
@@ -34,9 +35,20 @@ module Retort
           c.grab_key true, root, *c.chord_to_keymask("M-#{i}"), GRAB_MODE_ASYNC, GRAB_MODE_ASYNC
           c.grab_key true, root, *c.chord_to_keymask("M-S-#{i}"), GRAB_MODE_ASYNC, GRAB_MODE_ASYNC
           c.grab_key true, root, *c.chord_to_keymask("M-C-#{i}"), GRAB_MODE_ASYNC, GRAB_MODE_ASYNC
-          c.grab_key true, root, *c.chord_to_keymask("M-q"), GRAB_MODE_ASYNC, GRAB_MODE_ASYNC
         end
+        c.grab_key true, root, *c.chord_to_keymask("M-q"), GRAB_MODE_ASYNC, GRAB_MODE_ASYNC
+        c.grab_key true, root, *c.chord_to_keymask("M-c"), GRAB_MODE_ASYNC, GRAB_MODE_ASYNC
+        c.grab_key true, root, *c.chord_to_keymask("M-d"), GRAB_MODE_ASYNC, GRAB_MODE_ASYNC
+        c.grab_key true, root, *c.chord_to_keymask("M-h"), GRAB_MODE_ASYNC, GRAB_MODE_ASYNC
       end
+      c.open_font(@cursor_font = c.alloc_font, "cursor")
+      c.create_glyph_cursor(@cursor = c.alloc_cursor, @cursor_font, @cursor_font, 68, 69, 0xFFFF, 0xFFFF, 0xFFFF, 0x0000, 0x0000, 0x0000)
+      c.setup[:roots].each_with_index do |screen, i|
+        c.change_window_attributes(screen[:root], CW_CURSOR, @cursor.xid)
+      end
+    rescue => e
+      puts e
+      puts e.backtrace
     end
     
     def create_notify_event (e)
@@ -83,7 +95,7 @@ module Retort
     end
     
     def map_request_event (e)
-      Client.find(e[:window]).map()
+      Client.find(e[:window]).map
     end
     
     def button_press_event (e)
@@ -114,23 +126,37 @@ module Retort
     end
     
     def key_press_event (e)
-      1.upto(9).each do |i|
-        if c.keyevent_matches_chord("M-#{i}", e)
-          show_workspace(i)
-        elsif c.keyevent_matches_chord("M-S-#{i}", e)
-          if f = Client.focused and i != @current_workspace
-            f.change_workspaces([i], [@current_workspace], @current_workspace)
-          end
-        elsif c.keyevent_matches_chord("M-C-#{i}", e)
-          if f = Client.focused
-            if f.workspaces.member?(i)
-              f.change_workspaces([], [i], @current_workspace)
-            else
-              f.change_workspaces([i], [], @current_workspace)
+      if c.keyevent_matches_chord("M-q", e)
+        exit
+      elsif c.keyevent_matches_chord("M-c", e)
+        if f = Client.focused
+          f.delete(e)
+        end
+      elsif c.keyevent_matches_chord("M-d", e)
+        if f = Client.focused
+          f.undecorated = !f.undecorated
+        end
+      elsif c.keyevent_matches_chord("M-h", e)
+        if f = Client.focused
+          f.unmap
+        end
+      else
+        1.upto(9).each do |i|
+          if c.keyevent_matches_chord("M-#{i}", e)
+            show_workspace(i)
+          elsif c.keyevent_matches_chord("M-S-#{i}", e)
+            if f = Client.focused and i != @current_workspace
+              f.change_workspaces([i], [@current_workspace], @current_workspace)
+            end
+          elsif c.keyevent_matches_chord("M-C-#{i}", e)
+            if f = Client.focused
+              if f.workspaces.member?(i)
+                f.change_workspaces([], [i], @current_workspace)
+              else
+                f.change_workspaces([i], [], @current_workspace)
+              end
             end
           end
-        elsif c.keyevent_matches_chord("M-q", e)
-          exit
         end
       end
     end
