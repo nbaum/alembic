@@ -39,11 +39,44 @@ module Alembic
       super
     end
     
+    def decode_enum (value, hash)
+      hash[value] || value
+    end
+    
+    def decode_mask (value, hash)
+      flags = []
+      hash.each do |mask, name|
+        next if mask == 0
+        if value & mask == mask
+          flags << name
+          value &= ~mask
+        end
+      end
+      flags << value if value != 0
+      flags
+    end
+    
+    def encode_enum (value, hash)
+      hash[value] || value
+    end
+    
+    def encode_mask (flags, hash)
+      if Array === flags
+        value = 0
+        hash.each do |mask, name|
+          value |= mask if flags.member(name)
+        end
+        value
+      else
+        encode_enum(flags, hash)
+      end
+    end
+    
     def alloc_xid
       xid = @xid
-      raise "Ran out of resource IDs" if xid == setup.resource_id_base
+      raise "Ran out of resource IDs" if xid == setup[:resource_id_base]
       @xid += 1
-      xid & setup.resource_id_mask | setup.resource_id_base
+      xid & setup[:resource_id_mask] | setup[:resource_id_base]
     end
     
     def load_extension (name, opcode, event, error)

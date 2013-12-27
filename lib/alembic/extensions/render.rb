@@ -5,8 +5,37 @@ module Alembic
       
       extension_xname "RENDER"
       
-      module Methods
-      end
+      # render_query_version (client_major_version, client_minor_version)
+      # render_query_pict_formats ()
+      # render_query_pict_index_values (format)
+      # render_create_picture (pid, drawable, format, value_mask, *value_list)
+      # render_change_picture (picture, value_mask, *value_list)
+      # render_set_picture_clip_rectangles (picture, clip_x_origin, clip_y_origin, rectangles)
+      # render_free_picture (picture)
+      # render_composite (op, src, mask, dst, src_x, src_y, mask_x, mask_y, dst_x, dst_y, width, height)
+      # render_trapezoids (op, src, dst, mask_format, src_x, src_y, traps)
+      # render_triangles (op, src, dst, mask_format, src_x, src_y, triangles)
+      # render_tri_strip (op, src, dst, mask_format, src_x, src_y, points)
+      # render_tri_fan (op, src, dst, mask_format, src_x, src_y, points)
+      # render_create_glyph_set (gsid, format)
+      # render_reference_glyph_set (gsid, existing)
+      # render_free_glyph_set (glyphset)
+      # render_add_glyphs (glyphset, glyphids, glyphs, data)
+      # render_free_glyphs (glyphset, glyphs)
+      # render_composite_glyphs8 (op, src, dst, mask_format, glyphset, src_x, src_y, glyphcmds)
+      # render_composite_glyphs16 (op, src, dst, mask_format, glyphset, src_x, src_y, glyphcmds)
+      # render_composite_glyphs32 (op, src, dst, mask_format, glyphset, src_x, src_y, glyphcmds)
+      # render_fill_rectangles (op, dst, color, rects)
+      # render_create_cursor (cid, source, x, y)
+      # render_set_picture_transform (picture, transform)
+      # render_query_filters (drawable)
+      # render_set_picture_filter (picture, filter, values)
+      # render_create_anim_cursor (cid, cursors)
+      # render_add_traps (picture, x_off, y_off, traps)
+      # render_create_solid_fill (picture, color)
+      # render_create_linear_gradient (picture, p1, p2, stops, colors)
+      # render_create_radial_gradient (picture, inner, outer, inner_radius, outer_radius, stops, colors)
+      # render_create_conical_gradient (picture, center, angle, stops, colors)
       
       include Alembic::Extensions::Xproto
       
@@ -141,285 +170,25 @@ module Alembic
       
       RENDER_REPEAT.extend Alembic::ValueParamHelper
       
+      define_error 0, RenderPictFormatError = Class.new(X11Error)
+      define_error 1, RenderPictureError = Class.new(X11Error)
+      define_error 2, RenderPictOpError = Class.new(X11Error)
+      define_error 3, RenderGlyphSetError = Class.new(X11Error)
+      define_error 4, RenderGlyphError = Class.new(X11Error)
+      
       Glyphset = Class.new(Resource)
-      
-      module Methods
-        def alloc_glyphset ()
-          Glyphset.new(self, alloc_xid)
-        end
-      end
       Picture = Class.new(Resource)
-      
-      module Methods
-        def alloc_picture ()
-          Picture.new(self, alloc_xid)
-        end
-      end
       Pictformat = Class.new(Resource)
       
       module Methods
-        def alloc_pictformat ()
-          Pictformat.new(self, alloc_xid)
-        end
-      end
-      RenderPictFormatError = Class.new(X11Error)
-      
-      define_error 0, RenderPictFormatError
-      
-      RenderPictureError = Class.new(X11Error)
-      
-      define_error 1, RenderPictureError
-      
-      RenderPictOpError = Class.new(X11Error)
-      
-      define_error 2, RenderPictOpError
-      
-      RenderGlyphSetError = Class.new(X11Error)
-      
-      define_error 3, RenderGlyphSetError
-      
-      RenderGlyphError = Class.new(X11Error)
-      
-      define_error 4, RenderGlyphError
-      
-      RenderDIRECTFORMAT = Struct.new(:red_shift, :red_mask, :green_shift, :green_mask, :blue_shift, :blue_mask, :alpha_shift, :alpha_mask)
-      
-      module Methods
-        def encode_render_directformat (s, red_shift, red_mask, green_shift, green_mask, blue_shift, blue_mask, alpha_shift, alpha_mask)
-          s << [red_shift, red_mask, green_shift, green_mask, blue_shift, blue_mask, alpha_shift, alpha_mask].pack("SSSSSSSS")
-          s
-        end
-      end
-      
-      module Methods
-        def decode_render_directformat (s)
-          x = RenderDIRECTFORMAT.new
-          x.red_shift, x.red_mask, x.green_shift, x.green_mask, x.blue_shift, x.blue_mask, x.alpha_shift, x.alpha_mask, = s.slice!(0, 16).unpack("SSSSSSSS")
-          x
-        end
-      end
-      
-      RenderPICTFORMINFO = Struct.new(:id, :type, :depth, :direct, :colormap)
-      
-      module Methods
-        def encode_render_pictforminfo (s, id, type, depth, direct, colormap)
-          s << [Pictformat.to_xid(self, id), type, depth].pack("LCCx2")
-          s << encode_render_directformat(direct)
-          s << [Colormap.to_xid(self, colormap)].pack("L")
-          s
-        end
-      end
-      
-      module Methods
-        def decode_render_pictforminfo (s)
-          x = RenderPICTFORMINFO.new
-          x.id, x.type, x.depth, = s.slice!(0, 8).unpack("LCCx2")
-          x.id = Pictformat[self, x.id]
-          x.direct = decode_render_directformat(s)
-          x.colormap, = s.slice!(0, 4).unpack("L")
-          x.colormap = Colormap[self, x.colormap]
-          x
-        end
-      end
-      
-      RenderPICTVISUAL = Struct.new(:visual, :format)
-      
-      module Methods
-        def encode_render_pictvisual (s, visual, format)
-          s << [visual, Pictformat.to_xid(self, format)].pack("LL")
-          s
-        end
-      end
-      
-      module Methods
-        def decode_render_pictvisual (s)
-          x = RenderPICTVISUAL.new
-          x.visual, x.format, = s.slice!(0, 8).unpack("LL")
-          x.format = Pictformat[self, x.format]
-          x
-        end
-      end
-      
-      RenderPICTDEPTH = Struct.new(:depth, :num_visuals, :visuals)
-      
-      module Methods
-        def encode_render_pictdepth (s, depth, visuals)
-          num_visuals = visuals.length
-          s << [depth, num_visuals].pack("Cx1Sx4")
-          s << visuals.map{|x|encode_render_pictvisual(x)}
-          s
-        end
-      end
-      
-      module Methods
-        def decode_render_pictdepth (s)
-          x = RenderPICTDEPTH.new
-          x.depth, x.num_visuals, = s.slice!(0, 8).unpack("Cx1Sx4")
-          x.visuals = x.num_visuals.times.map{decode_render_pictvisual(s)}
-          x
-        end
-      end
-      
-      RenderPICTSCREEN = Struct.new(:num_depths, :fallback, :depths)
-      
-      module Methods
-        def encode_render_pictscreen (s, fallback, depths)
-          num_depths = depths.length
-          s << [num_depths, Pictformat.to_xid(self, fallback)].pack("LL")
-          s << depths.map{|x|encode_render_pictdepth(x)}
-          s
-        end
-      end
-      
-      module Methods
-        def decode_render_pictscreen (s)
-          x = RenderPICTSCREEN.new
-          x.num_depths, x.fallback, = s.slice!(0, 8).unpack("LL")
-          x.fallback = Pictformat[self, x.fallback]
-          x.depths = x.num_depths.times.map{decode_render_pictdepth(s)}
-          x
-        end
-      end
-      
-      RenderINDEXVALUE = Struct.new(:pixel, :red, :green, :blue, :alpha)
-      
-      module Methods
-        def encode_render_indexvalue (s, pixel, red, green, blue, alpha)
-          s << [pixel, red, green, blue, alpha].pack("LSSSS")
-          s
-        end
-      end
-      
-      module Methods
-        def decode_render_indexvalue (s)
-          x = RenderINDEXVALUE.new
-          x.pixel, x.red, x.green, x.blue, x.alpha, = s.slice!(0, 12).unpack("LSSSS")
-          x
-        end
-      end
-      
-      RenderCOLOR = Struct.new(:red, :green, :blue, :alpha)
-      
-      module Methods
-        def encode_render_color (s, red, green, blue, alpha)
-          s << [red, green, blue, alpha].pack("SSSS")
-          s
-        end
-      end
-      
-      module Methods
-        def decode_render_color (s)
-          x = RenderCOLOR.new
-          x.red, x.green, x.blue, x.alpha, = s.slice!(0, 8).unpack("SSSS")
-          x
-        end
-      end
-      
-      RenderPOINTFIX = Struct.new(:x, :y)
-      
-      module Methods
-        def encode_render_pointfix (s, x, y)
-          s << [x, y].pack("ll")
-          s
-        end
-      end
-      
-      module Methods
-        def decode_render_pointfix (s)
-          x = RenderPOINTFIX.new
-          x.x, x.y, = s.slice!(0, 8).unpack("ll")
-          x
-        end
-      end
-      
-      RenderLINEFIX = Struct.new(:p1, :p2)
-      
-      module Methods
-        def encode_render_linefix (s, p1, p2)
-          s << encode_render_pointfix(p1)
-          s << encode_render_pointfix(p2)
-          s
-        end
-      end
-      
-      module Methods
-        def decode_render_linefix (s)
-          x = RenderLINEFIX.new
-          x.p1 = decode_render_pointfix(s)
-          x.p2 = decode_render_pointfix(s)
-          x
-        end
-      end
-      
-      RenderTRIANGLE = Struct.new(:p1, :p2, :p3)
-      
-      module Methods
-        def encode_render_triangle (s, p1, p2, p3)
-          s << encode_render_pointfix(p1)
-          s << encode_render_pointfix(p2)
-          s << encode_render_pointfix(p3)
-          s
-        end
-      end
-      
-      module Methods
-        def decode_render_triangle (s)
-          x = RenderTRIANGLE.new
-          x.p1 = decode_render_pointfix(s)
-          x.p2 = decode_render_pointfix(s)
-          x.p3 = decode_render_pointfix(s)
-          x
-        end
-      end
-      
-      RenderTRAPEZOID = Struct.new(:top, :bottom, :left, :right)
-      
-      module Methods
-        def encode_render_trapezoid (s, top, bottom, left, right)
-          s << [top, bottom].pack("ll")
-          s << encode_render_linefix(left)
-          s << encode_render_linefix(right)
-          s
-        end
-      end
-      
-      module Methods
-        def decode_render_trapezoid (s)
-          x = RenderTRAPEZOID.new
-          x.top, x.bottom, = s.slice!(0, 8).unpack("ll")
-          x.left = decode_render_linefix(s)
-          x.right = decode_render_linefix(s)
-          x
-        end
-      end
-      
-      RenderGLYPHINFO = Struct.new(:width, :height, :x, :y, :x_off, :y_off)
-      
-      module Methods
-        def encode_render_glyphinfo (s, width, height, x, y, x_off, y_off)
-          s << [width, height, x, y, x_off, y_off].pack("SSssss")
-          s
-        end
-      end
-      
-      module Methods
-        def decode_render_glyphinfo (s)
-          x = RenderGLYPHINFO.new
-          x.width, x.height, x.x, x.y, x.x_off, x.y_off, = s.slice!(0, 12).unpack("SSssss")
-          x
-        end
-      end
-      
-      RenderQueryVersionReply = Struct.new(:major_version, :minor_version)
-      
-      module Methods
+        
         def render_query_version! (client_major_version, client_minor_version)
           s = opcodes["RENDER"].chr.encode('BINARY')
           s << 0
           s << [client_major_version, client_minor_version].pack("LL")
           send_request(s) do |s|
-            x = RenderQueryVersionReply.new
-            x.major_version, x.minor_version, = s.slice!(0, 25).unpack("x1LLx16")
+            x = {}
+            x[:major_version], x[:minor_version], = s.slice!(0, 25).unpack("x1LLx16")
             x
           end
         end
@@ -427,20 +196,16 @@ module Alembic
         def render_query_version (client_major_version, client_minor_version)
           render_query_version!(client_major_version, client_minor_version).wait
         end
-      end
-      
-      RenderQueryPictFormatsReply = Struct.new(:num_formats, :num_screens, :num_depths, :num_visuals, :num_subpixel, :formats, :screens, :subpixels)
-      
-      module Methods
+        
         def render_query_pict_formats! ()
           s = opcodes["RENDER"].chr.encode('BINARY')
           s << 1
           send_request(s) do |s|
-            x = RenderQueryPictFormatsReply.new
-            x.num_formats, x.num_screens, x.num_depths, x.num_visuals, x.num_subpixel, = s.slice!(0, 25).unpack("x1LLLLLx4")
-            x.formats = x.num_formats.times.map{decode_render_pictforminfo(s)}
-            x.screens = x.num_screens.times.map{decode_render_pictscreen(s)}
-            *x.subpixels = s.unpack("L*")
+            x = {}
+            x[:num_formats], x[:num_screens], x[:num_depths], x[:num_visuals], x[:num_subpixel], = s.slice!(0, 25).unpack("x1LLLLLx4")
+            x[:formats] = x[:num_formats].times.map{decode_render_pictforminfo(s)}
+            x[:screens] = x[:num_screens].times.map{decode_render_pictscreen(s)}
+            *x[:subpixels] = s.unpack("L*")
             x
           end
         end
@@ -448,29 +213,23 @@ module Alembic
         def render_query_pict_formats ()
           render_query_pict_formats!().wait
         end
-      end
-      
-      RenderQueryPictIndexValuesReply = Struct.new(:num_values, :values)
-      
-      module Methods
+        
         def render_query_pict_index_values! (format)
           s = opcodes["RENDER"].chr.encode('BINARY')
           s << 2
           s << [Pictformat.to_xid(self, format)].pack("L")
           send_request(s) do |s|
-            x = RenderQueryPictIndexValuesReply.new
-            x.num_values, = s.slice!(0, 25).unpack("x1Lx20")
-            x.values = x.num_values.times.map{decode_render_indexvalue(s)}
-            x.values
+            x = {}
+            x[:num_values], = s.slice!(0, 25).unpack("x1Lx20")
+            x[:values] = x[:num_values].times.map{decode_render_indexvalue(s)}
+            x[:values]
           end
         end
         
         def render_query_pict_index_values (format)
           render_query_pict_index_values!(format).wait
         end
-      end
-      
-      module Methods
+        
         def render_create_picture! (pid, drawable, format, value_mask, *value_list)
           s = opcodes["RENDER"].chr.encode('BINARY')
           s << 4
@@ -479,11 +238,9 @@ module Alembic
         end
         
         def render_create_picture (pid, drawable, format, value_mask, *value_list)
-          render_create_picture!(pid, drawable, format, value_mask, *value_list).wait
+          render_create_picture!(pid, drawable, format, value_mask, *value_list)
         end
-      end
-      
-      module Methods
+        
         def render_change_picture! (picture, value_mask, *value_list)
           s = opcodes["RENDER"].chr.encode('BINARY')
           s << 5
@@ -492,25 +249,21 @@ module Alembic
         end
         
         def render_change_picture (picture, value_mask, *value_list)
-          render_change_picture!(picture, value_mask, *value_list).wait
+          render_change_picture!(picture, value_mask, *value_list)
         end
-      end
-      
-      module Methods
+        
         def render_set_picture_clip_rectangles! (picture, clip_x_origin, clip_y_origin, rectangles)
           s = opcodes["RENDER"].chr.encode('BINARY')
           s << 6
           s << [Picture.to_xid(self, picture), clip_x_origin, clip_y_origin].pack("Lss")
-          s << rectangles.map{|x|encode_rectangle(x)}
+          s << rectangles.map{|x|encode_rectangle(''.encode('BINARY'), *x)}.join
           send_request(s)
         end
         
         def render_set_picture_clip_rectangles (picture, clip_x_origin, clip_y_origin, rectangles)
-          render_set_picture_clip_rectangles!(picture, clip_x_origin, clip_y_origin, rectangles).wait
+          render_set_picture_clip_rectangles!(picture, clip_x_origin, clip_y_origin, rectangles)
         end
-      end
-      
-      module Methods
+        
         def render_free_picture! (picture)
           s = opcodes["RENDER"].chr.encode('BINARY')
           s << 7
@@ -519,11 +272,9 @@ module Alembic
         end
         
         def render_free_picture (picture)
-          render_free_picture!(picture).wait
+          render_free_picture!(picture)
         end
-      end
-      
-      module Methods
+        
         def render_composite! (op, src, mask, dst, src_x, src_y, mask_x, mask_y, dst_x, dst_y, width, height)
           s = opcodes["RENDER"].chr.encode('BINARY')
           s << 8
@@ -532,67 +283,57 @@ module Alembic
         end
         
         def render_composite (op, src, mask, dst, src_x, src_y, mask_x, mask_y, dst_x, dst_y, width, height)
-          render_composite!(op, src, mask, dst, src_x, src_y, mask_x, mask_y, dst_x, dst_y, width, height).wait
+          render_composite!(op, src, mask, dst, src_x, src_y, mask_x, mask_y, dst_x, dst_y, width, height)
         end
-      end
-      
-      module Methods
+        
         def render_trapezoids! (op, src, dst, mask_format, src_x, src_y, traps)
           s = opcodes["RENDER"].chr.encode('BINARY')
           s << 10
           s << [op, Picture.to_xid(self, src), Picture.to_xid(self, dst), Pictformat.to_xid(self, mask_format), src_x, src_y].pack("Cx3LLLss")
-          s << traps.map{|x|encode_render_trapezoid(x)}
+          s << traps.map{|x|encode_render_trapezoid(''.encode('BINARY'), *x)}.join
           send_request(s)
         end
         
         def render_trapezoids (op, src, dst, mask_format, src_x, src_y, traps)
-          render_trapezoids!(op, src, dst, mask_format, src_x, src_y, traps).wait
+          render_trapezoids!(op, src, dst, mask_format, src_x, src_y, traps)
         end
-      end
-      
-      module Methods
+        
         def render_triangles! (op, src, dst, mask_format, src_x, src_y, triangles)
           s = opcodes["RENDER"].chr.encode('BINARY')
           s << 11
           s << [op, Picture.to_xid(self, src), Picture.to_xid(self, dst), Pictformat.to_xid(self, mask_format), src_x, src_y].pack("Cx3LLLss")
-          s << triangles.map{|x|encode_render_triangle(x)}
+          s << triangles.map{|x|encode_render_triangle(''.encode('BINARY'), *x)}.join
           send_request(s)
         end
         
         def render_triangles (op, src, dst, mask_format, src_x, src_y, triangles)
-          render_triangles!(op, src, dst, mask_format, src_x, src_y, triangles).wait
+          render_triangles!(op, src, dst, mask_format, src_x, src_y, triangles)
         end
-      end
-      
-      module Methods
+        
         def render_tri_strip! (op, src, dst, mask_format, src_x, src_y, points)
           s = opcodes["RENDER"].chr.encode('BINARY')
           s << 12
           s << [op, Picture.to_xid(self, src), Picture.to_xid(self, dst), Pictformat.to_xid(self, mask_format), src_x, src_y].pack("Cx3LLLss")
-          s << points.map{|x|encode_render_pointfix(x)}
+          s << points.map{|x|encode_render_pointfix(''.encode('BINARY'), *x)}.join
           send_request(s)
         end
         
         def render_tri_strip (op, src, dst, mask_format, src_x, src_y, points)
-          render_tri_strip!(op, src, dst, mask_format, src_x, src_y, points).wait
+          render_tri_strip!(op, src, dst, mask_format, src_x, src_y, points)
         end
-      end
-      
-      module Methods
+        
         def render_tri_fan! (op, src, dst, mask_format, src_x, src_y, points)
           s = opcodes["RENDER"].chr.encode('BINARY')
           s << 13
           s << [op, Picture.to_xid(self, src), Picture.to_xid(self, dst), Pictformat.to_xid(self, mask_format), src_x, src_y].pack("Cx3LLLss")
-          s << points.map{|x|encode_render_pointfix(x)}
+          s << points.map{|x|encode_render_pointfix(''.encode('BINARY'), *x)}.join
           send_request(s)
         end
         
         def render_tri_fan (op, src, dst, mask_format, src_x, src_y, points)
-          render_tri_fan!(op, src, dst, mask_format, src_x, src_y, points).wait
+          render_tri_fan!(op, src, dst, mask_format, src_x, src_y, points)
         end
-      end
-      
-      module Methods
+        
         def render_create_glyph_set! (gsid, format)
           s = opcodes["RENDER"].chr.encode('BINARY')
           s << 17
@@ -601,11 +342,9 @@ module Alembic
         end
         
         def render_create_glyph_set (gsid, format)
-          render_create_glyph_set!(gsid, format).wait
+          render_create_glyph_set!(gsid, format)
         end
-      end
-      
-      module Methods
+        
         def render_reference_glyph_set! (gsid, existing)
           s = opcodes["RENDER"].chr.encode('BINARY')
           s << 18
@@ -614,11 +353,9 @@ module Alembic
         end
         
         def render_reference_glyph_set (gsid, existing)
-          render_reference_glyph_set!(gsid, existing).wait
+          render_reference_glyph_set!(gsid, existing)
         end
-      end
-      
-      module Methods
+        
         def render_free_glyph_set! (glyphset)
           s = opcodes["RENDER"].chr.encode('BINARY')
           s << 19
@@ -627,29 +364,25 @@ module Alembic
         end
         
         def render_free_glyph_set (glyphset)
-          render_free_glyph_set!(glyphset).wait
+          render_free_glyph_set!(glyphset)
         end
-      end
-      
-      module Methods
+        
         def render_add_glyphs! (glyphset, glyphids, glyphs, data)
           s = opcodes["RENDER"].chr.encode('BINARY')
           s << 20
           glyphs_len = glyphids.length
           glyphs_len = glyphs.length
           s << [Glyphset.to_xid(self, glyphset), glyphs_len].pack("LL")
-          s << glyphids.map{|x|[x].pack("L")}
-          s << glyphs.map{|x|encode_render_glyphinfo(x)}
+          s << glyphids.map{|x|[x].pack("L")}.join
+          s << glyphs.map{|x|encode_render_glyphinfo(''.encode('BINARY'), *x)}.join
           s << [pad(data)].pack("A*")
           send_request(s)
         end
         
         def render_add_glyphs (glyphset, glyphids, glyphs, data)
-          render_add_glyphs!(glyphset, glyphids, glyphs, data).wait
+          render_add_glyphs!(glyphset, glyphids, glyphs, data)
         end
-      end
-      
-      module Methods
+        
         def render_free_glyphs! (glyphset, glyphs)
           s = opcodes["RENDER"].chr.encode('BINARY')
           s << 22
@@ -658,11 +391,9 @@ module Alembic
         end
         
         def render_free_glyphs (glyphset, glyphs)
-          render_free_glyphs!(glyphset, glyphs).wait
+          render_free_glyphs!(glyphset, glyphs)
         end
-      end
-      
-      module Methods
+        
         def render_composite_glyphs8! (op, src, dst, mask_format, glyphset, src_x, src_y, glyphcmds)
           s = opcodes["RENDER"].chr.encode('BINARY')
           s << 23
@@ -671,11 +402,9 @@ module Alembic
         end
         
         def render_composite_glyphs8 (op, src, dst, mask_format, glyphset, src_x, src_y, glyphcmds)
-          render_composite_glyphs8!(op, src, dst, mask_format, glyphset, src_x, src_y, glyphcmds).wait
+          render_composite_glyphs8!(op, src, dst, mask_format, glyphset, src_x, src_y, glyphcmds)
         end
-      end
-      
-      module Methods
+        
         def render_composite_glyphs16! (op, src, dst, mask_format, glyphset, src_x, src_y, glyphcmds)
           s = opcodes["RENDER"].chr.encode('BINARY')
           s << 24
@@ -684,11 +413,9 @@ module Alembic
         end
         
         def render_composite_glyphs16 (op, src, dst, mask_format, glyphset, src_x, src_y, glyphcmds)
-          render_composite_glyphs16!(op, src, dst, mask_format, glyphset, src_x, src_y, glyphcmds).wait
+          render_composite_glyphs16!(op, src, dst, mask_format, glyphset, src_x, src_y, glyphcmds)
         end
-      end
-      
-      module Methods
+        
         def render_composite_glyphs32! (op, src, dst, mask_format, glyphset, src_x, src_y, glyphcmds)
           s = opcodes["RENDER"].chr.encode('BINARY')
           s << 25
@@ -697,26 +424,22 @@ module Alembic
         end
         
         def render_composite_glyphs32 (op, src, dst, mask_format, glyphset, src_x, src_y, glyphcmds)
-          render_composite_glyphs32!(op, src, dst, mask_format, glyphset, src_x, src_y, glyphcmds).wait
+          render_composite_glyphs32!(op, src, dst, mask_format, glyphset, src_x, src_y, glyphcmds)
         end
-      end
-      
-      module Methods
+        
         def render_fill_rectangles! (op, dst, color, rects)
           s = opcodes["RENDER"].chr.encode('BINARY')
           s << 26
           s << [op, Picture.to_xid(self, dst)].pack("Cx3L")
-          s << encode_render_color(color)
-          s << rects.map{|x|encode_rectangle(x)}
+          s << encode_render_color(''.encode('BINARY'), *color)
+          s << rects.map{|x|encode_rectangle(''.encode('BINARY'), *x)}.join
           send_request(s)
         end
         
         def render_fill_rectangles (op, dst, color, rects)
-          render_fill_rectangles!(op, dst, color, rects).wait
+          render_fill_rectangles!(op, dst, color, rects)
         end
-      end
-      
-      module Methods
+        
         def render_create_cursor! (cid, source, x, y)
           s = opcodes["RENDER"].chr.encode('BINARY')
           s << 27
@@ -725,53 +448,30 @@ module Alembic
         end
         
         def render_create_cursor (cid, source, x, y)
-          render_create_cursor!(cid, source, x, y).wait
+          render_create_cursor!(cid, source, x, y)
         end
-      end
-      
-      RenderTRANSFORM = Struct.new(:matrix11, :matrix12, :matrix13, :matrix21, :matrix22, :matrix23, :matrix31, :matrix32, :matrix33)
-      
-      module Methods
-        def encode_render_transform (s, matrix11, matrix12, matrix13, matrix21, matrix22, matrix23, matrix31, matrix32, matrix33)
-          s << [matrix11, matrix12, matrix13, matrix21, matrix22, matrix23, matrix31, matrix32, matrix33].pack("lllllllll")
-          s
-        end
-      end
-      
-      module Methods
-        def decode_render_transform (s)
-          x = RenderTRANSFORM.new
-          x.matrix11, x.matrix12, x.matrix13, x.matrix21, x.matrix22, x.matrix23, x.matrix31, x.matrix32, x.matrix33, = s.slice!(0, 36).unpack("lllllllll")
-          x
-        end
-      end
-      
-      module Methods
+        
         def render_set_picture_transform! (picture, transform)
           s = opcodes["RENDER"].chr.encode('BINARY')
           s << 28
           s << [Picture.to_xid(self, picture)].pack("L")
-          s << encode_render_transform(transform)
+          s << encode_render_transform(''.encode('BINARY'), *transform)
           send_request(s)
         end
         
         def render_set_picture_transform (picture, transform)
-          render_set_picture_transform!(picture, transform).wait
+          render_set_picture_transform!(picture, transform)
         end
-      end
-      
-      RenderQueryFiltersReply = Struct.new(:num_aliases, :num_filters, :aliases, :filters)
-      
-      module Methods
+        
         def render_query_filters! (drawable)
           s = opcodes["RENDER"].chr.encode('BINARY')
           s << 29
           s << [Drawable.to_xid(self, drawable)].pack("L")
           send_request(s) do |s|
-            x = RenderQueryFiltersReply.new
-            x.num_aliases, x.num_filters, = s.slice!(0, 25).unpack("x1LLx16")
-            x.aliases = s.slice!(0..2*(x.num_aliases)).unpack('S*')
-            x.filters = x.num_filters.times.map{decode_str(s)}
+            x = {}
+            x[:num_aliases], x[:num_filters], = s.slice!(0, 25).unpack("x1LLx16")
+            x[:aliases] = s.slice!(0..2*(x[:num_aliases])).unpack('S*')
+            x[:filters] = x[:num_filters].times.map{decode_str(s)}
             x
           end
         end
@@ -779,9 +479,7 @@ module Alembic
         def render_query_filters (drawable)
           render_query_filters!(drawable).wait
         end
-      end
-      
-      module Methods
+        
         def render_set_picture_filter! (picture, filter, values)
           s = opcodes["RENDER"].chr.encode('BINARY')
           s << 30
@@ -791,163 +489,313 @@ module Alembic
         end
         
         def render_set_picture_filter (picture, filter, values)
-          render_set_picture_filter!(picture, filter, values).wait
+          render_set_picture_filter!(picture, filter, values)
         end
-      end
-      
-      RenderANIMCURSORELT = Struct.new(:cursor, :delay)
-      
-      module Methods
-        def encode_render_animcursorelt (s, cursor, delay)
-          s << [Cursor.to_xid(self, cursor), delay].pack("LL")
-          s
-        end
-      end
-      
-      module Methods
-        def decode_render_animcursorelt (s)
-          x = RenderANIMCURSORELT.new
-          x.cursor, x.delay, = s.slice!(0, 8).unpack("LL")
-          x.cursor = Cursor[self, x.cursor]
-          x
-        end
-      end
-      
-      module Methods
+        
         def render_create_anim_cursor! (cid, cursors)
           s = opcodes["RENDER"].chr.encode('BINARY')
           s << 31
           s << [Cursor.to_xid(self, cid)].pack("L")
-          s << cursors.map{|x|encode_render_animcursorelt(x)}
+          s << cursors.map{|x|encode_render_animcursorelt(''.encode('BINARY'), *x)}.join
           send_request(s)
         end
         
         def render_create_anim_cursor (cid, cursors)
-          render_create_anim_cursor!(cid, cursors).wait
+          render_create_anim_cursor!(cid, cursors)
         end
-      end
-      
-      RenderSPANFIX = Struct.new(:l, :r, :y)
-      
-      module Methods
-        def encode_render_spanfix (s, l, r, y)
-          s << [l, r, y].pack("lll")
-          s
-        end
-      end
-      
-      module Methods
-        def decode_render_spanfix (s)
-          x = RenderSPANFIX.new
-          x.l, x.r, x.y, = s.slice!(0, 12).unpack("lll")
-          x
-        end
-      end
-      
-      RenderTRAP = Struct.new(:top, :bot)
-      
-      module Methods
-        def encode_render_trap (s, top, bot)
-          s << encode_render_spanfix(top)
-          s << encode_render_spanfix(bot)
-          s
-        end
-      end
-      
-      module Methods
-        def decode_render_trap (s)
-          x = RenderTRAP.new
-          x.top = decode_render_spanfix(s)
-          x.bot = decode_render_spanfix(s)
-          x
-        end
-      end
-      
-      module Methods
+        
         def render_add_traps! (picture, x_off, y_off, traps)
           s = opcodes["RENDER"].chr.encode('BINARY')
           s << 32
           s << [Picture.to_xid(self, picture), x_off, y_off].pack("Lss")
-          s << traps.map{|x|encode_render_trap(x)}
+          s << traps.map{|x|encode_render_trap(''.encode('BINARY'), *x)}.join
           send_request(s)
         end
         
         def render_add_traps (picture, x_off, y_off, traps)
-          render_add_traps!(picture, x_off, y_off, traps).wait
+          render_add_traps!(picture, x_off, y_off, traps)
         end
-      end
-      
-      module Methods
+        
         def render_create_solid_fill! (picture, color)
           s = opcodes["RENDER"].chr.encode('BINARY')
           s << 33
           s << [Picture.to_xid(self, picture)].pack("L")
-          s << encode_render_color(color)
+          s << encode_render_color(''.encode('BINARY'), *color)
           send_request(s)
         end
         
         def render_create_solid_fill (picture, color)
-          render_create_solid_fill!(picture, color).wait
+          render_create_solid_fill!(picture, color)
         end
-      end
-      
-      module Methods
+        
         def render_create_linear_gradient! (picture, p1, p2, stops, colors)
           s = opcodes["RENDER"].chr.encode('BINARY')
           s << 34
           num_stops = stops.length
           num_stops = colors.length
           s << [Picture.to_xid(self, picture)].pack("L")
-          s << encode_render_pointfix(p1)
-          s << encode_render_pointfix(p2)
+          s << encode_render_pointfix(''.encode('BINARY'), *p1)
+          s << encode_render_pointfix(''.encode('BINARY'), *p2)
           s << [num_stops].pack("L")
-          s << stops.map{|x|[x].pack("l")}
-          s << colors.map{|x|encode_render_color(x)}
+          s << stops.map{|x|[x].pack("l")}.join
+          s << colors.map{|x|encode_render_color(''.encode('BINARY'), *x)}.join
           send_request(s)
         end
         
         def render_create_linear_gradient (picture, p1, p2, stops, colors)
-          render_create_linear_gradient!(picture, p1, p2, stops, colors).wait
+          render_create_linear_gradient!(picture, p1, p2, stops, colors)
         end
-      end
-      
-      module Methods
+        
         def render_create_radial_gradient! (picture, inner, outer, inner_radius, outer_radius, stops, colors)
           s = opcodes["RENDER"].chr.encode('BINARY')
           s << 35
           num_stops = stops.length
           num_stops = colors.length
           s << [Picture.to_xid(self, picture)].pack("L")
-          s << encode_render_pointfix(inner)
-          s << encode_render_pointfix(outer)
+          s << encode_render_pointfix(''.encode('BINARY'), *inner)
+          s << encode_render_pointfix(''.encode('BINARY'), *outer)
           s << [inner_radius, outer_radius, num_stops].pack("llL")
-          s << stops.map{|x|[x].pack("l")}
-          s << colors.map{|x|encode_render_color(x)}
+          s << stops.map{|x|[x].pack("l")}.join
+          s << colors.map{|x|encode_render_color(''.encode('BINARY'), *x)}.join
           send_request(s)
         end
         
         def render_create_radial_gradient (picture, inner, outer, inner_radius, outer_radius, stops, colors)
-          render_create_radial_gradient!(picture, inner, outer, inner_radius, outer_radius, stops, colors).wait
+          render_create_radial_gradient!(picture, inner, outer, inner_radius, outer_radius, stops, colors)
         end
-      end
-      
-      module Methods
+        
         def render_create_conical_gradient! (picture, center, angle, stops, colors)
           s = opcodes["RENDER"].chr.encode('BINARY')
           s << 36
           num_stops = stops.length
           num_stops = colors.length
           s << [Picture.to_xid(self, picture)].pack("L")
-          s << encode_render_pointfix(center)
+          s << encode_render_pointfix(''.encode('BINARY'), *center)
           s << [angle, num_stops].pack("lL")
-          s << stops.map{|x|[x].pack("l")}
-          s << colors.map{|x|encode_render_color(x)}
+          s << stops.map{|x|[x].pack("l")}.join
+          s << colors.map{|x|encode_render_color(''.encode('BINARY'), *x)}.join
           send_request(s)
         end
         
         def render_create_conical_gradient (picture, center, angle, stops, colors)
-          render_create_conical_gradient!(picture, center, angle, stops, colors).wait
+          render_create_conical_gradient!(picture, center, angle, stops, colors)
         end
+        
+        def encode_render_directformat (s, red_shift, red_mask, green_shift, green_mask, blue_shift, blue_mask, alpha_shift, alpha_mask)
+          s << [red_shift, red_mask, green_shift, green_mask, blue_shift, blue_mask, alpha_shift, alpha_mask].pack("SSSSSSSS")
+          s
+        end
+        
+        def decode_render_directformat (s)
+          x = {}
+          x[:red_shift], x[:red_mask], x[:green_shift], x[:green_mask], x[:blue_shift], x[:blue_mask], x[:alpha_shift], x[:alpha_mask], = s.slice!(0, 16).unpack("SSSSSSSS")
+          x
+        end
+        
+        def encode_render_pictforminfo (s, id, type, depth, direct, colormap)
+          s << [Pictformat.to_xid(self, id), type, depth].pack("LCCx2")
+          s << encode_render_directformat(''.encode('BINARY'), *direct)
+          s << [Colormap.to_xid(self, colormap)].pack("L")
+          s
+        end
+        
+        def decode_render_pictforminfo (s)
+          x = {}
+          x[:id], x[:type], x[:depth], = s.slice!(0, 8).unpack("LCCx2")
+          x[:id] = Pictformat[self, x[:id]]
+          x[:direct] = decode_render_directformat(s)
+          x[:colormap], = s.slice!(0, 4).unpack("L")
+          x[:colormap] = Colormap[self, x[:colormap]]
+          x
+        end
+        
+        def encode_render_pictvisual (s, visual, format)
+          s << [visual, Pictformat.to_xid(self, format)].pack("LL")
+          s
+        end
+        
+        def decode_render_pictvisual (s)
+          x = {}
+          x[:visual], x[:format], = s.slice!(0, 8).unpack("LL")
+          x[:format] = Pictformat[self, x[:format]]
+          x
+        end
+        
+        def encode_render_pictdepth (s, depth, visuals)
+          num_visuals = visuals.length
+          s << [depth, num_visuals].pack("Cx1Sx4")
+          s << visuals.map{|x|encode_render_pictvisual(''.encode('BINARY'), *x)}.join
+          s
+        end
+        
+        def decode_render_pictdepth (s)
+          x = {}
+          x[:depth], x[:num_visuals], = s.slice!(0, 8).unpack("Cx1Sx4")
+          x[:visuals] = x[:num_visuals].times.map{decode_render_pictvisual(s)}
+          x
+        end
+        
+        def encode_render_pictscreen (s, fallback, depths)
+          num_depths = depths.length
+          s << [num_depths, Pictformat.to_xid(self, fallback)].pack("LL")
+          s << depths.map{|x|encode_render_pictdepth(''.encode('BINARY'), *x)}.join
+          s
+        end
+        
+        def decode_render_pictscreen (s)
+          x = {}
+          x[:num_depths], x[:fallback], = s.slice!(0, 8).unpack("LL")
+          x[:fallback] = Pictformat[self, x[:fallback]]
+          x[:depths] = x[:num_depths].times.map{decode_render_pictdepth(s)}
+          x
+        end
+        
+        def encode_render_indexvalue (s, pixel, red, green, blue, alpha)
+          s << [pixel, red, green, blue, alpha].pack("LSSSS")
+          s
+        end
+        
+        def decode_render_indexvalue (s)
+          x = {}
+          x[:pixel], x[:red], x[:green], x[:blue], x[:alpha], = s.slice!(0, 12).unpack("LSSSS")
+          x
+        end
+        
+        def encode_render_color (s, red, green, blue, alpha)
+          s << [red, green, blue, alpha].pack("SSSS")
+          s
+        end
+        
+        def decode_render_color (s)
+          x = {}
+          x[:red], x[:green], x[:blue], x[:alpha], = s.slice!(0, 8).unpack("SSSS")
+          x
+        end
+        
+        def encode_render_pointfix (s, x, y)
+          s << [x, y].pack("ll")
+          s
+        end
+        
+        def decode_render_pointfix (s)
+          x = {}
+          x[:x], x[:y], = s.slice!(0, 8).unpack("ll")
+          x
+        end
+        
+        def encode_render_linefix (s, p1, p2)
+          s << encode_render_pointfix(''.encode('BINARY'), *p1)
+          s << encode_render_pointfix(''.encode('BINARY'), *p2)
+          s
+        end
+        
+        def decode_render_linefix (s)
+          x = {}
+          x[:p1] = decode_render_pointfix(s)
+          x[:p2] = decode_render_pointfix(s)
+          x
+        end
+        
+        def encode_render_triangle (s, p1, p2, p3)
+          s << encode_render_pointfix(''.encode('BINARY'), *p1)
+          s << encode_render_pointfix(''.encode('BINARY'), *p2)
+          s << encode_render_pointfix(''.encode('BINARY'), *p3)
+          s
+        end
+        
+        def decode_render_triangle (s)
+          x = {}
+          x[:p1] = decode_render_pointfix(s)
+          x[:p2] = decode_render_pointfix(s)
+          x[:p3] = decode_render_pointfix(s)
+          x
+        end
+        
+        def encode_render_trapezoid (s, top, bottom, left, right)
+          s << [top, bottom].pack("ll")
+          s << encode_render_linefix(''.encode('BINARY'), *left)
+          s << encode_render_linefix(''.encode('BINARY'), *right)
+          s
+        end
+        
+        def decode_render_trapezoid (s)
+          x = {}
+          x[:top], x[:bottom], = s.slice!(0, 8).unpack("ll")
+          x[:left] = decode_render_linefix(s)
+          x[:right] = decode_render_linefix(s)
+          x
+        end
+        
+        def encode_render_glyphinfo (s, width, height, x, y, x_off, y_off)
+          s << [width, height, x, y, x_off, y_off].pack("SSssss")
+          s
+        end
+        
+        def decode_render_glyphinfo (s)
+          x = {}
+          x[:width], x[:height], x[:x], x[:y], x[:x_off], x[:y_off], = s.slice!(0, 12).unpack("SSssss")
+          x
+        end
+        
+        def encode_render_transform (s, matrix11, matrix12, matrix13, matrix21, matrix22, matrix23, matrix31, matrix32, matrix33)
+          s << [matrix11, matrix12, matrix13, matrix21, matrix22, matrix23, matrix31, matrix32, matrix33].pack("lllllllll")
+          s
+        end
+        
+        def decode_render_transform (s)
+          x = {}
+          x[:matrix11], x[:matrix12], x[:matrix13], x[:matrix21], x[:matrix22], x[:matrix23], x[:matrix31], x[:matrix32], x[:matrix33], = s.slice!(0, 36).unpack("lllllllll")
+          x
+        end
+        
+        def encode_render_animcursorelt (s, cursor, delay)
+          s << [Cursor.to_xid(self, cursor), delay].pack("LL")
+          s
+        end
+        
+        def decode_render_animcursorelt (s)
+          x = {}
+          x[:cursor], x[:delay], = s.slice!(0, 8).unpack("LL")
+          x[:cursor] = Cursor[self, x[:cursor]]
+          x
+        end
+        
+        def encode_render_spanfix (s, l, r, y)
+          s << [l, r, y].pack("lll")
+          s
+        end
+        
+        def decode_render_spanfix (s)
+          x = {}
+          x[:l], x[:r], x[:y], = s.slice!(0, 12).unpack("lll")
+          x
+        end
+        
+        def encode_render_trap (s, top, bot)
+          s << encode_render_spanfix(''.encode('BINARY'), *top)
+          s << encode_render_spanfix(''.encode('BINARY'), *bot)
+          s
+        end
+        
+        def decode_render_trap (s)
+          x = {}
+          x[:top] = decode_render_spanfix(s)
+          x[:bot] = decode_render_spanfix(s)
+          x
+        end
+        
+        def alloc_glyphset ()
+          Glyphset.new(self, alloc_xid)
+        end
+        
+        def alloc_picture ()
+          Picture.new(self, alloc_xid)
+        end
+        
+        def alloc_pictformat ()
+          Pictformat.new(self, alloc_xid)
+        end
+      
       end
       
     end

@@ -14,10 +14,14 @@ module Alembic
         self
       end
       
-      def compile
+      def compile_comments
         [
-          "include Alembic::Extensions::#{text.capitalize}",
-          nil
+        ]
+      end
+      
+      def compile_constants
+        [
+          "include Alembic::Extensions::#{text.capitalize}"
         ]
       end
       

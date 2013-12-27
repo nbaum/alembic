@@ -37,12 +37,12 @@ module Alembic
       end
       
       def unpack_arguments (expr)
-        "x.#{expr}"
+        "x[:#{expr}]"
       end
       
       def unpack_post (expr)
         {
-          "BOOL"   => ["x.#{expr} = x.#{expr} != 0"],
+          "BOOL"   => ["x[:#{expr}] = x[:#{expr}] != 0"],
         }[type] || []
       end
       

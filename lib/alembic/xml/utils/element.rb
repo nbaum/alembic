@@ -61,7 +61,15 @@ module Alembic
         []
       end
       
-      def compile
+      def compile_comments
+        []
+      end
+      
+      def compile_constants
+        []
+      end
+      
+      def compile_methods
         []
       end
       

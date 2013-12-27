@@ -14,7 +14,7 @@ module Alembic
       end
       
       def compile_length
-        "x.#{name}"
+        "x[:#{name}]"
       end
       
     end

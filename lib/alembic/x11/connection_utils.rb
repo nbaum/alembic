@@ -4,7 +4,7 @@ module Alembic
     
     def initialize (display)
       super()
-      get_keyboard_mapping(setup.min_keycode, setup.max_keycode - setup.min_keycode)
+      get_keyboard_mapping(setup[:min_keycode], setup[:max_keycode] - setup[:min_keycode])
     end
     
     def keysym_to_keycodes (ks)
@@ -14,6 +14,11 @@ module Alembic
     
     def keysym_to_keycode (ks)
       keysym_to_keycodes(ks)[0]
+    end
+    
+    def keyevent_matches_chord (chord, event)
+      mod, kc = chord_to_keymask(chord)
+      event[:detail] == kc and event[:state] == mod
     end
     
     def chord_to_keymask (kc)

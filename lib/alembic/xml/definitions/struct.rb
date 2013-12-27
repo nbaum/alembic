@@ -7,8 +7,7 @@ module Alembic
       
       alias type name
       
-      def compile
-        struct_definition +
+      def compile_methods
         encoder_method +
         decoder_method
       end

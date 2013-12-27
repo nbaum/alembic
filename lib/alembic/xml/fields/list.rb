@@ -34,12 +34,12 @@ module Alembic
         if expr.empty?
           []
         else
-          ["x.#{name} = x.#{name} ? x.#{name}.map{|x|#{expr}} : []"]
+          ["x[:#{name}] = x[:#{name}] ? x[:#{name}].map{|x|#{expr}} : []"]
         end
       end
       
       def unpack_arguments
-        "*x.#{name}"
+        "*x[:#{name}]"
       end
       
       def packable? at_end = false
@@ -60,18 +60,18 @@ module Alembic
       
       def encoder
         e = lookup(type).encoder("x")
-        "#{name}.map{|x|#{e}}"
+        "#{name}.map{|x|#{e}}.join"
       end
       
       def decoder
         if lookup(type).type == "CARD8"
-          "x.#{name} = s.slice!(0..#{length.compile_length}).unpack('C*')"
+          "x[:#{name}] = s.slice!(0..#{length.compile_length}).unpack('C*')"
         elsif lookup(type).type == "CARD16"
-          "x.#{name} = s.slice!(0..2*(#{length.compile_length})).unpack('S*')"
+          "x[:#{name}] = s.slice!(0..2*(#{length.compile_length})).unpack('S*')"
         elsif lookup(type).type == "CARD32"
-          "x.#{name} = s.slice!(0..4*(#{length.compile_length})).unpack('L*')"
+          "x[:#{name}] = s.slice!(0..4*(#{length.compile_length})).unpack('L*')"
         else
-          "x.#{name} = #{length.compile_length}.times.map{#{lookup(type).decoder}}"
+          "x[:#{name}] = #{length.compile_length}.times.map{#{lookup(type).decoder}}"
         end
       end
       

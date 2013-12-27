@@ -41,21 +41,8 @@ module Alembic
          end.compact
       end
       
-      def struct_params
-        fields.flat_map(&:params).map do |param|
-          param.to_sym.inspect
-        end
-      end
-      
-      def struct_definition
-        [
-          "#{var_name} = Struct.new(#{struct_params.join(", ")})",
-          ""
-        ]
-      end
-      
       def encoder expr
-        "encode_#{var_name.snake_case}(#{expr})"
+        "encode_#{var_name.snake_case}(''.encode('BINARY'), *#{expr})"
       end
       
       def decoder
@@ -136,36 +123,24 @@ module Alembic
       
       def encoder_method ()
         [
-          "module Methods",
+          "def encode_#{var_name.snake_case} (#{['s', *params].join(", ")})",
           [
-            "def encode_#{var_name.snake_case} (#{['s', *params].join(", ")})",
-            [
-              *fields.flat_map(&:lengther),
-              *encoders,
-              "s",
-            ],
-            "end",
+            *fields.flat_map(&:lengther),
+            *encoders,
+            "s",
           ],
           "end",
           nil,
         ]
       end
       
-      def struct_name
-        var_name
-      end
-      
       def decoder_method ()
         [
-          "module Methods",
+          "def decode_#{var_name.snake_case} (s)",
           [
-            "def decode_#{var_name.snake_case} (s)",
-            [
-              "x = #{struct_name}.new",
-              *decoders,
-              "x",
-            ],
-            "end",
+            "x = {}",
+            *decoders,
+            "x",
           ],
           "end",
           nil,

@@ -14,7 +14,7 @@ module Alembic
       
       def unpack_post (expr)
         if expr
-          "x.#{expr} = #{class_name}[self, x.#{expr}]"
+          "x[:#{expr}] = #{class_name}[self, x[:#{expr}]]"
         else
           "#{class_name}[self, x]"
         end
@@ -32,25 +32,26 @@ module Alembic
         "#{class_name}[self, #{super}]"
       end
       
-      def compile
+      def compile_constants
         return [] if already_compiled
         self.already_compiled = true
         if st = @@supertypes[name]
-          st.compile
+          st.compile_constants
         else
           []
         end + [
           "#{class_name} = Class.new(#{(st ? st.name.capitalize : 'Resource')})",
-          nil,
-          "module Methods",
+        ]
+      end
+      
+      def compile_methods
+        [
+          "def alloc_#{class_name.snake_case} ()",
           [
-            "def alloc_#{class_name.snake_case} ()",
-            [
-              "#{class_name}.new(self, alloc_xid)"
-            ],
-            "end",
+            "#{class_name}.new(self, alloc_xid)"
           ],
           "end",
+          nil,
         ]
       end
       

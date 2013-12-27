@@ -8,12 +8,9 @@ module Alembic
         @name = "#{v}Error"
       end
       
-      def compile
+      def compile_constants
         [
-          "#{var_name} = Class.new(X11Error)",
-          nil,
-          "define_error #{number}, #{var_name}",
-          nil
+          "define_error #{number}, #{var_name} = Class.new(X11Error)"
         ]
       end
       

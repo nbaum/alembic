@@ -18,7 +18,7 @@ module Alembic
       if state
         value
       else
-        raise value
+        raise value, value.message, caller[1..-1]
       end
     end
     
@@ -47,7 +47,7 @@ module Alembic
     
     def skip_events event
       loop do
-        if ne = check_event(event.class)
+        if ne = check_event(event[:event_type])
           event = ne
         else
           return event
@@ -63,9 +63,9 @@ module Alembic
       @event_monitor.synchronize do
         loop do
           if type
-            @events.each_with_index do |ev, idx|
-              if type === ev
-                @events.delete_at(idx)
+            @event_queue.each_with_index do |ev, idx|
+              if type == ev[:event_type]
+                @event_queue.delete_at(idx)
                 return ev
               end
             end
@@ -105,7 +105,7 @@ module Alembic
     def event_loop
       loop do
         code = read(1).ord
-        case code
+        case code & 0x7f
         when 1
           extra, seq, len = read(7).unpack('aSL')
           data = extra + read(24 + len * 4)
@@ -114,24 +114,30 @@ module Alembic
           q.succeed(data) if q
         when 0
           code, seq = read(3).unpack("CS")
-          data = read(30)
+          data = read(28)
           q = @tickets.delete(seq)
           sweep_tickets(seq - 1)
           if q
-            q.fail(errors[code].new(data))
+            q.fail(errors[code].new(data.inspect))
           else
             puts "Unhandled #{errors[code]}"
           end
         else
           name, no_sequence_number = events[code & 0x7f]
-          synth = code & 0x80 == 0x80 ? 1.chr : 0.chr
+          synth = code & 0x80 == 0x80
+          ev = nil
           if !name
             read(31)
           elsif no_sequence_number
-            record_event __send__("decode_#{name}", read(31) + synth)
+            ev = __send__("decode_#{name}", read(31))
           else
             detail, _ = read(3).unpack('aS')
-            record_event __send__("decode_#{name}", detail + read(28) + synth)
+            ev = __send__("decode_#{name}", detail + read(28))
+          end
+          if ev
+            ev[:synthetic] = synth
+            ev[:event_type] = name
+            record_event ev
           end
         end
       end

@@ -7,7 +7,9 @@ module Alembic
       each do |name, mask0|
         if hash.has_key?(name)
           mask |= mask0
-          values << hash[name].to_i
+          value = hash[name]
+          value = ({ true => 1, false => 0 }[value] || value)
+          values << value
         end
       end
       [mask, *values]

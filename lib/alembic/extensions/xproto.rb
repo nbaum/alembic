@@ -5,156 +5,161 @@ module Alembic
       
       extension_xname nil
       
-      module Methods
-      end
+      # create_window (depth, wid, parent, x, y, width, height, border_width, klass, visual, value_mask, *value_list)
+      # change_window_attributes (window, value_mask, *value_list)
+      # get_window_attributes (window)
+      # destroy_window (window)
+      # destroy_subwindows (window)
+      # change_save_set (mode, window)
+      # reparent_window (window, parent, x, y)
+      # map_window (window)
+      # map_subwindows (window)
+      # unmap_window (window)
+      # unmap_subwindows (window)
+      # configure_window (window, value_mask, *value_list)
+      # circulate_window (direction, window)
+      # get_geometry (drawable)
+      # query_tree (window)
+      # intern_atom (only_if_exists, name)
+      # get_atom_name (atom)
+      # change_property (mode, window, property, type, format, data_len, data)
+      # delete_property (window, property)
+      # get_property (delete, window, property, type, long_offset, long_length)
+      # list_properties (window)
+      # set_selection_owner (owner, selection, time)
+      # get_selection_owner (selection)
+      # convert_selection (requestor, selection, target, property, time)
+      # send_event (propagate, destination, event_mask, event)
+      # grab_pointer (owner_events, grab_window, event_mask, pointer_mode, keyboard_mode, confine_to, cursor, time)
+      # ungrab_pointer (time)
+      # grab_button (owner_events, grab_window, event_mask, pointer_mode, keyboard_mode, confine_to, cursor, button, modifiers)
+      # ungrab_button (button, grab_window, modifiers)
+      # change_active_pointer_grab (cursor, time, event_mask)
+      # grab_keyboard (owner_events, grab_window, time, pointer_mode, keyboard_mode)
+      # ungrab_keyboard (time)
+      # grab_key (owner_events, grab_window, modifiers, key, pointer_mode, keyboard_mode)
+      # ungrab_key (key, grab_window, modifiers)
+      # allow_events (mode, time)
+      # grab_server ()
+      # ungrab_server ()
+      # query_pointer (window)
+      # get_motion_events (window, start, stop)
+      # translate_coordinates (src_window, dst_window, src_x, src_y)
+      # warp_pointer (src_window, dst_window, src_x, src_y, src_width, src_height, dst_x, dst_y)
+      # set_input_focus (revert_to, focus, time)
+      # get_input_focus ()
+      # query_keymap ()
+      # open_font (fid, name)
+      # close_font (font)
+      # query_font (font)
+      # query_text_extents (font, string)
+      # list_fonts (max_names, pattern)
+      # list_fonts_with_info (max_names, pattern)
+      # set_font_path (font)
+      # get_font_path ()
+      # create_pixmap (depth, pid, drawable, width, height)
+      # free_pixmap (pixmap)
+      # create_gc (cid, drawable, value_mask, *value_list)
+      # change_gc (gc, value_mask, *value_list)
+      # copy_gc (src_gc, dst_gc, value_mask)
+      # set_dashes (gc, dash_offset, dashes)
+      # set_clip_rectangles (ordering, gc, clip_x_origin, clip_y_origin, rectangles)
+      # free_gc (gc)
+      # clear_area (exposures, window, x, y, width, height)
+      # copy_area (src_drawable, dst_drawable, gc, src_x, src_y, dst_x, dst_y, width, height)
+      # copy_plane (src_drawable, dst_drawable, gc, src_x, src_y, dst_x, dst_y, width, height, bit_plane)
+      # poly_point (coordinate_mode, drawable, gc, points)
+      # poly_line (coordinate_mode, drawable, gc, points)
+      # poly_segment (drawable, gc, segments)
+      # poly_rectangle (drawable, gc, rectangles)
+      # poly_arc (drawable, gc, arcs)
+      # fill_poly (drawable, gc, shape, coordinate_mode, points)
+      # poly_fill_rectangle (drawable, gc, rectangles)
+      # poly_fill_arc (drawable, gc, arcs)
+      # put_image (format, drawable, gc, width, height, dst_x, dst_y, left_pad, depth, data)
+      # get_image (format, drawable, x, y, width, height, plane_mask)
+      # poly_text8 (drawable, gc, x, y, items)
+      # poly_text16 (drawable, gc, x, y, items)
+      # image_text8 (drawable, gc, x, y, string)
+      # image_text16 (drawable, gc, x, y, string)
+      # create_colormap (alloc, mid, window, visual)
+      # free_colormap (cmap)
+      # copy_colormap_and_free (mid, src_cmap)
+      # install_colormap (cmap)
+      # uninstall_colormap (cmap)
+      # list_installed_colormaps (window)
+      # alloc_color (cmap, red, green, blue)
+      # alloc_named_color (cmap, name)
+      # alloc_color_cells (contiguous, cmap, colors, planes)
+      # alloc_color_planes (contiguous, cmap, colors, reds, greens, blues)
+      # free_colors (cmap, plane_mask, pixels)
+      # store_colors (cmap, items)
+      # store_named_color (flags, cmap, pixel, name)
+      # query_colors (cmap, pixels)
+      # lookup_color (cmap, name)
+      # create_cursor (cid, source, mask, fore_red, fore_green, fore_blue, back_red, back_green, back_blue, x, y)
+      # create_glyph_cursor (cid, source_font, mask_font, source_char, mask_char, fore_red, fore_green, fore_blue, back_red, back_green, back_blue)
+      # free_cursor (cursor)
+      # recolor_cursor (cursor, fore_red, fore_green, fore_blue, back_red, back_green, back_blue)
+      # query_best_size (klass, drawable, width, height)
+      # query_extension (name)
+      # list_extensions ()
+      # change_keyboard_mapping (keycode_count, first_keycode, keysyms_per_keycode, keysyms)
+      # get_keyboard_mapping (first_keycode, count)
+      # change_keyboard_control (value_mask, *value_list)
+      # get_keyboard_control ()
+      # bell (percent)
+      # change_pointer_control (acceleration_numerator, acceleration_denominator, threshold, do_acceleration, do_threshold)
+      # get_pointer_control ()
+      # set_screen_saver (timeout, interval, prefer_blanking, allow_exposures)
+      # get_screen_saver ()
+      # change_hosts (mode, family, address)
+      # list_hosts ()
+      # set_access_control (mode)
+      # set_close_down_mode (mode)
+      # kill_client (resource)
+      # rotate_properties (window, delta, atoms)
+      # force_screen_saver (mode)
+      # set_pointer_mapping (map)
+      # get_pointer_mapping ()
+      # set_modifier_mapping (keycodes_per_modifier, keycodes)
+      # get_modifier_mapping ()
+      # no_operation ()
       
-      CHAR2B = Struct.new(:byte1, :byte2)
-      
-      module Methods
-        def encode_char2b (s, byte1, byte2)
-          s << [byte1, byte2].pack("CC")
-          s
-        end
-      end
-      
-      module Methods
-        def decode_char2b (s)
-          x = CHAR2B.new
-          x.byte1, x.byte2, = s.slice!(0, 2).unpack("CC")
-          x
-        end
-      end
-      
-      Drawable = Class.new(Resource)
-      
-      module Methods
-        def alloc_drawable ()
-          Drawable.new(self, alloc_xid)
-        end
-      end
-      Window = Class.new(Drawable)
-      
-      module Methods
-        def alloc_window ()
-          Window.new(self, alloc_xid)
-        end
-      end
-      Pixmap = Class.new(Drawable)
-      
-      module Methods
-        def alloc_pixmap ()
-          Pixmap.new(self, alloc_xid)
-        end
-      end
-      Cursor = Class.new(Resource)
-      
-      module Methods
-        def alloc_cursor ()
-          Cursor.new(self, alloc_xid)
-        end
-      end
-      Fontable = Class.new(Resource)
-      
-      module Methods
-        def alloc_fontable ()
-          Fontable.new(self, alloc_xid)
-        end
-      end
-      Font = Class.new(Fontable)
-      
-      module Methods
-        def alloc_font ()
-          Font.new(self, alloc_xid)
-        end
-      end
-      Gcontext = Class.new(Fontable)
-      
-      module Methods
-        def alloc_gcontext ()
-          Gcontext.new(self, alloc_xid)
-        end
-      end
-      Colormap = Class.new(Resource)
-      
-      module Methods
-        def alloc_colormap ()
-          Colormap.new(self, alloc_xid)
-        end
-      end
-      Atom = Class.new(Resource)
-      
-      module Methods
-        def alloc_atom ()
-          Atom.new(self, alloc_xid)
-        end
-      end
-      POINT = Struct.new(:x, :y)
-      
-      module Methods
-        def encode_point (s, x, y)
-          s << [x, y].pack("ss")
-          s
-        end
-      end
-      
-      module Methods
-        def decode_point (s)
-          x = POINT.new
-          x.x, x.y, = s.slice!(0, 4).unpack("ss")
-          x
-        end
-      end
-      
-      RECTANGLE = Struct.new(:x, :y, :width, :height)
-      
-      module Methods
-        def encode_rectangle (s, x, y, width, height)
-          s << [x, y, width, height].pack("ssSS")
-          s
-        end
-      end
-      
-      module Methods
-        def decode_rectangle (s)
-          x = RECTANGLE.new
-          x.x, x.y, x.width, x.height, = s.slice!(0, 8).unpack("ssSS")
-          x
-        end
-      end
-      
-      ARC = Struct.new(:x, :y, :width, :height, :angle1, :angle2)
-      
-      module Methods
-        def encode_arc (s, x, y, width, height, angle1, angle2)
-          s << [x, y, width, height, angle1, angle2].pack("ssSSss")
-          s
-        end
-      end
-      
-      module Methods
-        def decode_arc (s)
-          x = ARC.new
-          x.x, x.y, x.width, x.height, x.angle1, x.angle2, = s.slice!(0, 12).unpack("ssSSss")
-          x
-        end
-      end
-      
-      FORMAT = Struct.new(:depth, :bits_per_pixel, :scanline_pad)
-      
-      module Methods
-        def encode_format (s, depth, bits_per_pixel, scanline_pad)
-          s << [depth, bits_per_pixel, scanline_pad].pack("CCCx5")
-          s
-        end
-      end
-      
-      module Methods
-        def decode_format (s)
-          x = FORMAT.new
-          x.depth, x.bits_per_pixel, x.scanline_pad, = s.slice!(0, 8).unpack("CCCx5")
-          x
-        end
-      end
+      # key_press_event (detail, time, root, event, child, root_x, root_y, event_x, event_y, state, same_screen)
+      # key_release_event (detail, time, root, event, child, root_x, root_y, event_x, event_y, state, same_screen)
+      # button_press_event (detail, time, root, event, child, root_x, root_y, event_x, event_y, state, same_screen)
+      # button_release_event (detail, time, root, event, child, root_x, root_y, event_x, event_y, state, same_screen)
+      # motion_notify_event (detail, time, root, event, child, root_x, root_y, event_x, event_y, state, same_screen)
+      # enter_notify_event (detail, time, root, event, child, root_x, root_y, event_x, event_y, state, mode, same_screen_focus)
+      # leave_notify_event (detail, time, root, event, child, root_x, root_y, event_x, event_y, state, mode, same_screen_focus)
+      # focus_in_event (detail, event, mode)
+      # focus_out_event (detail, event, mode)
+      # keymap_notify_event (keys)
+      # expose_event (window, x, y, width, height, count)
+      # graphics_exposure_event (drawable, x, y, width, height, minor_opcode, count, major_opcode)
+      # no_exposure_event (drawable, minor_opcode, major_opcode)
+      # visibility_notify_event (window, state)
+      # create_notify_event (parent, window, x, y, width, height, border_width, override_redirect)
+      # destroy_notify_event (event, window)
+      # unmap_notify_event (event, window, from_configure)
+      # map_notify_event (event, window, override_redirect)
+      # map_request_event (parent, window)
+      # reparent_notify_event (event, window, parent, x, y, override_redirect)
+      # configure_notify_event (event, window, above_sibling, x, y, width, height, border_width, override_redirect)
+      # configure_request_event (stack_mode, parent, window, sibling, x, y, width, height, border_width, value_mask)
+      # gravity_notify_event (event, window, x, y)
+      # resize_request_event (window, width, height)
+      # circulate_notify_event (event, window, place)
+      # circulate_request_event (event, window, place)
+      # property_notify_event (window, atom, time, state)
+      # selection_clear_event (time, owner, selection)
+      # selection_request_event (time, owner, requestor, selection, target, property)
+      # selection_notify_event (time, requestor, selection, target, property)
+      # colormap_notify_event (window, colormap, new, state)
+      # client_message_event (format, window, type, data)
+      # mapping_notify_event (request, first_keycode, count)
+      # ge_event ()
       
       VISUAL_CLASS = {:static_gray=>0, :gray_scale=>1, :static_color=>2, :pseudo_color=>3, :true_color=>4, :direct_color=>5}
       VISUAL_CLASS_I = {0=>:static_gray, 1=>:gray_scale, 2=>:static_color, 3=>:pseudo_color, 4=>:true_color, 5=>:direct_color}
@@ -167,43 +172,6 @@ module Alembic
       VISUAL_CLASS_DIRECT_COLOR = 5
       
       VISUAL_CLASS.extend Alembic::ValueParamHelper
-      
-      VISUALTYPE = Struct.new(:visual_id, :klass, :bits_per_rgb_value, :colormap_entries, :red_mask, :green_mask, :blue_mask)
-      
-      module Methods
-        def encode_visualtype (s, visual_id, klass, bits_per_rgb_value, colormap_entries, red_mask, green_mask, blue_mask)
-          s << [visual_id, klass, bits_per_rgb_value, colormap_entries, red_mask, green_mask, blue_mask].pack("LCCSLLLx4")
-          s
-        end
-      end
-      
-      module Methods
-        def decode_visualtype (s)
-          x = VISUALTYPE.new
-          x.visual_id, x.klass, x.bits_per_rgb_value, x.colormap_entries, x.red_mask, x.green_mask, x.blue_mask, = s.slice!(0, 24).unpack("LCCSLLLx4")
-          x
-        end
-      end
-      
-      DEPTH = Struct.new(:depth, :visuals_len, :visuals)
-      
-      module Methods
-        def encode_depth (s, depth, visuals)
-          visuals_len = visuals.length
-          s << [depth, visuals_len].pack("Cx1Sx4")
-          s << visuals.map{|x|encode_visualtype(x)}
-          s
-        end
-      end
-      
-      module Methods
-        def decode_depth (s)
-          x = DEPTH.new
-          x.depth, x.visuals_len, = s.slice!(0, 8).unpack("Cx1Sx4")
-          x.visuals = x.visuals_len.times.map{decode_visualtype(s)}
-          x
-        end
-      end
       
       EVENT_MASK = {:no_event=>0, :key_press=>1, :key_release=>2, :button_press=>4, :button_release=>8, :enter_window=>16, :leave_window=>32, :pointer_motion=>64, :pointer_motion_hint=>128, :button1motion=>256, :button2motion=>512, :button3motion=>1024, :button4motion=>2048, :button5motion=>4096, :button_motion=>8192, :keymap_state=>16384, :exposure=>32768, :visibility_change=>65536, :structure_notify=>131072, :resize_redirect=>262144, :substructure_notify=>524288, :substructure_redirect=>1048576, :focus_change=>2097152, :property_change=>4194304, :color_map_change=>8388608, :owner_grab_button=>16777216}
       EVENT_MASK_I = {0=>:no_event, 1=>:key_press, 2=>:key_release, 4=>:button_press, 8=>:button_release, 16=>:enter_window, 32=>:leave_window, 64=>:pointer_motion, 128=>:pointer_motion_hint, 256=>:button1motion, 512=>:button2motion, 1024=>:button3motion, 2048=>:button4motion, 4096=>:button5motion, 8192=>:button_motion, 16384=>:keymap_state, 32768=>:exposure, 65536=>:visibility_change, 131072=>:structure_notify, 262144=>:resize_redirect, 524288=>:substructure_notify, 1048576=>:substructure_redirect, 2097152=>:focus_change, 4194304=>:property_change, 8388608=>:color_map_change, 16777216=>:owner_grab_button}
@@ -246,87 +214,6 @@ module Alembic
       
       BACKING_STORE.extend Alembic::ValueParamHelper
       
-      SCREEN = Struct.new(:root, :default_colormap, :white_pixel, :black_pixel, :current_input_masks, :width_in_pixels, :height_in_pixels, :width_in_millimeters, :height_in_millimeters, :min_installed_maps, :max_installed_maps, :root_visual, :backing_stores, :save_unders, :root_depth, :allowed_depths_len, :allowed_depths)
-      
-      module Methods
-        def encode_screen (s, root, default_colormap, white_pixel, black_pixel, current_input_masks, width_in_pixels, height_in_pixels, width_in_millimeters, height_in_millimeters, min_installed_maps, max_installed_maps, root_visual, backing_stores, save_unders, root_depth, allowed_depths)
-          allowed_depths_len = allowed_depths.length
-          s << [Window.to_xid(self, root), Colormap.to_xid(self, default_colormap), white_pixel, black_pixel, current_input_masks, width_in_pixels, height_in_pixels, width_in_millimeters, height_in_millimeters, min_installed_maps, max_installed_maps, root_visual, backing_stores, save_unders ? 1 : 0, root_depth, allowed_depths_len].pack("LLLLLSSSSSSLCCCC")
-          s << allowed_depths.map{|x|encode_depth(x)}
-          s
-        end
-      end
-      
-      module Methods
-        def decode_screen (s)
-          x = SCREEN.new
-          x.root, x.default_colormap, x.white_pixel, x.black_pixel, x.current_input_masks, x.width_in_pixels, x.height_in_pixels, x.width_in_millimeters, x.height_in_millimeters, x.min_installed_maps, x.max_installed_maps, x.root_visual, x.backing_stores, x.save_unders, x.root_depth, x.allowed_depths_len, = s.slice!(0, 40).unpack("LLLLLSSSSSSLCCCC")
-          x.root = Window[self, x.root]
-          x.default_colormap = Colormap[self, x.default_colormap]
-          x.save_unders = x.save_unders != 0
-          x.allowed_depths = x.allowed_depths_len.times.map{decode_depth(s)}
-          x
-        end
-      end
-      
-      SetupRequest = Struct.new(:byte_order, :protocol_major_version, :protocol_minor_version, :authorization_protocol_name_len, :authorization_protocol_data_len, :authorization_protocol_name, :authorization_protocol_data)
-      
-      module Methods
-        def encode_setup_request (s, byte_order, protocol_major_version, protocol_minor_version, authorization_protocol_name, authorization_protocol_data)
-          authorization_protocol_name_len = authorization_protocol_name.length
-          authorization_protocol_data_len = authorization_protocol_data.length
-          s << [byte_order, protocol_major_version, protocol_minor_version, authorization_protocol_name_len, authorization_protocol_data_len, pad(authorization_protocol_name), pad(authorization_protocol_data)].pack("Cx1SSSSx2A*A*")
-          s
-        end
-      end
-      
-      module Methods
-        def decode_setup_request (s)
-          x = SetupRequest.new
-          x.byte_order, x.protocol_major_version, x.protocol_minor_version, x.authorization_protocol_name_len, x.authorization_protocol_data_len, = s.slice!(0, 12).unpack("Cx1SSSSx2")
-          x.authorization_protocol_name = s.slice!(0, x.authorization_protocol_name_len)
-          x.authorization_protocol_data = s.slice!(0, x.authorization_protocol_data_len)
-          x
-        end
-      end
-      
-      SetupFailed = Struct.new(:status, :reason_len, :protocol_major_version, :protocol_minor_version, :length, :reason)
-      
-      module Methods
-        def encode_setup_failed (s, status, protocol_major_version, protocol_minor_version, length, reason)
-          reason_len = reason.length
-          s << [status, reason_len, protocol_major_version, protocol_minor_version, length, pad(reason)].pack("CCSSSA*")
-          s
-        end
-      end
-      
-      module Methods
-        def decode_setup_failed (s)
-          x = SetupFailed.new
-          x.status, x.reason_len, x.protocol_major_version, x.protocol_minor_version, x.length, = s.slice!(0, 8).unpack("CCSSS")
-          x.reason = s.slice!(0, x.reason_len)
-          x
-        end
-      end
-      
-      SetupAuthenticate = Struct.new(:status, :length, :reason)
-      
-      module Methods
-        def encode_setup_authenticate (s, status, length, reason)
-          s << [status, length, pad(reason)].pack("Cx5SA*")
-          s
-        end
-      end
-      
-      module Methods
-        def decode_setup_authenticate (s)
-          x = SetupAuthenticate.new
-          x.status, x.length, = s.slice!(0, 8).unpack("Cx5S")
-          x.reason = s.slice!(0, (x.length * 4))
-          x
-        end
-      end
-      
       IMAGE_ORDER = {:lsb_first=>0, :msb_first=>1}
       IMAGE_ORDER_I = {0=>:lsb_first, 1=>:msb_first}
       
@@ -334,31 +221,6 @@ module Alembic
       IMAGE_ORDER_MSB_FIRST = 1
       
       IMAGE_ORDER.extend Alembic::ValueParamHelper
-      
-      Setup = Struct.new(:status, :protocol_major_version, :protocol_minor_version, :length, :release_number, :resource_id_base, :resource_id_mask, :motion_buffer_size, :vendor_len, :maximum_request_length, :roots_len, :pixmap_formats_len, :image_byte_order, :bitmap_format_bit_order, :bitmap_format_scanline_unit, :bitmap_format_scanline_pad, :min_keycode, :max_keycode, :vendor, :pixmap_formats, :roots)
-      
-      module Methods
-        def encode_setup (s, status, protocol_major_version, protocol_minor_version, length, release_number, resource_id_base, resource_id_mask, motion_buffer_size, maximum_request_length, image_byte_order, bitmap_format_bit_order, bitmap_format_scanline_unit, bitmap_format_scanline_pad, min_keycode, max_keycode, vendor, pixmap_formats, roots)
-          vendor_len = vendor.length
-          pixmap_formats_len = pixmap_formats.length
-          roots_len = roots.length
-          s << [status, protocol_major_version, protocol_minor_version, length, release_number, resource_id_base, resource_id_mask, motion_buffer_size, vendor_len, maximum_request_length, roots_len, pixmap_formats_len, image_byte_order, bitmap_format_bit_order, bitmap_format_scanline_unit, bitmap_format_scanline_pad, min_keycode, max_keycode, pad(vendor)].pack("Cx1SSSLLLLSSCCCCCCCCx4A*")
-          s << pixmap_formats.map{|x|encode_format(x)}
-          s << roots.map{|x|encode_screen(x)}
-          s
-        end
-      end
-      
-      module Methods
-        def decode_setup (s)
-          x = Setup.new
-          x.status, x.protocol_major_version, x.protocol_minor_version, x.length, x.release_number, x.resource_id_base, x.resource_id_mask, x.motion_buffer_size, x.vendor_len, x.maximum_request_length, x.roots_len, x.pixmap_formats_len, x.image_byte_order, x.bitmap_format_bit_order, x.bitmap_format_scanline_unit, x.bitmap_format_scanline_pad, x.min_keycode, x.max_keycode, = s.slice!(0, 40).unpack("Cx1SSSLLLLSSCCCCCCCCx4")
-          x.vendor = s.slice!(0, x.vendor_len)
-          x.pixmap_formats = x.pixmap_formats_len.times.map{decode_format(s)}
-          x.roots = x.roots_len.times.map{decode_screen(s)}
-          x
-        end
-      end
       
       MOD_MASK = {:shift=>1, :lock=>2, :control=>4, :"1"=>8, :"2"=>16, :"3"=>32, :"4"=>64, :"5"=>128, :any=>32768}
       MOD_MASK_I = {1=>:shift, 2=>:lock, 4=>:control, 8=>:"1", 16=>:"2", 32=>:"3", 64=>:"4", 128=>:"5", 32768=>:any}
@@ -401,60 +263,6 @@ module Alembic
       
       WINDOW.extend Alembic::ValueParamHelper
       
-      KeyPressEvent = Struct.new(:detail, :time, :root, :event, :child, :root_x, :root_y, :event_x, :event_y, :state, :same_screen, :synthetic)
-      
-      define_event 2, :key_press_event, false
-      
-      module Methods
-        def encode_key_press_event (detail, time, root, event, child, root_x, root_y, event_x, event_y, state, same_screen)
-          s = 2.chr.encode('BINARY')
-          s << [detail, time, Window.to_xid(self, root), Window.to_xid(self, event), Window.to_xid(self, child), root_x, root_y, event_x, event_y, state, same_screen ? 1 : 0].pack("CLLLLssssSCx1")
-          s = s.ljust(30, "\0")
-          s[2, 0] = "\0\0"
-          s
-        end
-      end
-      
-      module Methods
-        def decode_key_press_event (s)
-          x = KeyPressEvent.new
-          x.detail, x.time, x.root, x.event, x.child, x.root_x, x.root_y, x.event_x, x.event_y, x.state, x.same_screen, x.synthetic, = s.slice!(0, 30).unpack("CLLLLssssSCx1C")
-          x.root = Window[self, x.root]
-          x.event = Window[self, x.event]
-          x.child = Window[self, x.child]
-          x.same_screen = x.same_screen != 0
-          x.synthetic = x.synthetic != 0
-          x
-        end
-      end
-      
-      KeyReleaseEvent = Struct.new(:detail, :time, :root, :event, :child, :root_x, :root_y, :event_x, :event_y, :state, :same_screen, :synthetic)
-      
-      define_event 3, :key_release_event, false
-      
-      module Methods
-        def encode_key_release_event (detail, time, root, event, child, root_x, root_y, event_x, event_y, state, same_screen)
-          s = 3.chr.encode('BINARY')
-          s << [detail, time, Window.to_xid(self, root), Window.to_xid(self, event), Window.to_xid(self, child), root_x, root_y, event_x, event_y, state, same_screen ? 1 : 0].pack("CLLLLssssSCx1")
-          s = s.ljust(30, "\0")
-          s[2, 0] = "\0\0"
-          s
-        end
-      end
-      
-      module Methods
-        def decode_key_release_event (s)
-          x = KeyReleaseEvent.new
-          x.detail, x.time, x.root, x.event, x.child, x.root_x, x.root_y, x.event_x, x.event_y, x.state, x.same_screen, x.synthetic, = s.slice!(0, 30).unpack("CLLLLssssSCx1C")
-          x.root = Window[self, x.root]
-          x.event = Window[self, x.event]
-          x.child = Window[self, x.child]
-          x.same_screen = x.same_screen != 0
-          x.synthetic = x.synthetic != 0
-          x
-        end
-      end
-      
       BUTTON_MASK = {:"1"=>256, :"2"=>512, :"3"=>1024, :"4"=>2048, :"5"=>4096, :any=>32768}
       BUTTON_MASK_I = {256=>:"1", 512=>:"2", 1024=>:"3", 2048=>:"4", 4096=>:"5", 32768=>:any}
       
@@ -467,60 +275,6 @@ module Alembic
       
       BUTTON_MASK.extend Alembic::ValueParamHelper
       
-      ButtonPressEvent = Struct.new(:detail, :time, :root, :event, :child, :root_x, :root_y, :event_x, :event_y, :state, :same_screen, :synthetic)
-      
-      define_event 4, :button_press_event, false
-      
-      module Methods
-        def encode_button_press_event (detail, time, root, event, child, root_x, root_y, event_x, event_y, state, same_screen)
-          s = 4.chr.encode('BINARY')
-          s << [detail, time, Window.to_xid(self, root), Window.to_xid(self, event), Window.to_xid(self, child), root_x, root_y, event_x, event_y, state, same_screen ? 1 : 0].pack("CLLLLssssSCx1")
-          s = s.ljust(30, "\0")
-          s[2, 0] = "\0\0"
-          s
-        end
-      end
-      
-      module Methods
-        def decode_button_press_event (s)
-          x = ButtonPressEvent.new
-          x.detail, x.time, x.root, x.event, x.child, x.root_x, x.root_y, x.event_x, x.event_y, x.state, x.same_screen, x.synthetic, = s.slice!(0, 30).unpack("CLLLLssssSCx1C")
-          x.root = Window[self, x.root]
-          x.event = Window[self, x.event]
-          x.child = Window[self, x.child]
-          x.same_screen = x.same_screen != 0
-          x.synthetic = x.synthetic != 0
-          x
-        end
-      end
-      
-      ButtonReleaseEvent = Struct.new(:detail, :time, :root, :event, :child, :root_x, :root_y, :event_x, :event_y, :state, :same_screen, :synthetic)
-      
-      define_event 5, :button_release_event, false
-      
-      module Methods
-        def encode_button_release_event (detail, time, root, event, child, root_x, root_y, event_x, event_y, state, same_screen)
-          s = 5.chr.encode('BINARY')
-          s << [detail, time, Window.to_xid(self, root), Window.to_xid(self, event), Window.to_xid(self, child), root_x, root_y, event_x, event_y, state, same_screen ? 1 : 0].pack("CLLLLssssSCx1")
-          s = s.ljust(30, "\0")
-          s[2, 0] = "\0\0"
-          s
-        end
-      end
-      
-      module Methods
-        def decode_button_release_event (s)
-          x = ButtonReleaseEvent.new
-          x.detail, x.time, x.root, x.event, x.child, x.root_x, x.root_y, x.event_x, x.event_y, x.state, x.same_screen, x.synthetic, = s.slice!(0, 30).unpack("CLLLLssssSCx1C")
-          x.root = Window[self, x.root]
-          x.event = Window[self, x.event]
-          x.child = Window[self, x.child]
-          x.same_screen = x.same_screen != 0
-          x.synthetic = x.synthetic != 0
-          x
-        end
-      end
-      
       MOTION = {:normal=>0, :hint=>1}
       MOTION_I = {0=>:normal, 1=>:hint}
       
@@ -528,33 +282,6 @@ module Alembic
       MOTION_HINT = 1
       
       MOTION.extend Alembic::ValueParamHelper
-      
-      MotionNotifyEvent = Struct.new(:detail, :time, :root, :event, :child, :root_x, :root_y, :event_x, :event_y, :state, :same_screen, :synthetic)
-      
-      define_event 6, :motion_notify_event, false
-      
-      module Methods
-        def encode_motion_notify_event (detail, time, root, event, child, root_x, root_y, event_x, event_y, state, same_screen)
-          s = 6.chr.encode('BINARY')
-          s << [detail, time, Window.to_xid(self, root), Window.to_xid(self, event), Window.to_xid(self, child), root_x, root_y, event_x, event_y, state, same_screen ? 1 : 0].pack("CLLLLssssSCx1")
-          s = s.ljust(30, "\0")
-          s[2, 0] = "\0\0"
-          s
-        end
-      end
-      
-      module Methods
-        def decode_motion_notify_event (s)
-          x = MotionNotifyEvent.new
-          x.detail, x.time, x.root, x.event, x.child, x.root_x, x.root_y, x.event_x, x.event_y, x.state, x.same_screen, x.synthetic, = s.slice!(0, 30).unpack("CLLLLssssSCx1C")
-          x.root = Window[self, x.root]
-          x.event = Window[self, x.event]
-          x.child = Window[self, x.child]
-          x.same_screen = x.same_screen != 0
-          x.synthetic = x.synthetic != 0
-          x
-        end
-      end
       
       NOTIFY_DETAIL = {:ancestor=>0, :virtual=>1, :inferior=>2, :nonlinear=>3, :nonlinear_virtual=>4, :pointer=>5, :pointer_root=>6, :none=>7}
       NOTIFY_DETAIL_I = {0=>:ancestor, 1=>:virtual, 2=>:inferior, 3=>:nonlinear, 4=>:nonlinear_virtual, 5=>:pointer, 6=>:pointer_root, 7=>:none}
@@ -580,202 +307,6 @@ module Alembic
       
       NOTIFY_MODE.extend Alembic::ValueParamHelper
       
-      EnterNotifyEvent = Struct.new(:detail, :time, :root, :event, :child, :root_x, :root_y, :event_x, :event_y, :state, :mode, :same_screen_focus, :synthetic)
-      
-      define_event 7, :enter_notify_event, false
-      
-      module Methods
-        def encode_enter_notify_event (detail, time, root, event, child, root_x, root_y, event_x, event_y, state, mode, same_screen_focus)
-          s = 7.chr.encode('BINARY')
-          s << [detail, time, Window.to_xid(self, root), Window.to_xid(self, event), Window.to_xid(self, child), root_x, root_y, event_x, event_y, state, mode, same_screen_focus].pack("CLLLLssssSCC")
-          s = s.ljust(30, "\0")
-          s[2, 0] = "\0\0"
-          s
-        end
-      end
-      
-      module Methods
-        def decode_enter_notify_event (s)
-          x = EnterNotifyEvent.new
-          x.detail, x.time, x.root, x.event, x.child, x.root_x, x.root_y, x.event_x, x.event_y, x.state, x.mode, x.same_screen_focus, x.synthetic, = s.slice!(0, 30).unpack("CLLLLssssSCCC")
-          x.root = Window[self, x.root]
-          x.event = Window[self, x.event]
-          x.child = Window[self, x.child]
-          x.synthetic = x.synthetic != 0
-          x
-        end
-      end
-      
-      LeaveNotifyEvent = Struct.new(:detail, :time, :root, :event, :child, :root_x, :root_y, :event_x, :event_y, :state, :mode, :same_screen_focus, :synthetic)
-      
-      define_event 8, :leave_notify_event, false
-      
-      module Methods
-        def encode_leave_notify_event (detail, time, root, event, child, root_x, root_y, event_x, event_y, state, mode, same_screen_focus)
-          s = 8.chr.encode('BINARY')
-          s << [detail, time, Window.to_xid(self, root), Window.to_xid(self, event), Window.to_xid(self, child), root_x, root_y, event_x, event_y, state, mode, same_screen_focus].pack("CLLLLssssSCC")
-          s = s.ljust(30, "\0")
-          s[2, 0] = "\0\0"
-          s
-        end
-      end
-      
-      module Methods
-        def decode_leave_notify_event (s)
-          x = LeaveNotifyEvent.new
-          x.detail, x.time, x.root, x.event, x.child, x.root_x, x.root_y, x.event_x, x.event_y, x.state, x.mode, x.same_screen_focus, x.synthetic, = s.slice!(0, 30).unpack("CLLLLssssSCCC")
-          x.root = Window[self, x.root]
-          x.event = Window[self, x.event]
-          x.child = Window[self, x.child]
-          x.synthetic = x.synthetic != 0
-          x
-        end
-      end
-      
-      FocusInEvent = Struct.new(:detail, :event, :mode, :synthetic)
-      
-      define_event 9, :focus_in_event, false
-      
-      module Methods
-        def encode_focus_in_event (detail, event, mode)
-          s = 9.chr.encode('BINARY')
-          s << [detail, Window.to_xid(self, event), mode].pack("CLCx3")
-          s = s.ljust(30, "\0")
-          s[2, 0] = "\0\0"
-          s
-        end
-      end
-      
-      module Methods
-        def decode_focus_in_event (s)
-          x = FocusInEvent.new
-          x.detail, x.event, x.mode, x.synthetic, = s.slice!(0, 10).unpack("CLCx3C")
-          x.event = Window[self, x.event]
-          x.synthetic = x.synthetic != 0
-          x
-        end
-      end
-      
-      FocusOutEvent = Struct.new(:detail, :event, :mode, :synthetic)
-      
-      define_event 10, :focus_out_event, false
-      
-      module Methods
-        def encode_focus_out_event (detail, event, mode)
-          s = 10.chr.encode('BINARY')
-          s << [detail, Window.to_xid(self, event), mode].pack("CLCx3")
-          s = s.ljust(30, "\0")
-          s[2, 0] = "\0\0"
-          s
-        end
-      end
-      
-      module Methods
-        def decode_focus_out_event (s)
-          x = FocusOutEvent.new
-          x.detail, x.event, x.mode, x.synthetic, = s.slice!(0, 10).unpack("CLCx3C")
-          x.event = Window[self, x.event]
-          x.synthetic = x.synthetic != 0
-          x
-        end
-      end
-      
-      KeymapNotifyEvent = Struct.new(:keys, :synthetic)
-      
-      define_event 11, :keymap_notify_event, true
-      
-      module Methods
-        def encode_keymap_notify_event (keys)
-          s = 11.chr.encode('BINARY')
-          s << keys.map{|x|[x].pack("C")}
-          s = s.ljust(30, "\0")
-          s[2, 0] = "\0\0"
-          s
-        end
-      end
-      
-      module Methods
-        def decode_keymap_notify_event (s)
-          x = KeymapNotifyEvent.new
-          x.keys = s.slice!(0..31).unpack('C*')
-          x.synthetic, = s.slice!(0, 1).unpack("C")
-          x.synthetic = x.synthetic != 0
-          x
-        end
-      end
-      
-      ExposeEvent = Struct.new(:window, :x, :y, :width, :height, :count, :synthetic)
-      
-      define_event 12, :expose_event, false
-      
-      module Methods
-        def encode_expose_event (window, x, y, width, height, count)
-          s = 12.chr.encode('BINARY')
-          s << [Window.to_xid(self, window), x, y, width, height, count].pack("x1LSSSSSx2")
-          s = s.ljust(30, "\0")
-          s[2, 0] = "\0\0"
-          s
-        end
-      end
-      
-      module Methods
-        def decode_expose_event (s)
-          x = ExposeEvent.new
-          x.window, x.x, x.y, x.width, x.height, x.count, x.synthetic, = s.slice!(0, 18).unpack("x1LSSSSSx2C")
-          x.window = Window[self, x.window]
-          x.synthetic = x.synthetic != 0
-          x
-        end
-      end
-      
-      GraphicsExposureEvent = Struct.new(:drawable, :x, :y, :width, :height, :minor_opcode, :count, :major_opcode, :synthetic)
-      
-      define_event 13, :graphics_exposure_event, false
-      
-      module Methods
-        def encode_graphics_exposure_event (drawable, x, y, width, height, minor_opcode, count, major_opcode)
-          s = 13.chr.encode('BINARY')
-          s << [Drawable.to_xid(self, drawable), x, y, width, height, minor_opcode, count, major_opcode].pack("x1LSSSSSSCx3")
-          s = s.ljust(30, "\0")
-          s[2, 0] = "\0\0"
-          s
-        end
-      end
-      
-      module Methods
-        def decode_graphics_exposure_event (s)
-          x = GraphicsExposureEvent.new
-          x.drawable, x.x, x.y, x.width, x.height, x.minor_opcode, x.count, x.major_opcode, x.synthetic, = s.slice!(0, 22).unpack("x1LSSSSSSCx3C")
-          x.drawable = Drawable[self, x.drawable]
-          x.synthetic = x.synthetic != 0
-          x
-        end
-      end
-      
-      NoExposureEvent = Struct.new(:drawable, :minor_opcode, :major_opcode, :synthetic)
-      
-      define_event 14, :no_exposure_event, false
-      
-      module Methods
-        def encode_no_exposure_event (drawable, minor_opcode, major_opcode)
-          s = 14.chr.encode('BINARY')
-          s << [Drawable.to_xid(self, drawable), minor_opcode, major_opcode].pack("x1LSCx1")
-          s = s.ljust(30, "\0")
-          s[2, 0] = "\0\0"
-          s
-        end
-      end
-      
-      module Methods
-        def decode_no_exposure_event (s)
-          x = NoExposureEvent.new
-          x.drawable, x.minor_opcode, x.major_opcode, x.synthetic, = s.slice!(0, 10).unpack("x1LSCx1C")
-          x.drawable = Drawable[self, x.drawable]
-          x.synthetic = x.synthetic != 0
-          x
-        end
-      end
-      
       VISIBILITY = {:unobscured=>0, :partially_obscured=>1, :fully_obscured=>2}
       VISIBILITY_I = {0=>:unobscured, 1=>:partially_obscured, 2=>:fully_obscured}
       
@@ -785,287 +316,6 @@ module Alembic
       
       VISIBILITY.extend Alembic::ValueParamHelper
       
-      VisibilityNotifyEvent = Struct.new(:window, :state, :synthetic)
-      
-      define_event 15, :visibility_notify_event, false
-      
-      module Methods
-        def encode_visibility_notify_event (window, state)
-          s = 15.chr.encode('BINARY')
-          s << [Window.to_xid(self, window), state].pack("x1LCx3")
-          s = s.ljust(30, "\0")
-          s[2, 0] = "\0\0"
-          s
-        end
-      end
-      
-      module Methods
-        def decode_visibility_notify_event (s)
-          x = VisibilityNotifyEvent.new
-          x.window, x.state, x.synthetic, = s.slice!(0, 10).unpack("x1LCx3C")
-          x.window = Window[self, x.window]
-          x.synthetic = x.synthetic != 0
-          x
-        end
-      end
-      
-      CreateNotifyEvent = Struct.new(:parent, :window, :x, :y, :width, :height, :border_width, :override_redirect, :synthetic)
-      
-      define_event 16, :create_notify_event, false
-      
-      module Methods
-        def encode_create_notify_event (parent, window, x, y, width, height, border_width, override_redirect)
-          s = 16.chr.encode('BINARY')
-          s << [Window.to_xid(self, parent), Window.to_xid(self, window), x, y, width, height, border_width, override_redirect ? 1 : 0].pack("x1LLssSSSCx1")
-          s = s.ljust(30, "\0")
-          s[2, 0] = "\0\0"
-          s
-        end
-      end
-      
-      module Methods
-        def decode_create_notify_event (s)
-          x = CreateNotifyEvent.new
-          x.parent, x.window, x.x, x.y, x.width, x.height, x.border_width, x.override_redirect, x.synthetic, = s.slice!(0, 22).unpack("x1LLssSSSCx1C")
-          x.parent = Window[self, x.parent]
-          x.window = Window[self, x.window]
-          x.override_redirect = x.override_redirect != 0
-          x.synthetic = x.synthetic != 0
-          x
-        end
-      end
-      
-      DestroyNotifyEvent = Struct.new(:event, :window, :synthetic)
-      
-      define_event 17, :destroy_notify_event, false
-      
-      module Methods
-        def encode_destroy_notify_event (event, window)
-          s = 17.chr.encode('BINARY')
-          s << [Window.to_xid(self, event), Window.to_xid(self, window)].pack("x1LL")
-          s = s.ljust(30, "\0")
-          s[2, 0] = "\0\0"
-          s
-        end
-      end
-      
-      module Methods
-        def decode_destroy_notify_event (s)
-          x = DestroyNotifyEvent.new
-          x.event, x.window, x.synthetic, = s.slice!(0, 10).unpack("x1LLC")
-          x.event = Window[self, x.event]
-          x.window = Window[self, x.window]
-          x.synthetic = x.synthetic != 0
-          x
-        end
-      end
-      
-      UnmapNotifyEvent = Struct.new(:event, :window, :from_configure, :synthetic)
-      
-      define_event 18, :unmap_notify_event, false
-      
-      module Methods
-        def encode_unmap_notify_event (event, window, from_configure)
-          s = 18.chr.encode('BINARY')
-          s << [Window.to_xid(self, event), Window.to_xid(self, window), from_configure ? 1 : 0].pack("x1LLCx3")
-          s = s.ljust(30, "\0")
-          s[2, 0] = "\0\0"
-          s
-        end
-      end
-      
-      module Methods
-        def decode_unmap_notify_event (s)
-          x = UnmapNotifyEvent.new
-          x.event, x.window, x.from_configure, x.synthetic, = s.slice!(0, 14).unpack("x1LLCx3C")
-          x.event = Window[self, x.event]
-          x.window = Window[self, x.window]
-          x.from_configure = x.from_configure != 0
-          x.synthetic = x.synthetic != 0
-          x
-        end
-      end
-      
-      MapNotifyEvent = Struct.new(:event, :window, :override_redirect, :synthetic)
-      
-      define_event 19, :map_notify_event, false
-      
-      module Methods
-        def encode_map_notify_event (event, window, override_redirect)
-          s = 19.chr.encode('BINARY')
-          s << [Window.to_xid(self, event), Window.to_xid(self, window), override_redirect ? 1 : 0].pack("x1LLCx3")
-          s = s.ljust(30, "\0")
-          s[2, 0] = "\0\0"
-          s
-        end
-      end
-      
-      module Methods
-        def decode_map_notify_event (s)
-          x = MapNotifyEvent.new
-          x.event, x.window, x.override_redirect, x.synthetic, = s.slice!(0, 14).unpack("x1LLCx3C")
-          x.event = Window[self, x.event]
-          x.window = Window[self, x.window]
-          x.override_redirect = x.override_redirect != 0
-          x.synthetic = x.synthetic != 0
-          x
-        end
-      end
-      
-      MapRequestEvent = Struct.new(:parent, :window, :synthetic)
-      
-      define_event 20, :map_request_event, false
-      
-      module Methods
-        def encode_map_request_event (parent, window)
-          s = 20.chr.encode('BINARY')
-          s << [Window.to_xid(self, parent), Window.to_xid(self, window)].pack("x1LL")
-          s = s.ljust(30, "\0")
-          s[2, 0] = "\0\0"
-          s
-        end
-      end
-      
-      module Methods
-        def decode_map_request_event (s)
-          x = MapRequestEvent.new
-          x.parent, x.window, x.synthetic, = s.slice!(0, 10).unpack("x1LLC")
-          x.parent = Window[self, x.parent]
-          x.window = Window[self, x.window]
-          x.synthetic = x.synthetic != 0
-          x
-        end
-      end
-      
-      ReparentNotifyEvent = Struct.new(:event, :window, :parent, :x, :y, :override_redirect, :synthetic)
-      
-      define_event 21, :reparent_notify_event, false
-      
-      module Methods
-        def encode_reparent_notify_event (event, window, parent, x, y, override_redirect)
-          s = 21.chr.encode('BINARY')
-          s << [Window.to_xid(self, event), Window.to_xid(self, window), Window.to_xid(self, parent), x, y, override_redirect ? 1 : 0].pack("x1LLLssCx3")
-          s = s.ljust(30, "\0")
-          s[2, 0] = "\0\0"
-          s
-        end
-      end
-      
-      module Methods
-        def decode_reparent_notify_event (s)
-          x = ReparentNotifyEvent.new
-          x.event, x.window, x.parent, x.x, x.y, x.override_redirect, x.synthetic, = s.slice!(0, 22).unpack("x1LLLssCx3C")
-          x.event = Window[self, x.event]
-          x.window = Window[self, x.window]
-          x.parent = Window[self, x.parent]
-          x.override_redirect = x.override_redirect != 0
-          x.synthetic = x.synthetic != 0
-          x
-        end
-      end
-      
-      ConfigureNotifyEvent = Struct.new(:event, :window, :above_sibling, :x, :y, :width, :height, :border_width, :override_redirect, :synthetic)
-      
-      define_event 22, :configure_notify_event, false
-      
-      module Methods
-        def encode_configure_notify_event (event, window, above_sibling, x, y, width, height, border_width, override_redirect)
-          s = 22.chr.encode('BINARY')
-          s << [Window.to_xid(self, event), Window.to_xid(self, window), Window.to_xid(self, above_sibling), x, y, width, height, border_width, override_redirect ? 1 : 0].pack("x1LLLssSSSCx1")
-          s = s.ljust(30, "\0")
-          s[2, 0] = "\0\0"
-          s
-        end
-      end
-      
-      module Methods
-        def decode_configure_notify_event (s)
-          x = ConfigureNotifyEvent.new
-          x.event, x.window, x.above_sibling, x.x, x.y, x.width, x.height, x.border_width, x.override_redirect, x.synthetic, = s.slice!(0, 26).unpack("x1LLLssSSSCx1C")
-          x.event = Window[self, x.event]
-          x.window = Window[self, x.window]
-          x.above_sibling = Window[self, x.above_sibling]
-          x.override_redirect = x.override_redirect != 0
-          x.synthetic = x.synthetic != 0
-          x
-        end
-      end
-      
-      ConfigureRequestEvent = Struct.new(:stack_mode, :parent, :window, :sibling, :x, :y, :width, :height, :border_width, :value_mask, :synthetic)
-      
-      define_event 23, :configure_request_event, false
-      
-      module Methods
-        def encode_configure_request_event (stack_mode, parent, window, sibling, x, y, width, height, border_width, value_mask)
-          s = 23.chr.encode('BINARY')
-          s << [stack_mode, Window.to_xid(self, parent), Window.to_xid(self, window), Window.to_xid(self, sibling), x, y, width, height, border_width, value_mask].pack("CLLLssSSSS")
-          s = s.ljust(30, "\0")
-          s[2, 0] = "\0\0"
-          s
-        end
-      end
-      
-      module Methods
-        def decode_configure_request_event (s)
-          x = ConfigureRequestEvent.new
-          x.stack_mode, x.parent, x.window, x.sibling, x.x, x.y, x.width, x.height, x.border_width, x.value_mask, x.synthetic, = s.slice!(0, 26).unpack("CLLLssSSSSC")
-          x.parent = Window[self, x.parent]
-          x.window = Window[self, x.window]
-          x.sibling = Window[self, x.sibling]
-          x.synthetic = x.synthetic != 0
-          x
-        end
-      end
-      
-      GravityNotifyEvent = Struct.new(:event, :window, :x, :y, :synthetic)
-      
-      define_event 24, :gravity_notify_event, false
-      
-      module Methods
-        def encode_gravity_notify_event (event, window, x, y)
-          s = 24.chr.encode('BINARY')
-          s << [Window.to_xid(self, event), Window.to_xid(self, window), x, y].pack("x1LLss")
-          s = s.ljust(30, "\0")
-          s[2, 0] = "\0\0"
-          s
-        end
-      end
-      
-      module Methods
-        def decode_gravity_notify_event (s)
-          x = GravityNotifyEvent.new
-          x.event, x.window, x.x, x.y, x.synthetic, = s.slice!(0, 14).unpack("x1LLssC")
-          x.event = Window[self, x.event]
-          x.window = Window[self, x.window]
-          x.synthetic = x.synthetic != 0
-          x
-        end
-      end
-      
-      ResizeRequestEvent = Struct.new(:window, :width, :height, :synthetic)
-      
-      define_event 25, :resize_request_event, false
-      
-      module Methods
-        def encode_resize_request_event (window, width, height)
-          s = 25.chr.encode('BINARY')
-          s << [Window.to_xid(self, window), width, height].pack("x1LSS")
-          s = s.ljust(30, "\0")
-          s[2, 0] = "\0\0"
-          s
-        end
-      end
-      
-      module Methods
-        def decode_resize_request_event (s)
-          x = ResizeRequestEvent.new
-          x.window, x.width, x.height, x.synthetic, = s.slice!(0, 10).unpack("x1LSSC")
-          x.window = Window[self, x.window]
-          x.synthetic = x.synthetic != 0
-          x
-        end
-      end
-      
       PLACE = {:on_top=>0, :on_bottom=>1}
       PLACE_I = {0=>:on_top, 1=>:on_bottom}
       
@@ -1074,56 +324,6 @@ module Alembic
       
       PLACE.extend Alembic::ValueParamHelper
       
-      CirculateNotifyEvent = Struct.new(:event, :window, :place, :synthetic)
-      
-      define_event 26, :circulate_notify_event, false
-      
-      module Methods
-        def encode_circulate_notify_event (event, window, place)
-          s = 26.chr.encode('BINARY')
-          s << [Window.to_xid(self, event), Window.to_xid(self, window), place].pack("x1LLx4Cx3")
-          s = s.ljust(30, "\0")
-          s[2, 0] = "\0\0"
-          s
-        end
-      end
-      
-      module Methods
-        def decode_circulate_notify_event (s)
-          x = CirculateNotifyEvent.new
-          x.event, x.window, x.place, x.synthetic, = s.slice!(0, 18).unpack("x1LLx4Cx3C")
-          x.event = Window[self, x.event]
-          x.window = Window[self, x.window]
-          x.synthetic = x.synthetic != 0
-          x
-        end
-      end
-      
-      CirculateRequestEvent = Struct.new(:event, :window, :place, :synthetic)
-      
-      define_event 27, :circulate_request_event, false
-      
-      module Methods
-        def encode_circulate_request_event (event, window, place)
-          s = 27.chr.encode('BINARY')
-          s << [Window.to_xid(self, event), Window.to_xid(self, window), place].pack("x1LLx4Cx3")
-          s = s.ljust(30, "\0")
-          s[2, 0] = "\0\0"
-          s
-        end
-      end
-      
-      module Methods
-        def decode_circulate_request_event (s)
-          x = CirculateRequestEvent.new
-          x.event, x.window, x.place, x.synthetic, = s.slice!(0, 18).unpack("x1LLx4Cx3C")
-          x.event = Window[self, x.event]
-          x.window = Window[self, x.window]
-          x.synthetic = x.synthetic != 0
-          x
-        end
-      end
-      
       PROPERTY = {:new_value=>0, :delete=>1}
       PROPERTY_I = {0=>:new_value, 1=>:delete}
       
@@ -1131,56 +331,6 @@ module Alembic
       PROPERTY_DELETE = 1
       
       PROPERTY.extend Alembic::ValueParamHelper
-      
-      PropertyNotifyEvent = Struct.new(:window, :atom, :time, :state, :synthetic)
-      
-      define_event 28, :property_notify_event, false
-      
-      module Methods
-        def encode_property_notify_event (window, atom, time, state)
-          s = 28.chr.encode('BINARY')
-          s << [Window.to_xid(self, window), Atom.to_xid(self, atom), time, state].pack("x1LLLCx3")
-          s = s.ljust(30, "\0")
-          s[2, 0] = "\0\0"
-          s
-        end
-      end
-      
-      module Methods
-        def decode_property_notify_event (s)
-          x = PropertyNotifyEvent.new
-          x.window, x.atom, x.time, x.state, x.synthetic, = s.slice!(0, 18).unpack("x1LLLCx3C")
-          x.window = Window[self, x.window]
-          x.atom = Atom[self, x.atom]
-          x.synthetic = x.synthetic != 0
-          x
-        end
-      end
-      
-      SelectionClearEvent = Struct.new(:time, :owner, :selection, :synthetic)
-      
-      define_event 29, :selection_clear_event, false
-      
-      module Methods
-        def encode_selection_clear_event (time, owner, selection)
-          s = 29.chr.encode('BINARY')
-          s << [time, Window.to_xid(self, owner), Atom.to_xid(self, selection)].pack("x1LLL")
-          s = s.ljust(30, "\0")
-          s[2, 0] = "\0\0"
-          s
-        end
-      end
-      
-      module Methods
-        def decode_selection_clear_event (s)
-          x = SelectionClearEvent.new
-          x.time, x.owner, x.selection, x.synthetic, = s.slice!(0, 14).unpack("x1LLLC")
-          x.owner = Window[self, x.owner]
-          x.selection = Atom[self, x.selection]
-          x.synthetic = x.synthetic != 0
-          x
-        end
-      end
       
       TIME = {:current_time=>0}
       TIME_I = {0=>:current_time}
@@ -1265,61 +415,6 @@ module Alembic
       
       ATOM.extend Alembic::ValueParamHelper
       
-      SelectionRequestEvent = Struct.new(:time, :owner, :requestor, :selection, :target, :property, :synthetic)
-      
-      define_event 30, :selection_request_event, false
-      
-      module Methods
-        def encode_selection_request_event (time, owner, requestor, selection, target, property)
-          s = 30.chr.encode('BINARY')
-          s << [time, Window.to_xid(self, owner), Window.to_xid(self, requestor), Atom.to_xid(self, selection), Atom.to_xid(self, target), Atom.to_xid(self, property)].pack("x1LLLLLL")
-          s = s.ljust(30, "\0")
-          s[2, 0] = "\0\0"
-          s
-        end
-      end
-      
-      module Methods
-        def decode_selection_request_event (s)
-          x = SelectionRequestEvent.new
-          x.time, x.owner, x.requestor, x.selection, x.target, x.property, x.synthetic, = s.slice!(0, 26).unpack("x1LLLLLLC")
-          x.owner = Window[self, x.owner]
-          x.requestor = Window[self, x.requestor]
-          x.selection = Atom[self, x.selection]
-          x.target = Atom[self, x.target]
-          x.property = Atom[self, x.property]
-          x.synthetic = x.synthetic != 0
-          x
-        end
-      end
-      
-      SelectionNotifyEvent = Struct.new(:time, :requestor, :selection, :target, :property, :synthetic)
-      
-      define_event 31, :selection_notify_event, false
-      
-      module Methods
-        def encode_selection_notify_event (time, requestor, selection, target, property)
-          s = 31.chr.encode('BINARY')
-          s << [time, Window.to_xid(self, requestor), Atom.to_xid(self, selection), Atom.to_xid(self, target), Atom.to_xid(self, property)].pack("x1LLLLL")
-          s = s.ljust(30, "\0")
-          s[2, 0] = "\0\0"
-          s
-        end
-      end
-      
-      module Methods
-        def decode_selection_notify_event (s)
-          x = SelectionNotifyEvent.new
-          x.time, x.requestor, x.selection, x.target, x.property, x.synthetic, = s.slice!(0, 22).unpack("x1LLLLLC")
-          x.requestor = Window[self, x.requestor]
-          x.selection = Atom[self, x.selection]
-          x.target = Atom[self, x.target]
-          x.property = Atom[self, x.property]
-          x.synthetic = x.synthetic != 0
-          x
-        end
-      end
-      
       COLORMAP_STATE = {:uninstalled=>0, :installed=>1}
       COLORMAP_STATE_I = {0=>:uninstalled, 1=>:installed}
       
@@ -1335,60 +430,6 @@ module Alembic
       
       COLORMAP.extend Alembic::ValueParamHelper
       
-      ColormapNotifyEvent = Struct.new(:window, :colormap, :new, :state, :synthetic)
-      
-      define_event 32, :colormap_notify_event, false
-      
-      module Methods
-        def encode_colormap_notify_event (window, colormap, new, state)
-          s = 32.chr.encode('BINARY')
-          s << [Window.to_xid(self, window), Colormap.to_xid(self, colormap), new ? 1 : 0, state].pack("x1LLCCx2")
-          s = s.ljust(30, "\0")
-          s[2, 0] = "\0\0"
-          s
-        end
-      end
-      
-      module Methods
-        def decode_colormap_notify_event (s)
-          x = ColormapNotifyEvent.new
-          x.window, x.colormap, x.new, x.state, x.synthetic, = s.slice!(0, 14).unpack("x1LLCCx2C")
-          x.window = Window[self, x.window]
-          x.colormap = Colormap[self, x.colormap]
-          x.new = x.new != 0
-          x.synthetic = x.synthetic != 0
-          x
-        end
-      end
-      
-      ClientMessageEvent = Struct.new(:format, :window, :type, :data, :synthetic)
-      
-      define_event 33, :client_message_event, false
-      
-      module Methods
-        def encode_client_message_event (format, window, type, data)
-          s = 33.chr.encode('BINARY')
-          s << [format, Window.to_xid(self, window), Atom.to_xid(self, type)].pack("CLL")
-          s << encode_client_message_data(data)
-          s = s.ljust(30, "\0")
-          s[2, 0] = "\0\0"
-          s
-        end
-      end
-      
-      module Methods
-        def decode_client_message_event (s)
-          x = ClientMessageEvent.new
-          x.format, x.window, x.type, = s.slice!(0, 9).unpack("CLL")
-          x.window = Window[self, x.window]
-          x.type = Atom[self, x.type]
-          x.data = decode_client_message_data(s)
-          x.synthetic, = s.slice!(0, 1).unpack("C")
-          x.synthetic = x.synthetic != 0
-          x
-        end
-      end
-      
       MAPPING = {:modifier=>0, :keyboard=>1, :pointer=>2}
       MAPPING_I = {0=>:modifier, 1=>:keyboard, 2=>:pointer}
       
@@ -1397,119 +438,6 @@ module Alembic
       MAPPING_POINTER = 2
       
       MAPPING.extend Alembic::ValueParamHelper
-      
-      MappingNotifyEvent = Struct.new(:request, :first_keycode, :count, :synthetic)
-      
-      define_event 34, :mapping_notify_event, false
-      
-      module Methods
-        def encode_mapping_notify_event (request, first_keycode, count)
-          s = 34.chr.encode('BINARY')
-          s << [request, first_keycode, count].pack("x1CCCx1")
-          s = s.ljust(30, "\0")
-          s[2, 0] = "\0\0"
-          s
-        end
-      end
-      
-      module Methods
-        def decode_mapping_notify_event (s)
-          x = MappingNotifyEvent.new
-          x.request, x.first_keycode, x.count, x.synthetic, = s.slice!(0, 6).unpack("x1CCCx1C")
-          x.synthetic = x.synthetic != 0
-          x
-        end
-      end
-      
-      GeEvent = Struct.new(:synthetic)
-      
-      define_event 35, :ge_event, false
-      
-      module Methods
-        def encode_ge_event ()
-          s = 35.chr.encode('BINARY')
-          s = s.ljust(30, "\0")
-          s[2, 0] = "\0\0"
-          s
-        end
-      end
-      
-      module Methods
-        def decode_ge_event (s)
-          x = GeEvent.new
-          x.synthetic, = s.slice!(0, 23).unpack("x22C")
-          x.synthetic = x.synthetic != 0
-          x
-        end
-      end
-      
-      RequestError = Class.new(X11Error)
-      
-      define_error 1, RequestError
-      
-      ValueError = Class.new(X11Error)
-      
-      define_error 2, ValueError
-      
-      WindowError = Class.new(X11Error)
-      
-      define_error 3, WindowError
-      
-      PixmapError = Class.new(X11Error)
-      
-      define_error 4, PixmapError
-      
-      AtomError = Class.new(X11Error)
-      
-      define_error 5, AtomError
-      
-      CursorError = Class.new(X11Error)
-      
-      define_error 6, CursorError
-      
-      FontError = Class.new(X11Error)
-      
-      define_error 7, FontError
-      
-      MatchError = Class.new(X11Error)
-      
-      define_error 8, MatchError
-      
-      DrawableError = Class.new(X11Error)
-      
-      define_error 9, DrawableError
-      
-      AccessError = Class.new(X11Error)
-      
-      define_error 10, AccessError
-      
-      AllocError = Class.new(X11Error)
-      
-      define_error 11, AllocError
-      
-      ColormapError = Class.new(X11Error)
-      
-      define_error 12, ColormapError
-      
-      GContextError = Class.new(X11Error)
-      
-      define_error 13, GContextError
-      
-      IDChoiceError = Class.new(X11Error)
-      
-      define_error 14, IDChoiceError
-      
-      NameError = Class.new(X11Error)
-      
-      define_error 15, NameError
-      
-      LengthError = Class.new(X11Error)
-      
-      define_error 16, LengthError
-      
-      ImplementationError = Class.new(X11Error)
-      
-      define_error 17, ImplementationError
       
       WINDOW_CLASS = {:copy_from_parent=>0, :input_output=>1, :input_only=>2}
       WINDOW_CLASS_I = {0=>:copy_from_parent, 1=>:input_output, 2=>:input_only}
@@ -1567,30 +495,6 @@ module Alembic
       
       GRAVITY.extend Alembic::ValueParamHelper
       
-      module Methods
-        def create_window! (depth, wid, parent, x, y, width, height, border_width, klass, visual, value_mask, *value_list)
-          s = 1.chr.encode('BINARY')
-          s << [depth, Window.to_xid(self, wid), Window.to_xid(self, parent), x, y, width, height, border_width, klass, visual, value_mask, *value_list].pack("CLLssSSSSLLL*")
-          send_request(s)
-        end
-        
-        def create_window (depth, wid, parent, x, y, width, height, border_width, klass, visual, value_mask, *value_list)
-          create_window!(depth, wid, parent, x, y, width, height, border_width, klass, visual, value_mask, *value_list).wait
-        end
-      end
-      
-      module Methods
-        def change_window_attributes! (window, value_mask, *value_list)
-          s = 2.chr.encode('BINARY')
-          s << [Window.to_xid(self, window), value_mask, *value_list].pack("x1LLL*")
-          send_request(s)
-        end
-        
-        def change_window_attributes (window, value_mask, *value_list)
-          change_window_attributes!(window, value_mask, *value_list).wait
-        end
-      end
-      
       MAP_STATE = {:unmapped=>0, :unviewable=>1, :viewable=>2}
       MAP_STATE_I = {0=>:unmapped, 1=>:unviewable, 2=>:viewable}
       
@@ -1600,52 +504,6 @@ module Alembic
       
       MAP_STATE.extend Alembic::ValueParamHelper
       
-      GetWindowAttributesReply = Struct.new(:backing_store, :visual, :klass, :bit_gravity, :win_gravity, :backing_planes, :backing_pixel, :save_under, :map_is_installed, :map_state, :override_redirect, :colormap, :all_event_masks, :your_event_mask, :do_not_propagate_mask)
-      
-      module Methods
-        def get_window_attributes! (window)
-          s = 3.chr.encode('BINARY')
-          s << [Window.to_xid(self, window)].pack("x1L")
-          send_request(s) do |s|
-            x = GetWindowAttributesReply.new
-            x.backing_store, x.visual, x.klass, x.bit_gravity, x.win_gravity, x.backing_planes, x.backing_pixel, x.save_under, x.map_is_installed, x.map_state, x.override_redirect, x.colormap, x.all_event_masks, x.your_event_mask, x.do_not_propagate_mask, = s.slice!(0, 37).unpack("CLSCCLLCCCCLLLSx2")
-            x.save_under = x.save_under != 0
-            x.map_is_installed = x.map_is_installed != 0
-            x.override_redirect = x.override_redirect != 0
-            x.colormap = Colormap[self, x.colormap]
-            x
-          end
-        end
-        
-        def get_window_attributes (window)
-          get_window_attributes!(window).wait
-        end
-      end
-      
-      module Methods
-        def destroy_window! (window)
-          s = 4.chr.encode('BINARY')
-          s << [Window.to_xid(self, window)].pack("x1L")
-          send_request(s)
-        end
-        
-        def destroy_window (window)
-          destroy_window!(window).wait
-        end
-      end
-      
-      module Methods
-        def destroy_subwindows! (window)
-          s = 5.chr.encode('BINARY')
-          s << [Window.to_xid(self, window)].pack("x1L")
-          send_request(s)
-        end
-        
-        def destroy_subwindows (window)
-          destroy_subwindows!(window).wait
-        end
-      end
-      
       SET_MODE = {:insert=>0, :delete=>1}
       SET_MODE_I = {0=>:insert, 1=>:delete}
       
@@ -1653,78 +511,6 @@ module Alembic
       SET_MODE_DELETE = 1
       
       SET_MODE.extend Alembic::ValueParamHelper
-      
-      module Methods
-        def change_save_set! (mode, window)
-          s = 6.chr.encode('BINARY')
-          s << [mode, Window.to_xid(self, window)].pack("CL")
-          send_request(s)
-        end
-        
-        def change_save_set (mode, window)
-          change_save_set!(mode, window).wait
-        end
-      end
-      
-      module Methods
-        def reparent_window! (window, parent, x, y)
-          s = 7.chr.encode('BINARY')
-          s << [Window.to_xid(self, window), Window.to_xid(self, parent), x, y].pack("x1LLss")
-          send_request(s)
-        end
-        
-        def reparent_window (window, parent, x, y)
-          reparent_window!(window, parent, x, y).wait
-        end
-      end
-      
-      module Methods
-        def map_window! (window)
-          s = 8.chr.encode('BINARY')
-          s << [Window.to_xid(self, window)].pack("x1L")
-          send_request(s)
-        end
-        
-        def map_window (window)
-          map_window!(window).wait
-        end
-      end
-      
-      module Methods
-        def map_subwindows! (window)
-          s = 9.chr.encode('BINARY')
-          s << [Window.to_xid(self, window)].pack("x1L")
-          send_request(s)
-        end
-        
-        def map_subwindows (window)
-          map_subwindows!(window).wait
-        end
-      end
-      
-      module Methods
-        def unmap_window! (window)
-          s = 10.chr.encode('BINARY')
-          s << [Window.to_xid(self, window)].pack("x1L")
-          send_request(s)
-        end
-        
-        def unmap_window (window)
-          unmap_window!(window).wait
-        end
-      end
-      
-      module Methods
-        def unmap_subwindows! (window)
-          s = 11.chr.encode('BINARY')
-          s << [Window.to_xid(self, window)].pack("x1L")
-          send_request(s)
-        end
-        
-        def unmap_subwindows (window)
-          unmap_subwindows!(window).wait
-        end
-      end
       
       CONFIG_WINDOW = {:x=>1, :y=>2, :width=>4, :height=>8, :border_width=>16, :sibling=>32, :stack_mode=>64}
       CONFIG_WINDOW_I = {1=>:x, 2=>:y, 4=>:width, 8=>:height, 16=>:border_width, 32=>:sibling, 64=>:stack_mode}
@@ -1750,18 +536,6 @@ module Alembic
       
       STACK_MODE.extend Alembic::ValueParamHelper
       
-      module Methods
-        def configure_window! (window, value_mask, *value_list)
-          s = 12.chr.encode('BINARY')
-          s << [Window.to_xid(self, window), value_mask, *value_list].pack("x1LSx2L*")
-          send_request(s)
-        end
-        
-        def configure_window (window, value_mask, *value_list)
-          configure_window!(window, value_mask, *value_list).wait
-        end
-      end
-      
       CIRCULATE = {:raise_lowest=>0, :lower_highest=>1}
       CIRCULATE_I = {0=>:raise_lowest, 1=>:lower_highest}
       
@@ -1769,97 +543,6 @@ module Alembic
       CIRCULATE_LOWER_HIGHEST = 1
       
       CIRCULATE.extend Alembic::ValueParamHelper
-      
-      module Methods
-        def circulate_window! (direction, window)
-          s = 13.chr.encode('BINARY')
-          s << [direction, Window.to_xid(self, window)].pack("CL")
-          send_request(s)
-        end
-        
-        def circulate_window (direction, window)
-          circulate_window!(direction, window).wait
-        end
-      end
-      
-      GetGeometryReply = Struct.new(:depth, :root, :x, :y, :width, :height, :border_width)
-      
-      module Methods
-        def get_geometry! (drawable)
-          s = 14.chr.encode('BINARY')
-          s << [Drawable.to_xid(self, drawable)].pack("x1L")
-          send_request(s) do |s|
-            x = GetGeometryReply.new
-            x.depth, x.root, x.x, x.y, x.width, x.height, x.border_width, = s.slice!(0, 17).unpack("CLssSSSx2")
-            x.root = Window[self, x.root]
-            x
-          end
-        end
-        
-        def get_geometry (drawable)
-          get_geometry!(drawable).wait
-        end
-      end
-      
-      QueryTreeReply = Struct.new(:root, :parent, :children_len, :children)
-      
-      module Methods
-        def query_tree! (window)
-          s = 15.chr.encode('BINARY')
-          s << [Window.to_xid(self, window)].pack("x1L")
-          send_request(s) do |s|
-            x = QueryTreeReply.new
-            x.root, x.parent, x.children_len, *x.children = s.unpack("x1LLSx14L*")
-            x.root = Window[self, x.root]
-            x.parent = Window[self, x.parent]
-            x.children = x.children ? x.children.map{|x|Window[self, x]} : []
-            x
-          end
-        end
-        
-        def query_tree (window)
-          query_tree!(window).wait
-        end
-      end
-      
-      InternAtomReply = Struct.new(:atom)
-      
-      module Methods
-        def intern_atom! (only_if_exists, name)
-          s = 16.chr.encode('BINARY')
-          name_len = name.length
-          s << [only_if_exists ? 1 : 0, name_len, pad(name)].pack("CSx2A*")
-          send_request(s) do |s|
-            x = InternAtomReply.new
-            x.atom, = s.slice!(0, 5).unpack("x1L")
-            x.atom = Atom[self, x.atom]
-            x.atom
-          end
-        end
-        
-        def intern_atom (only_if_exists, name)
-          intern_atom!(only_if_exists, name).wait
-        end
-      end
-      
-      GetAtomNameReply = Struct.new(:name_len, :name)
-      
-      module Methods
-        def get_atom_name! (atom)
-          s = 17.chr.encode('BINARY')
-          s << [Atom.to_xid(self, atom)].pack("x1L")
-          send_request(s) do |s|
-            x = GetAtomNameReply.new
-            x.name_len, = s.slice!(0, 25).unpack("x1Sx22")
-            x.name = s.slice!(0, x.name_len)
-            x.name
-          end
-        end
-        
-        def get_atom_name (atom)
-          get_atom_name!(atom).wait
-        end
-      end
       
       PROP_MODE = {:replace=>0, :prepend=>1, :append=>2}
       PROP_MODE_I = {0=>:replace, 1=>:prepend, 2=>:append}
@@ -1870,118 +553,12 @@ module Alembic
       
       PROP_MODE.extend Alembic::ValueParamHelper
       
-      module Methods
-        def change_property! (mode, window, property, type, format, data_len, data)
-          s = 18.chr.encode('BINARY')
-          s << [mode, Window.to_xid(self, window), Atom.to_xid(self, property), Atom.to_xid(self, type), format, data_len, pad(data)].pack("CLLLCx3LA*")
-          send_request(s)
-        end
-        
-        def change_property (mode, window, property, type, format, data_len, data)
-          change_property!(mode, window, property, type, format, data_len, data).wait
-        end
-      end
-      
-      module Methods
-        def delete_property! (window, property)
-          s = 19.chr.encode('BINARY')
-          s << [Window.to_xid(self, window), Atom.to_xid(self, property)].pack("x1LL")
-          send_request(s)
-        end
-        
-        def delete_property (window, property)
-          delete_property!(window, property).wait
-        end
-      end
-      
       GET_PROPERTY_TYPE = {:any=>0}
       GET_PROPERTY_TYPE_I = {0=>:any}
       
       GET_PROPERTY_TYPE_ANY = 0
       
       GET_PROPERTY_TYPE.extend Alembic::ValueParamHelper
-      
-      GetPropertyReply = Struct.new(:format, :type, :bytes_after, :value_len, :value)
-      
-      module Methods
-        def get_property! (delete, window, property, type, long_offset, long_length)
-          s = 20.chr.encode('BINARY')
-          s << [delete ? 1 : 0, Window.to_xid(self, window), Atom.to_xid(self, property), Atom.to_xid(self, type), long_offset, long_length].pack("CLLLLL")
-          send_request(s) do |s|
-            x = GetPropertyReply.new
-            x.format, x.type, x.bytes_after, x.value_len, = s.slice!(0, 25).unpack("CLLLx12")
-            x.type = Atom[self, x.type]
-            x.value = s.slice!(0, (x.value_len * (x.format / 8)))
-            x
-          end
-        end
-        
-        def get_property (delete, window, property, type, long_offset, long_length)
-          get_property!(delete, window, property, type, long_offset, long_length).wait
-        end
-      end
-      
-      ListPropertiesReply = Struct.new(:atoms_len, :atoms)
-      
-      module Methods
-        def list_properties! (window)
-          s = 21.chr.encode('BINARY')
-          s << [Window.to_xid(self, window)].pack("x1L")
-          send_request(s) do |s|
-            x = ListPropertiesReply.new
-            x.atoms_len, *x.atoms = s.unpack("x1Sx22L*")
-            x.atoms = x.atoms ? x.atoms.map{|x|Atom[self, x]} : []
-            x.atoms
-          end
-        end
-        
-        def list_properties (window)
-          list_properties!(window).wait
-        end
-      end
-      
-      module Methods
-        def set_selection_owner! (owner, selection, time)
-          s = 22.chr.encode('BINARY')
-          s << [Window.to_xid(self, owner), Atom.to_xid(self, selection), time].pack("x1LLL")
-          send_request(s)
-        end
-        
-        def set_selection_owner (owner, selection, time)
-          set_selection_owner!(owner, selection, time).wait
-        end
-      end
-      
-      GetSelectionOwnerReply = Struct.new(:owner)
-      
-      module Methods
-        def get_selection_owner! (selection)
-          s = 23.chr.encode('BINARY')
-          s << [Atom.to_xid(self, selection)].pack("x1L")
-          send_request(s) do |s|
-            x = GetSelectionOwnerReply.new
-            x.owner, = s.slice!(0, 5).unpack("x1L")
-            x.owner = Window[self, x.owner]
-            x.owner
-          end
-        end
-        
-        def get_selection_owner (selection)
-          get_selection_owner!(selection).wait
-        end
-      end
-      
-      module Methods
-        def convert_selection! (requestor, selection, target, property, time)
-          s = 24.chr.encode('BINARY')
-          s << [Window.to_xid(self, requestor), Atom.to_xid(self, selection), Atom.to_xid(self, target), Atom.to_xid(self, property), time].pack("x1LLLLL")
-          send_request(s)
-        end
-        
-        def convert_selection (requestor, selection, target, property, time)
-          convert_selection!(requestor, selection, target, property, time).wait
-        end
-      end
       
       SEND_EVENT_DEST = {:pointer_window=>0, :item_focus=>1}
       SEND_EVENT_DEST_I = {0=>:pointer_window, 1=>:item_focus}
@@ -1990,18 +567,6 @@ module Alembic
       SEND_EVENT_DEST_ITEM_FOCUS = 1
       
       SEND_EVENT_DEST.extend Alembic::ValueParamHelper
-      
-      module Methods
-        def send_event! (propagate, destination, event_mask, event)
-          s = 25.chr.encode('BINARY')
-          s << [propagate ? 1 : 0, Window.to_xid(self, destination), event_mask, pad(event)].pack("CLLA*")
-          send_request(s)
-        end
-        
-        def send_event (propagate, destination, event_mask, event)
-          send_event!(propagate, destination, event_mask, event).wait
-        end
-      end
       
       GRAB_MODE = {:sync=>0, :async=>1}
       GRAB_MODE_I = {0=>:sync, 1=>:async}
@@ -2029,36 +594,6 @@ module Alembic
       
       CURSOR.extend Alembic::ValueParamHelper
       
-      GrabPointerReply = Struct.new(:status)
-      
-      module Methods
-        def grab_pointer! (owner_events, grab_window, event_mask, pointer_mode, keyboard_mode, confine_to, cursor, time)
-          s = 26.chr.encode('BINARY')
-          s << [owner_events ? 1 : 0, Window.to_xid(self, grab_window), event_mask, pointer_mode, keyboard_mode, Window.to_xid(self, confine_to), Cursor.to_xid(self, cursor), time].pack("CLSCCLLL")
-          send_request(s) do |s|
-            x = GrabPointerReply.new
-            x.status, = s.slice!(0, 1).unpack("C")
-            x.status
-          end
-        end
-        
-        def grab_pointer (owner_events, grab_window, event_mask, pointer_mode, keyboard_mode, confine_to, cursor, time)
-          grab_pointer!(owner_events, grab_window, event_mask, pointer_mode, keyboard_mode, confine_to, cursor, time).wait
-        end
-      end
-      
-      module Methods
-        def ungrab_pointer! (time)
-          s = 27.chr.encode('BINARY')
-          s << [time].pack("x1L")
-          send_request(s)
-        end
-        
-        def ungrab_pointer (time)
-          ungrab_pointer!(time).wait
-        end
-      end
-      
       BUTTON_INDEX = {:any=>0, :"1"=>1, :"2"=>2, :"3"=>3, :"4"=>4, :"5"=>5}
       BUTTON_INDEX_I = {0=>:any, 1=>:"1", 2=>:"2", 3=>:"3", 4=>:"4", 5=>:"5"}
       
@@ -2071,102 +606,12 @@ module Alembic
       
       BUTTON_INDEX.extend Alembic::ValueParamHelper
       
-      module Methods
-        def grab_button! (owner_events, grab_window, event_mask, pointer_mode, keyboard_mode, confine_to, cursor, button, modifiers)
-          s = 28.chr.encode('BINARY')
-          s << [owner_events ? 1 : 0, Window.to_xid(self, grab_window), event_mask, pointer_mode, keyboard_mode, Window.to_xid(self, confine_to), Cursor.to_xid(self, cursor), button, modifiers].pack("CLSCCLLCx1S")
-          send_request(s)
-        end
-        
-        def grab_button (owner_events, grab_window, event_mask, pointer_mode, keyboard_mode, confine_to, cursor, button, modifiers)
-          grab_button!(owner_events, grab_window, event_mask, pointer_mode, keyboard_mode, confine_to, cursor, button, modifiers).wait
-        end
-      end
-      
-      module Methods
-        def ungrab_button! (button, grab_window, modifiers)
-          s = 29.chr.encode('BINARY')
-          s << [button, Window.to_xid(self, grab_window), modifiers].pack("CLSx2")
-          send_request(s)
-        end
-        
-        def ungrab_button (button, grab_window, modifiers)
-          ungrab_button!(button, grab_window, modifiers).wait
-        end
-      end
-      
-      module Methods
-        def change_active_pointer_grab! (cursor, time, event_mask)
-          s = 30.chr.encode('BINARY')
-          s << [Cursor.to_xid(self, cursor), time, event_mask].pack("x1LLSx2")
-          send_request(s)
-        end
-        
-        def change_active_pointer_grab (cursor, time, event_mask)
-          change_active_pointer_grab!(cursor, time, event_mask).wait
-        end
-      end
-      
-      GrabKeyboardReply = Struct.new(:status)
-      
-      module Methods
-        def grab_keyboard! (owner_events, grab_window, time, pointer_mode, keyboard_mode)
-          s = 31.chr.encode('BINARY')
-          s << [owner_events ? 1 : 0, Window.to_xid(self, grab_window), time, pointer_mode, keyboard_mode].pack("CLLCCx2")
-          send_request(s) do |s|
-            x = GrabKeyboardReply.new
-            x.status, = s.slice!(0, 1).unpack("C")
-            x.status
-          end
-        end
-        
-        def grab_keyboard (owner_events, grab_window, time, pointer_mode, keyboard_mode)
-          grab_keyboard!(owner_events, grab_window, time, pointer_mode, keyboard_mode).wait
-        end
-      end
-      
-      module Methods
-        def ungrab_keyboard! (time)
-          s = 32.chr.encode('BINARY')
-          s << [time].pack("x1L")
-          send_request(s)
-        end
-        
-        def ungrab_keyboard (time)
-          ungrab_keyboard!(time).wait
-        end
-      end
-      
       GRAB = {:any=>0}
       GRAB_I = {0=>:any}
       
       GRAB_ANY = 0
       
       GRAB.extend Alembic::ValueParamHelper
-      
-      module Methods
-        def grab_key! (owner_events, grab_window, modifiers, key, pointer_mode, keyboard_mode)
-          s = 33.chr.encode('BINARY')
-          s << [owner_events ? 1 : 0, Window.to_xid(self, grab_window), modifiers, key, pointer_mode, keyboard_mode].pack("CLSCCCx3")
-          send_request(s)
-        end
-        
-        def grab_key (owner_events, grab_window, modifiers, key, pointer_mode, keyboard_mode)
-          grab_key!(owner_events, grab_window, modifiers, key, pointer_mode, keyboard_mode).wait
-        end
-      end
-      
-      module Methods
-        def ungrab_key! (key, grab_window, modifiers)
-          s = 34.chr.encode('BINARY')
-          s << [key, Window.to_xid(self, grab_window), modifiers].pack("CLSx2")
-          send_request(s)
-        end
-        
-        def ungrab_key (key, grab_window, modifiers)
-          ungrab_key!(key, grab_window, modifiers).wait
-        end
-      end
       
       ALLOW = {:async_pointer=>0, :sync_pointer=>1, :replay_pointer=>2, :async_keyboard=>3, :sync_keyboard=>4, :replay_keyboard=>5, :async_both=>6, :sync_both=>7}
       ALLOW_I = {0=>:async_pointer, 1=>:sync_pointer, 2=>:replay_pointer, 3=>:async_keyboard, 4=>:sync_keyboard, 5=>:replay_keyboard, 6=>:async_both, 7=>:sync_both}
@@ -2182,129 +627,6 @@ module Alembic
       
       ALLOW.extend Alembic::ValueParamHelper
       
-      module Methods
-        def allow_events! (mode, time)
-          s = 35.chr.encode('BINARY')
-          s << [mode, time].pack("CL")
-          send_request(s)
-        end
-        
-        def allow_events (mode, time)
-          allow_events!(mode, time).wait
-        end
-      end
-      
-      module Methods
-        def grab_server! ()
-          s = 36.chr.encode('BINARY')
-          send_request(s)
-        end
-        
-        def grab_server ()
-          grab_server!().wait
-        end
-      end
-      
-      module Methods
-        def ungrab_server! ()
-          s = 37.chr.encode('BINARY')
-          send_request(s)
-        end
-        
-        def ungrab_server ()
-          ungrab_server!().wait
-        end
-      end
-      
-      QueryPointerReply = Struct.new(:same_screen, :root, :child, :root_x, :root_y, :win_x, :win_y, :mask)
-      
-      module Methods
-        def query_pointer! (window)
-          s = 38.chr.encode('BINARY')
-          s << [Window.to_xid(self, window)].pack("x1L")
-          send_request(s) do |s|
-            x = QueryPointerReply.new
-            x.same_screen, x.root, x.child, x.root_x, x.root_y, x.win_x, x.win_y, x.mask, = s.slice!(0, 21).unpack("CLLssssSx2")
-            x.same_screen = x.same_screen != 0
-            x.root = Window[self, x.root]
-            x.child = Window[self, x.child]
-            x
-          end
-        end
-        
-        def query_pointer (window)
-          query_pointer!(window).wait
-        end
-      end
-      
-      TIMECOORD = Struct.new(:time, :x, :y)
-      
-      module Methods
-        def encode_timecoord (s, time, x, y)
-          s << [time, x, y].pack("Lss")
-          s
-        end
-      end
-      
-      module Methods
-        def decode_timecoord (s)
-          x = TIMECOORD.new
-          x.time, x.x, x.y, = s.slice!(0, 8).unpack("Lss")
-          x
-        end
-      end
-      
-      GetMotionEventsReply = Struct.new(:events_len, :events)
-      
-      module Methods
-        def get_motion_events! (window, start, stop)
-          s = 39.chr.encode('BINARY')
-          s << [Window.to_xid(self, window), start, stop].pack("x1LLL")
-          send_request(s) do |s|
-            x = GetMotionEventsReply.new
-            x.events_len, = s.slice!(0, 25).unpack("x1Lx20")
-            x.events = x.events_len.times.map{decode_timecoord(s)}
-            x.events
-          end
-        end
-        
-        def get_motion_events (window, start, stop)
-          get_motion_events!(window, start, stop).wait
-        end
-      end
-      
-      TranslateCoordinatesReply = Struct.new(:same_screen, :child, :dst_x, :dst_y)
-      
-      module Methods
-        def translate_coordinates! (src_window, dst_window, src_x, src_y)
-          s = 40.chr.encode('BINARY')
-          s << [Window.to_xid(self, src_window), Window.to_xid(self, dst_window), src_x, src_y].pack("x1LLss")
-          send_request(s) do |s|
-            x = TranslateCoordinatesReply.new
-            x.same_screen, x.child, x.dst_x, x.dst_y, = s.slice!(0, 9).unpack("CLss")
-            x.same_screen = x.same_screen != 0
-            x.child = Window[self, x.child]
-            x
-          end
-        end
-        
-        def translate_coordinates (src_window, dst_window, src_x, src_y)
-          translate_coordinates!(src_window, dst_window, src_x, src_y).wait
-        end
-      end
-      
-      module Methods
-        def warp_pointer! (src_window, dst_window, src_x, src_y, src_width, src_height, dst_x, dst_y)
-          s = 41.chr.encode('BINARY')
-          s << [Window.to_xid(self, src_window), Window.to_xid(self, dst_window), src_x, src_y, src_width, src_height, dst_x, dst_y].pack("x1LLssSSss")
-          send_request(s)
-        end
-        
-        def warp_pointer (src_window, dst_window, src_x, src_y, src_width, src_height, dst_x, dst_y)
-          warp_pointer!(src_window, dst_window, src_x, src_y, src_width, src_height, dst_x, dst_y).wait
-        end
-      end
-      
       INPUT_FOCUS = {:none=>0, :pointer_root=>1, :parent=>2, :follow_keyboard=>3}
       INPUT_FOCUS_I = {0=>:none, 1=>:pointer_root, 2=>:parent, 3=>:follow_keyboard}
       
@@ -2315,79 +637,6 @@ module Alembic
       
       INPUT_FOCUS.extend Alembic::ValueParamHelper
       
-      module Methods
-        def set_input_focus! (revert_to, focus, time)
-          s = 42.chr.encode('BINARY')
-          s << [revert_to, Window.to_xid(self, focus), time].pack("CLL")
-          send_request(s)
-        end
-        
-        def set_input_focus (revert_to, focus, time)
-          set_input_focus!(revert_to, focus, time).wait
-        end
-      end
-      
-      GetInputFocusReply = Struct.new(:revert_to, :focus)
-      
-      module Methods
-        def get_input_focus! ()
-          s = 43.chr.encode('BINARY')
-          send_request(s) do |s|
-            x = GetInputFocusReply.new
-            x.revert_to, x.focus, = s.slice!(0, 5).unpack("CL")
-            x.focus = Window[self, x.focus]
-            x
-          end
-        end
-        
-        def get_input_focus ()
-          get_input_focus!().wait
-        end
-      end
-      
-      QueryKeymapReply = Struct.new(:keys)
-      
-      module Methods
-        def query_keymap! ()
-          s = 44.chr.encode('BINARY')
-          send_request(s) do |s|
-            x = QueryKeymapReply.new
-            s.slice!(0, 1)
-            x.keys = s.slice!(0..32).unpack('C*')
-            x.keys
-          end
-        end
-        
-        def query_keymap ()
-          query_keymap!().wait
-        end
-      end
-      
-      module Methods
-        def open_font! (fid, name)
-          s = 45.chr.encode('BINARY')
-          name_len = name.length
-          s << [Font.to_xid(self, fid), name_len, pad(name)].pack("x1LSx2A*")
-          send_request(s)
-        end
-        
-        def open_font (fid, name)
-          open_font!(fid, name).wait
-        end
-      end
-      
-      module Methods
-        def close_font! (font)
-          s = 46.chr.encode('BINARY')
-          s << [Font.to_xid(self, font)].pack("x1L")
-          send_request(s)
-        end
-        
-        def close_font (font)
-          close_font!(font).wait
-        end
-      end
-      
       FONT_DRAW = {:left_to_right=>0, :right_to_left=>1}
       FONT_DRAW_I = {0=>:left_to_right, 1=>:right_to_left}
       
@@ -2395,207 +644,6 @@ module Alembic
       FONT_DRAW_RIGHT_TO_LEFT = 1
       
       FONT_DRAW.extend Alembic::ValueParamHelper
-      
-      FONTPROP = Struct.new(:name, :value)
-      
-      module Methods
-        def encode_fontprop (s, name, value)
-          s << [Atom.to_xid(self, name), value].pack("LL")
-          s
-        end
-      end
-      
-      module Methods
-        def decode_fontprop (s)
-          x = FONTPROP.new
-          x.name, x.value, = s.slice!(0, 8).unpack("LL")
-          x.name = Atom[self, x.name]
-          x
-        end
-      end
-      
-      CHARINFO = Struct.new(:left_side_bearing, :right_side_bearing, :character_width, :ascent, :descent, :attributes)
-      
-      module Methods
-        def encode_charinfo (s, left_side_bearing, right_side_bearing, character_width, ascent, descent, attributes)
-          s << [left_side_bearing, right_side_bearing, character_width, ascent, descent, attributes].pack("sssssS")
-          s
-        end
-      end
-      
-      module Methods
-        def decode_charinfo (s)
-          x = CHARINFO.new
-          x.left_side_bearing, x.right_side_bearing, x.character_width, x.ascent, x.descent, x.attributes, = s.slice!(0, 12).unpack("sssssS")
-          x
-        end
-      end
-      
-      QueryFontReply = Struct.new(:min_bounds, :max_bounds, :min_char_or_byte2, :max_char_or_byte2, :default_char, :properties_len, :draw_direction, :min_byte1, :max_byte1, :all_chars_exist, :font_ascent, :font_descent, :char_infos_len, :properties, :char_infos)
-      
-      module Methods
-        def query_font! (font)
-          s = 47.chr.encode('BINARY')
-          s << [Fontable.to_xid(self, font)].pack("x1L")
-          send_request(s) do |s|
-            x = QueryFontReply.new
-            s.slice!(0, 1)
-            x.min_bounds = decode_charinfo(s)
-            s.slice!(0, 4)
-            x.max_bounds = decode_charinfo(s)
-            x.min_char_or_byte2, x.max_char_or_byte2, x.default_char, x.properties_len, x.draw_direction, x.min_byte1, x.max_byte1, x.all_chars_exist, x.font_ascent, x.font_descent, x.char_infos_len, = s.slice!(0, 24).unpack("x4SSSSCCCCssL")
-            x.all_chars_exist = x.all_chars_exist != 0
-            x.properties = x.properties_len.times.map{decode_fontprop(s)}
-            x.char_infos = x.char_infos_len.times.map{decode_charinfo(s)}
-            x
-          end
-        end
-        
-        def query_font (font)
-          query_font!(font).wait
-        end
-      end
-      
-      QueryTextExtentsReply = Struct.new(:draw_direction, :font_ascent, :font_descent, :overall_ascent, :overall_descent, :overall_width, :overall_left, :overall_right)
-      
-      module Methods
-        def query_text_extents! (font, string)
-          s = 48.chr.encode('BINARY')
-          s << raise('this doesn\'t work')
-          s << [Fontable.to_xid(self, font)].pack("L")
-          s << string.map{|x|encode_char2b(x)}
-          send_request(s) do |s|
-            x = QueryTextExtentsReply.new
-            x.draw_direction, x.font_ascent, x.font_descent, x.overall_ascent, x.overall_descent, x.overall_width, x.overall_left, x.overall_right, = s.slice!(0, 21).unpack("Csssslll")
-            x
-          end
-        end
-        
-        def query_text_extents (font, string)
-          query_text_extents!(font, string).wait
-        end
-      end
-      
-      STR = Struct.new(:name_len, :name)
-      
-      module Methods
-        def encode_str (s, name)
-          name_len = name.length
-          s << [name_len, pad(name)].pack("CA*")
-          s
-        end
-      end
-      
-      module Methods
-        def decode_str (s)
-          x = STR.new
-          x.name_len, = s.slice!(0, 1).unpack("C")
-          x.name = s.slice!(0, x.name_len)
-          x
-        end
-      end
-      
-      ListFontsReply = Struct.new(:names_len, :names)
-      
-      module Methods
-        def list_fonts! (max_names, pattern)
-          s = 49.chr.encode('BINARY')
-          pattern_len = pattern.length
-          s << [max_names, pattern_len, pad(pattern)].pack("x1SSA*")
-          send_request(s) do |s|
-            x = ListFontsReply.new
-            x.names_len, = s.slice!(0, 25).unpack("x1Sx22")
-            x.names = x.names_len.times.map{decode_str(s)}
-            x.names
-          end
-        end
-        
-        def list_fonts (max_names, pattern)
-          list_fonts!(max_names, pattern).wait
-        end
-      end
-      
-      ListFontsWithInfoReply = Struct.new(:name_len, :min_bounds, :max_bounds, :min_char_or_byte2, :max_char_or_byte2, :default_char, :properties_len, :draw_direction, :min_byte1, :max_byte1, :all_chars_exist, :font_ascent, :font_descent, :replies_hint, :properties, :name)
-      
-      module Methods
-        def list_fonts_with_info! (max_names, pattern)
-          s = 50.chr.encode('BINARY')
-          pattern_len = pattern.length
-          s << [max_names, pattern_len, pad(pattern)].pack("x1SSA*")
-          send_request(s) do |s|
-            x = ListFontsWithInfoReply.new
-            x.name_len, = s.slice!(0, 1).unpack("C")
-            x.min_bounds = decode_charinfo(s)
-            s.slice!(0, 4)
-            x.max_bounds = decode_charinfo(s)
-            x.min_char_or_byte2, x.max_char_or_byte2, x.default_char, x.properties_len, x.draw_direction, x.min_byte1, x.max_byte1, x.all_chars_exist, x.font_ascent, x.font_descent, x.replies_hint, = s.slice!(0, 24).unpack("x4SSSSCCCCssL")
-            x.all_chars_exist = x.all_chars_exist != 0
-            x.properties = x.properties_len.times.map{decode_fontprop(s)}
-            x.name = s.slice!(0, x.name_len)
-            x
-          end
-        end
-        
-        def list_fonts_with_info (max_names, pattern)
-          list_fonts_with_info!(max_names, pattern).wait
-        end
-      end
-      
-      module Methods
-        def set_font_path! (font)
-          s = 51.chr.encode('BINARY')
-          font_qty = font.length
-          s << [font_qty].pack("x1Sx2")
-          s << font.map{|x|encode_str(x)}
-          send_request(s)
-        end
-        
-        def set_font_path (font)
-          set_font_path!(font).wait
-        end
-      end
-      
-      GetFontPathReply = Struct.new(:path_len, :path)
-      
-      module Methods
-        def get_font_path! ()
-          s = 52.chr.encode('BINARY')
-          send_request(s) do |s|
-            x = GetFontPathReply.new
-            x.path_len, = s.slice!(0, 25).unpack("x1Sx22")
-            x.path = x.path_len.times.map{decode_str(s)}
-            x.path
-          end
-        end
-        
-        def get_font_path ()
-          get_font_path!().wait
-        end
-      end
-      
-      module Methods
-        def create_pixmap! (depth, pid, drawable, width, height)
-          s = 53.chr.encode('BINARY')
-          s << [depth, Pixmap.to_xid(self, pid), Drawable.to_xid(self, drawable), width, height].pack("CLLSS")
-          send_request(s)
-        end
-        
-        def create_pixmap (depth, pid, drawable, width, height)
-          create_pixmap!(depth, pid, drawable, width, height).wait
-        end
-      end
-      
-      module Methods
-        def free_pixmap! (pixmap)
-          s = 54.chr.encode('BINARY')
-          s << [Pixmap.to_xid(self, pixmap)].pack("x1L")
-          send_request(s)
-        end
-        
-        def free_pixmap (pixmap)
-          free_pixmap!(pixmap).wait
-        end
-      end
       
       GC = {:function=>1, :plane_mask=>2, :foreground=>4, :background=>8, :line_width=>16, :line_style=>32, :cap_style=>64, :join_style=>128, :fill_style=>256, :fill_rule=>512, :tile=>1024, :stipple=>2048, :tile_stipple_origin_x=>4096, :tile_stipple_origin_y=>8192, :font=>16384, :subwindow_mode=>32768, :graphics_exposures=>65536, :clip_origin_x=>131072, :clip_origin_y=>262144, :clip_mask=>524288, :dash_offset=>1048576, :dash_list=>2097152, :arc_mode=>4194304}
       GC_I = {1=>:function, 2=>:plane_mask, 4=>:foreground, 8=>:background, 16=>:line_width, 32=>:line_style, 64=>:cap_style, 128=>:join_style, 256=>:fill_style, 512=>:fill_rule, 1024=>:tile, 2048=>:stipple, 4096=>:tile_stipple_origin_x, 8192=>:tile_stipple_origin_y, 16384=>:font, 32768=>:subwindow_mode, 65536=>:graphics_exposures, 131072=>:clip_origin_x, 262144=>:clip_origin_y, 524288=>:clip_mask, 1048576=>:dash_offset, 2097152=>:dash_list, 4194304=>:arc_mode}
@@ -2710,55 +758,6 @@ module Alembic
       
       ARC_MODE.extend Alembic::ValueParamHelper
       
-      module Methods
-        def create_gc! (cid, drawable, value_mask, *value_list)
-          s = 55.chr.encode('BINARY')
-          s << [Gcontext.to_xid(self, cid), Drawable.to_xid(self, drawable), value_mask, *value_list].pack("x1LLLL*")
-          send_request(s)
-        end
-        
-        def create_gc (cid, drawable, value_mask, *value_list)
-          create_gc!(cid, drawable, value_mask, *value_list).wait
-        end
-      end
-      
-      module Methods
-        def change_gc! (gc, value_mask, *value_list)
-          s = 56.chr.encode('BINARY')
-          s << [Gcontext.to_xid(self, gc), value_mask, *value_list].pack("x1LLL*")
-          send_request(s)
-        end
-        
-        def change_gc (gc, value_mask, *value_list)
-          change_gc!(gc, value_mask, *value_list).wait
-        end
-      end
-      
-      module Methods
-        def copy_gc! (src_gc, dst_gc, value_mask)
-          s = 57.chr.encode('BINARY')
-          s << [Gcontext.to_xid(self, src_gc), Gcontext.to_xid(self, dst_gc), value_mask].pack("x1LLL")
-          send_request(s)
-        end
-        
-        def copy_gc (src_gc, dst_gc, value_mask)
-          copy_gc!(src_gc, dst_gc, value_mask).wait
-        end
-      end
-      
-      module Methods
-        def set_dashes! (gc, dash_offset, dashes)
-          s = 58.chr.encode('BINARY')
-          dashes_len = dashes.length
-          s << [Gcontext.to_xid(self, gc), dash_offset, dashes_len, *dashes].pack("x1LSSC*")
-          send_request(s)
-        end
-        
-        def set_dashes (gc, dash_offset, dashes)
-          set_dashes!(gc, dash_offset, dashes).wait
-        end
-      end
-      
       CLIP_ORDERING = {:unsorted=>0, :y_sorted=>1, :yx_sorted=>2, :yx_banded=>3}
       CLIP_ORDERING_I = {0=>:unsorted, 1=>:y_sorted, 2=>:yx_sorted, 3=>:yx_banded}
       
@@ -2769,67 +768,6 @@ module Alembic
       
       CLIP_ORDERING.extend Alembic::ValueParamHelper
       
-      module Methods
-        def set_clip_rectangles! (ordering, gc, clip_x_origin, clip_y_origin, rectangles)
-          s = 59.chr.encode('BINARY')
-          s << [ordering, Gcontext.to_xid(self, gc), clip_x_origin, clip_y_origin].pack("CLss")
-          s << rectangles.map{|x|encode_rectangle(x)}
-          send_request(s)
-        end
-        
-        def set_clip_rectangles (ordering, gc, clip_x_origin, clip_y_origin, rectangles)
-          set_clip_rectangles!(ordering, gc, clip_x_origin, clip_y_origin, rectangles).wait
-        end
-      end
-      
-      module Methods
-        def free_gc! (gc)
-          s = 60.chr.encode('BINARY')
-          s << [Gcontext.to_xid(self, gc)].pack("x1L")
-          send_request(s)
-        end
-        
-        def free_gc (gc)
-          free_gc!(gc).wait
-        end
-      end
-      
-      module Methods
-        def clear_area! (exposures, window, x, y, width, height)
-          s = 61.chr.encode('BINARY')
-          s << [exposures ? 1 : 0, Window.to_xid(self, window), x, y, width, height].pack("CLssSS")
-          send_request(s)
-        end
-        
-        def clear_area (exposures, window, x, y, width, height)
-          clear_area!(exposures, window, x, y, width, height).wait
-        end
-      end
-      
-      module Methods
-        def copy_area! (src_drawable, dst_drawable, gc, src_x, src_y, dst_x, dst_y, width, height)
-          s = 62.chr.encode('BINARY')
-          s << [Drawable.to_xid(self, src_drawable), Drawable.to_xid(self, dst_drawable), Gcontext.to_xid(self, gc), src_x, src_y, dst_x, dst_y, width, height].pack("x1LLLssssSS")
-          send_request(s)
-        end
-        
-        def copy_area (src_drawable, dst_drawable, gc, src_x, src_y, dst_x, dst_y, width, height)
-          copy_area!(src_drawable, dst_drawable, gc, src_x, src_y, dst_x, dst_y, width, height).wait
-        end
-      end
-      
-      module Methods
-        def copy_plane! (src_drawable, dst_drawable, gc, src_x, src_y, dst_x, dst_y, width, height, bit_plane)
-          s = 63.chr.encode('BINARY')
-          s << [Drawable.to_xid(self, src_drawable), Drawable.to_xid(self, dst_drawable), Gcontext.to_xid(self, gc), src_x, src_y, dst_x, dst_y, width, height, bit_plane].pack("x1LLLssssSSL")
-          send_request(s)
-        end
-        
-        def copy_plane (src_drawable, dst_drawable, gc, src_x, src_y, dst_x, dst_y, width, height, bit_plane)
-          copy_plane!(src_drawable, dst_drawable, gc, src_x, src_y, dst_x, dst_y, width, height, bit_plane).wait
-        end
-      end
-      
       COORD_MODE = {:origin=>0, :previous=>1}
       COORD_MODE_I = {0=>:origin, 1=>:previous}
       
@@ -2837,88 +775,6 @@ module Alembic
       COORD_MODE_PREVIOUS = 1
       
       COORD_MODE.extend Alembic::ValueParamHelper
-      
-      module Methods
-        def poly_point! (coordinate_mode, drawable, gc, points)
-          s = 64.chr.encode('BINARY')
-          s << [coordinate_mode, Drawable.to_xid(self, drawable), Gcontext.to_xid(self, gc)].pack("CLL")
-          s << points.map{|x|encode_point(x)}
-          send_request(s)
-        end
-        
-        def poly_point (coordinate_mode, drawable, gc, points)
-          poly_point!(coordinate_mode, drawable, gc, points).wait
-        end
-      end
-      
-      module Methods
-        def poly_line! (coordinate_mode, drawable, gc, points)
-          s = 65.chr.encode('BINARY')
-          s << [coordinate_mode, Drawable.to_xid(self, drawable), Gcontext.to_xid(self, gc)].pack("CLL")
-          s << points.map{|x|encode_point(x)}
-          send_request(s)
-        end
-        
-        def poly_line (coordinate_mode, drawable, gc, points)
-          poly_line!(coordinate_mode, drawable, gc, points).wait
-        end
-      end
-      
-      SEGMENT = Struct.new(:x1, :y1, :x2, :y2)
-      
-      module Methods
-        def encode_segment (s, x1, y1, x2, y2)
-          s << [x1, y1, x2, y2].pack("ssss")
-          s
-        end
-      end
-      
-      module Methods
-        def decode_segment (s)
-          x = SEGMENT.new
-          x.x1, x.y1, x.x2, x.y2, = s.slice!(0, 8).unpack("ssss")
-          x
-        end
-      end
-      
-      module Methods
-        def poly_segment! (drawable, gc, segments)
-          s = 66.chr.encode('BINARY')
-          s << [Drawable.to_xid(self, drawable), Gcontext.to_xid(self, gc)].pack("x1LL")
-          s << segments.map{|x|encode_segment(x)}
-          send_request(s)
-        end
-        
-        def poly_segment (drawable, gc, segments)
-          poly_segment!(drawable, gc, segments).wait
-        end
-      end
-      
-      module Methods
-        def poly_rectangle! (drawable, gc, rectangles)
-          s = 67.chr.encode('BINARY')
-          s << [Drawable.to_xid(self, drawable), Gcontext.to_xid(self, gc)].pack("x1LL")
-          s << rectangles.map{|x|encode_rectangle(x)}
-          send_request(s)
-        end
-        
-        def poly_rectangle (drawable, gc, rectangles)
-          poly_rectangle!(drawable, gc, rectangles).wait
-        end
-      end
-      
-      module Methods
-        def poly_arc! (drawable, gc, arcs)
-          s = 68.chr.encode('BINARY')
-          s << [Drawable.to_xid(self, drawable), Gcontext.to_xid(self, gc)].pack("x1LL")
-          s << arcs.map{|x|encode_arc(x)}
-          send_request(s)
-        end
-        
-        def poly_arc (drawable, gc, arcs)
-          poly_arc!(drawable, gc, arcs).wait
-        end
-      end
       
       POLY_SHAPE = {:complex=>0, :nonconvex=>1, :convex=>2}
       POLY_SHAPE_I = {0=>:complex, 1=>:nonconvex, 2=>:convex}
@@ -2929,45 +785,6 @@ module Alembic
       
       POLY_SHAPE.extend Alembic::ValueParamHelper
       
-      module Methods
-        def fill_poly! (drawable, gc, shape, coordinate_mode, points)
-          s = 69.chr.encode('BINARY')
-          s << [Drawable.to_xid(self, drawable), Gcontext.to_xid(self, gc), shape, coordinate_mode].pack("x1LLCCx2")
-          s << points.map{|x|encode_point(x)}
-          send_request(s)
-        end
-        
-        def fill_poly (drawable, gc, shape, coordinate_mode, points)
-          fill_poly!(drawable, gc, shape, coordinate_mode, points).wait
-        end
-      end
-      
-      module Methods
-        def poly_fill_rectangle! (drawable, gc, rectangles)
-          s = 70.chr.encode('BINARY')
-          s << [Drawable.to_xid(self, drawable), Gcontext.to_xid(self, gc)].pack("x1LL")
-          s << rectangles.map{|x|encode_rectangle(x)}
-          send_request(s)
-        end
-        
-        def poly_fill_rectangle (drawable, gc, rectangles)
-          poly_fill_rectangle!(drawable, gc, rectangles).wait
-        end
-      end
-      
-      module Methods
-        def poly_fill_arc! (drawable, gc, arcs)
-          s = 71.chr.encode('BINARY')
-          s << [Drawable.to_xid(self, drawable), Gcontext.to_xid(self, gc)].pack("x1LL")
-          s << arcs.map{|x|encode_arc(x)}
-          send_request(s)
-        end
-        
-        def poly_fill_arc (drawable, gc, arcs)
-          poly_fill_arc!(drawable, gc, arcs).wait
-        end
-      end
-      
       IMAGE_FORMAT = {:xy_bitmap=>0, :xy_pixmap=>1, :z_pixmap=>2}
       IMAGE_FORMAT_I = {0=>:xy_bitmap, 1=>:xy_pixmap, 2=>:z_pixmap}
       
@@ -2977,88 +794,6 @@ module Alembic
       
       IMAGE_FORMAT.extend Alembic::ValueParamHelper
       
-      module Methods
-        def put_image! (format, drawable, gc, width, height, dst_x, dst_y, left_pad, depth, data)
-          s = 72.chr.encode('BINARY')
-          s << [format, Drawable.to_xid(self, drawable), Gcontext.to_xid(self, gc), width, height, dst_x, dst_y, left_pad, depth, pad(data)].pack("CLLSSssCCx2A*")
-          send_request(s)
-        end
-        
-        def put_image (format, drawable, gc, width, height, dst_x, dst_y, left_pad, depth, data)
-          put_image!(format, drawable, gc, width, height, dst_x, dst_y, left_pad, depth, data).wait
-        end
-      end
-      
-      GetImageReply = Struct.new(:depth, :visual, :data)
-      
-      module Methods
-        def get_image! (format, drawable, x, y, width, height, plane_mask)
-          s = 73.chr.encode('BINARY')
-          s << [format, Drawable.to_xid(self, drawable), x, y, width, height, plane_mask].pack("CLssSSL")
-          send_request(s) do |s|
-            x = GetImageReply.new
-            x.depth, x.visual, = s.slice!(0, 25).unpack("CLx20")
-            x.data = s.slice!(0, (x.length * 4))
-            x
-          end
-        end
-        
-        def get_image (format, drawable, x, y, width, height, plane_mask)
-          get_image!(format, drawable, x, y, width, height, plane_mask).wait
-        end
-      end
-      
-      module Methods
-        def poly_text8! (drawable, gc, x, y, items)
-          s = 74.chr.encode('BINARY')
-          s << [Drawable.to_xid(self, drawable), Gcontext.to_xid(self, gc), x, y, pad(items)].pack("x1LLssA*")
-          send_request(s)
-        end
-        
-        def poly_text8 (drawable, gc, x, y, items)
-          poly_text8!(drawable, gc, x, y, items).wait
-        end
-      end
-      
-      module Methods
-        def poly_text16! (drawable, gc, x, y, items)
-          s = 75.chr.encode('BINARY')
-          s << [Drawable.to_xid(self, drawable), Gcontext.to_xid(self, gc), x, y, pad(items)].pack("x1LLssA*")
-          send_request(s)
-        end
-        
-        def poly_text16 (drawable, gc, x, y, items)
-          poly_text16!(drawable, gc, x, y, items).wait
-        end
-      end
-      
-      module Methods
-        def image_text8! (drawable, gc, x, y, string)
-          s = 76.chr.encode('BINARY')
-          string_len = string.length
-          s << [string_len, Drawable.to_xid(self, drawable), Gcontext.to_xid(self, gc), x, y, pad(string)].pack("CLLssA*")
-          send_request(s)
-        end
-        
-        def image_text8 (drawable, gc, x, y, string)
-          image_text8!(drawable, gc, x, y, string).wait
-        end
-      end
-      
-      module Methods
-        def image_text16! (drawable, gc, x, y, string)
-          s = 77.chr.encode('BINARY')
-          string_len = string.length
-          s << [string_len, Drawable.to_xid(self, drawable), Gcontext.to_xid(self, gc), x, y].pack("CLLss")
-          s << string.map{|x|encode_char2b(x)}
-          send_request(s)
-        end
-        
-        def image_text16 (drawable, gc, x, y, string)
-          image_text16!(drawable, gc, x, y, string).wait
-        end
-      end
-      
       COLORMAP_ALLOC = {:none=>0, :all=>1}
       COLORMAP_ALLOC_I = {0=>:none, 1=>:all}
       
@@ -3066,172 +801,6 @@ module Alembic
       COLORMAP_ALLOC_ALL = 1
       
       COLORMAP_ALLOC.extend Alembic::ValueParamHelper
-      
-      module Methods
-        def create_colormap! (alloc, mid, window, visual)
-          s = 78.chr.encode('BINARY')
-          s << [alloc, Colormap.to_xid(self, mid), Window.to_xid(self, window), visual].pack("CLLL")
-          send_request(s)
-        end
-        
-        def create_colormap (alloc, mid, window, visual)
-          create_colormap!(alloc, mid, window, visual).wait
-        end
-      end
-      
-      module Methods
-        def free_colormap! (cmap)
-          s = 79.chr.encode('BINARY')
-          s << [Colormap.to_xid(self, cmap)].pack("x1L")
-          send_request(s)
-        end
-        
-        def free_colormap (cmap)
-          free_colormap!(cmap).wait
-        end
-      end
-      
-      module Methods
-        def copy_colormap_and_free! (mid, src_cmap)
-          s = 80.chr.encode('BINARY')
-          s << [Colormap.to_xid(self, mid), Colormap.to_xid(self, src_cmap)].pack("x1LL")
-          send_request(s)
-        end
-        
-        def copy_colormap_and_free (mid, src_cmap)
-          copy_colormap_and_free!(mid, src_cmap).wait
-        end
-      end
-      
-      module Methods
-        def install_colormap! (cmap)
-          s = 81.chr.encode('BINARY')
-          s << [Colormap.to_xid(self, cmap)].pack("x1L")
-          send_request(s)
-        end
-        
-        def install_colormap (cmap)
-          install_colormap!(cmap).wait
-        end
-      end
-      
-      module Methods
-        def uninstall_colormap! (cmap)
-          s = 82.chr.encode('BINARY')
-          s << [Colormap.to_xid(self, cmap)].pack("x1L")
-          send_request(s)
-        end
-        
-        def uninstall_colormap (cmap)
-          uninstall_colormap!(cmap).wait
-        end
-      end
-      
-      ListInstalledColormapsReply = Struct.new(:cmaps_len, :cmaps)
-      
-      module Methods
-        def list_installed_colormaps! (window)
-          s = 83.chr.encode('BINARY')
-          s << [Window.to_xid(self, window)].pack("x1L")
-          send_request(s) do |s|
-            x = ListInstalledColormapsReply.new
-            x.cmaps_len, *x.cmaps = s.unpack("x1Sx22L*")
-            x.cmaps = x.cmaps ? x.cmaps.map{|x|Colormap[self, x]} : []
-            x.cmaps
-          end
-        end
-        
-        def list_installed_colormaps (window)
-          list_installed_colormaps!(window).wait
-        end
-      end
-      
-      AllocColorReply = Struct.new(:red, :green, :blue, :pixel)
-      
-      module Methods
-        def alloc_color! (cmap, red, green, blue)
-          s = 84.chr.encode('BINARY')
-          s << [Colormap.to_xid(self, cmap), red, green, blue].pack("x1LSSSx2")
-          send_request(s) do |s|
-            x = AllocColorReply.new
-            x.red, x.green, x.blue, x.pixel, = s.slice!(0, 13).unpack("x1SSSx2L")
-            x
-          end
-        end
-        
-        def alloc_color (cmap, red, green, blue)
-          alloc_color!(cmap, red, green, blue).wait
-        end
-      end
-      
-      AllocNamedColorReply = Struct.new(:pixel, :exact_red, :exact_green, :exact_blue, :visual_red, :visual_green, :visual_blue)
-      
-      module Methods
-        def alloc_named_color! (cmap, name)
-          s = 85.chr.encode('BINARY')
-          name_len = name.length
-          s << [Colormap.to_xid(self, cmap), name_len, pad(name)].pack("x1LSx2A*")
-          send_request(s) do |s|
-            x = AllocNamedColorReply.new
-            x.pixel, x.exact_red, x.exact_green, x.exact_blue, x.visual_red, x.visual_green, x.visual_blue, = s.slice!(0, 17).unpack("x1LSSSSSS")
-            x
-          end
-        end
-        
-        def alloc_named_color (cmap, name)
-          alloc_named_color!(cmap, name).wait
-        end
-      end
-      
-      AllocColorCellsReply = Struct.new(:pixels_len, :masks_len, :pixels, :masks)
-      
-      module Methods
-        def alloc_color_cells! (contiguous, cmap, colors, planes)
-          s = 86.chr.encode('BINARY')
-          s << [contiguous ? 1 : 0, Colormap.to_xid(self, cmap), colors, planes].pack("CLSS")
-          send_request(s) do |s|
-            x = AllocColorCellsReply.new
-            x.pixels_len, x.masks_len, = s.slice!(0, 25).unpack("x1SSx20")
-            x.pixels = s.slice!(0..4*(x.pixels_len)).unpack('L*')
-            *x.masks = s.unpack("L*")
-            x
-          end
-        end
-        
-        def alloc_color_cells (contiguous, cmap, colors, planes)
-          alloc_color_cells!(contiguous, cmap, colors, planes).wait
-        end
-      end
-      
-      AllocColorPlanesReply = Struct.new(:pixels_len, :red_mask, :green_mask, :blue_mask, :pixels)
-      
-      module Methods
-        def alloc_color_planes! (contiguous, cmap, colors, reds, greens, blues)
-          s = 87.chr.encode('BINARY')
-          s << [contiguous ? 1 : 0, Colormap.to_xid(self, cmap), colors, reds, greens, blues].pack("CLSSSS")
-          send_request(s) do |s|
-            x = AllocColorPlanesReply.new
-            x.pixels_len, x.red_mask, x.green_mask, x.blue_mask, *x.pixels = s.unpack("x1Sx2LLLx8L*")
-            x
-          end
-        end
-        
-        def alloc_color_planes (contiguous, cmap, colors, reds, greens, blues)
-          alloc_color_planes!(contiguous, cmap, colors, reds, greens, blues).wait
-        end
-      end
-      
-      module Methods
-        def free_colors! (cmap, plane_mask, pixels)
-          s = 88.chr.encode('BINARY')
-          s << [Colormap.to_xid(self, cmap), plane_mask, *pixels].pack("x1LLL*")
-          send_request(s)
-        end
-        
-        def free_colors (cmap, plane_mask, pixels)
-          free_colors!(cmap, plane_mask, pixels).wait
-        end
-      end
       
       COLOR_FLAG = {:red=>1, :green=>2, :blue=>4}
       COLOR_FLAG_I = {1=>:red, 2=>:green, 4=>:blue}
@@ -3242,104 +811,6 @@ module Alembic
       
       COLOR_FLAG.extend Alembic::ValueParamHelper
       
-      COLORITEM = Struct.new(:pixel, :red, :green, :blue, :flags)
-      
-      module Methods
-        def encode_coloritem (s, pixel, red, green, blue, flags)
-          s << [pixel, red, green, blue, flags].pack("LSSSCx1")
-          s
-        end
-      end
-      
-      module Methods
-        def decode_coloritem (s)
-          x = COLORITEM.new
-          x.pixel, x.red, x.green, x.blue, x.flags, = s.slice!(0, 12).unpack("LSSSCx1")
-          x
-        end
-      end
-      
-      module Methods
-        def store_colors! (cmap, items)
-          s = 89.chr.encode('BINARY')
-          s << [Colormap.to_xid(self, cmap)].pack("x1L")
-          s << items.map{|x|encode_coloritem(x)}
-          send_request(s)
-        end
-        
-        def store_colors (cmap, items)
-          store_colors!(cmap, items).wait
-        end
-      end
-      
-      module Methods
-        def store_named_color! (flags, cmap, pixel, name)
-          s = 90.chr.encode('BINARY')
-          name_len = name.length
-          s << [flags, Colormap.to_xid(self, cmap), pixel, name_len, pad(name)].pack("CLLSx2A*")
-          send_request(s)
-        end
-        
-        def store_named_color (flags, cmap, pixel, name)
-          store_named_color!(flags, cmap, pixel, name).wait
-        end
-      end
-      
-      RGB = Struct.new(:red, :green, :blue)
-      
-      module Methods
-        def encode_rgb (s, red, green, blue)
-          s << [red, green, blue].pack("SSSx2")
-          s
-        end
-      end
-      
-      module Methods
-        def decode_rgb (s)
-          x = RGB.new
-          x.red, x.green, x.blue, = s.slice!(0, 8).unpack("SSSx2")
-          x
-        end
-      end
-      
-      QueryColorsReply = Struct.new(:colors_len, :colors)
-      
-      module Methods
-        def query_colors! (cmap, pixels)
-          s = 91.chr.encode('BINARY')
-          s << [Colormap.to_xid(self, cmap), *pixels].pack("x1LL*")
-          send_request(s) do |s|
-            x = QueryColorsReply.new
-            x.colors_len, = s.slice!(0, 25).unpack("x1Sx22")
-            x.colors = x.colors_len.times.map{decode_rgb(s)}
-            x.colors
-          end
-        end
-        
-        def query_colors (cmap, pixels)
-          query_colors!(cmap, pixels).wait
-        end
-      end
-      
-      LookupColorReply = Struct.new(:exact_red, :exact_green, :exact_blue, :visual_red, :visual_green, :visual_blue)
-      
-      module Methods
-        def lookup_color! (cmap, name)
-          s = 92.chr.encode('BINARY')
-          name_len = name.length
-          s << [Colormap.to_xid(self, cmap), name_len, pad(name)].pack("x1LSx2A*")
-          send_request(s) do |s|
-            x = LookupColorReply.new
-            x.exact_red, x.exact_green, x.exact_blue, x.visual_red, x.visual_green, x.visual_blue, = s.slice!(0, 13).unpack("x1SSSSSS")
-            x
-          end
-        end
-        
-        def lookup_color (cmap, name)
-          lookup_color!(cmap, name).wait
-        end
-      end
-      
       PIXMAP = {:none=>0}
       PIXMAP_I = {0=>:none}
       
@@ -3347,60 +818,12 @@ module Alembic
       
       PIXMAP.extend Alembic::ValueParamHelper
       
-      module Methods
-        def create_cursor! (cid, source, mask, fore_red, fore_green, fore_blue, back_red, back_green, back_blue, x, y)
-          s = 93.chr.encode('BINARY')
-          s << [Cursor.to_xid(self, cid), Pixmap.to_xid(self, source), Pixmap.to_xid(self, mask), fore_red, fore_green, fore_blue, back_red, back_green, back_blue, x, y].pack("x1LLLSSSSSSSS")
-          send_request(s)
-        end
-        
-        def create_cursor (cid, source, mask, fore_red, fore_green, fore_blue, back_red, back_green, back_blue, x, y)
-          create_cursor!(cid, source, mask, fore_red, fore_green, fore_blue, back_red, back_green, back_blue, x, y).wait
-        end
-      end
-      
       FONT = {:none=>0}
       FONT_I = {0=>:none}
       
       FONT_NONE = 0
       
       FONT.extend Alembic::ValueParamHelper
-      
-      module Methods
-        def create_glyph_cursor! (cid, source_font, mask_font, source_char, mask_char, fore_red, fore_green, fore_blue, back_red, back_green, back_blue)
-          s = 94.chr.encode('BINARY')
-          s << [Cursor.to_xid(self, cid), Font.to_xid(self, source_font), Font.to_xid(self, mask_font), source_char, mask_char, fore_red, fore_green, fore_blue, back_red, back_green, back_blue].pack("x1LLLSSSSSSSS")
-          send_request(s)
-        end
-        
-        def create_glyph_cursor (cid, source_font, mask_font, source_char, mask_char, fore_red, fore_green, fore_blue, back_red, back_green, back_blue)
-          create_glyph_cursor!(cid, source_font, mask_font, source_char, mask_char, fore_red, fore_green, fore_blue, back_red, back_green, back_blue).wait
-        end
-      end
-      
-      module Methods
-        def free_cursor! (cursor)
-          s = 95.chr.encode('BINARY')
-          s << [Cursor.to_xid(self, cursor)].pack("x1L")
-          send_request(s)
-        end
-        
-        def free_cursor (cursor)
-          free_cursor!(cursor).wait
-        end
-      end
-      
-      module Methods
-        def recolor_cursor! (cursor, fore_red, fore_green, fore_blue, back_red, back_green, back_blue)
-          s = 96.chr.encode('BINARY')
-          s << [Cursor.to_xid(self, cursor), fore_red, fore_green, fore_blue, back_red, back_green, back_blue].pack("x1LSSSSSS")
-          send_request(s)
-        end
-        
-        def recolor_cursor (cursor, fore_red, fore_green, fore_blue, back_red, back_green, back_blue)
-          recolor_cursor!(cursor, fore_red, fore_green, fore_blue, back_red, back_green, back_blue).wait
-        end
-      end
       
       QUERY_SHAPE_OF = {:largest_cursor=>0, :fastest_tile=>1, :fastest_stipple=>2}
       QUERY_SHAPE_OF_I = {0=>:largest_cursor, 1=>:fastest_tile, 2=>:fastest_stipple}
@@ -3410,92 +833,6 @@ module Alembic
       QUERY_SHAPE_OF_FASTEST_STIPPLE = 2
       
       QUERY_SHAPE_OF.extend Alembic::ValueParamHelper
-      
-      QueryBestSizeReply = Struct.new(:width, :height)
-      
-      module Methods
-        def query_best_size! (klass, drawable, width, height)
-          s = 97.chr.encode('BINARY')
-          s << [klass, Drawable.to_xid(self, drawable), width, height].pack("CLSS")
-          send_request(s) do |s|
-            x = QueryBestSizeReply.new
-            x.width, x.height, = s.slice!(0, 5).unpack("x1SS")
-            x
-          end
-        end
-        
-        def query_best_size (klass, drawable, width, height)
-          query_best_size!(klass, drawable, width, height).wait
-        end
-      end
-      
-      QueryExtensionReply = Struct.new(:present, :major_opcode, :first_event, :first_error)
-      
-      module Methods
-        def query_extension! (name)
-          s = 98.chr.encode('BINARY')
-          name_len = name.length
-          s << [name_len, pad(name)].pack("x1Sx2A*")
-          send_request(s) do |s|
-            x = QueryExtensionReply.new
-            x.present, x.major_opcode, x.first_event, x.first_error, = s.slice!(0, 5).unpack("x1CCCC")
-            x.present = x.present != 0
-            x
-          end
-        end
-        
-        def query_extension (name)
-          query_extension!(name).wait
-        end
-      end
-      
-      ListExtensionsReply = Struct.new(:names_len, :names)
-      
-      module Methods
-        def list_extensions! ()
-          s = 99.chr.encode('BINARY')
-          send_request(s) do |s|
-            x = ListExtensionsReply.new
-            x.names_len, = s.slice!(0, 25).unpack("Cx24")
-            x.names = x.names_len.times.map{decode_str(s)}
-            x.names
-          end
-        end
-        
-        def list_extensions ()
-          list_extensions!().wait
-        end
-      end
-      
-      module Methods
-        def change_keyboard_mapping! (keycode_count, first_keycode, keysyms_per_keycode, keysyms)
-          s = 100.chr.encode('BINARY')
-          s << [keycode_count, first_keycode, keysyms_per_keycode, *keysyms].pack("CCCx2L*")
-          send_request(s)
-        end
-        
-        def change_keyboard_mapping (keycode_count, first_keycode, keysyms_per_keycode, keysyms)
-          change_keyboard_mapping!(keycode_count, first_keycode, keysyms_per_keycode, keysyms).wait
-        end
-      end
-      
-      GetKeyboardMappingReply = Struct.new(:keysyms_per_keycode, :keysyms)
-      
-      module Methods
-        def get_keyboard_mapping! (first_keycode, count)
-          s = 101.chr.encode('BINARY')
-          s << [first_keycode, count].pack("x1CC")
-          send_request(s) do |s|
-            x = GetKeyboardMappingReply.new
-            x.keysyms_per_keycode, *x.keysyms = s.unpack("Cx24L*")
-            x
-          end
-        end
-        
-        def get_keyboard_mapping (first_keycode, count)
-          get_keyboard_mapping!(first_keycode, count).wait
-        end
-      end
       
       KB = {:key_click_percent=>1, :bell_percent=>2, :bell_pitch=>4, :bell_duration=>8, :led=>16, :led_mode=>32, :key=>64, :auto_repeat_mode=>128}
       KB_I = {1=>:key_click_percent, 2=>:bell_percent, 4=>:bell_pitch, 8=>:bell_duration, 16=>:led, 32=>:led_mode, 64=>:key, 128=>:auto_repeat_mode}
@@ -3528,77 +865,6 @@ module Alembic
       
       AUTO_REPEAT_MODE.extend Alembic::ValueParamHelper
       
-      module Methods
-        def change_keyboard_control! (value_mask, *value_list)
-          s = 102.chr.encode('BINARY')
-          s << [value_mask, *value_list].pack("x1LL*")
-          send_request(s)
-        end
-        
-        def change_keyboard_control (value_mask, *value_list)
-          change_keyboard_control!(value_mask, *value_list).wait
-        end
-      end
-      
-      GetKeyboardControlReply = Struct.new(:global_auto_repeat, :led_mask, :key_click_percent, :bell_percent, :bell_pitch, :bell_duration, :auto_repeats)
-      
-      module Methods
-        def get_keyboard_control! ()
-          s = 103.chr.encode('BINARY')
-          send_request(s) do |s|
-            x = GetKeyboardControlReply.new
-            x.global_auto_repeat, x.led_mask, x.key_click_percent, x.bell_percent, x.bell_pitch, x.bell_duration, = s.slice!(0, 13).unpack("CLCCSSx2")
-            x.auto_repeats = s.slice!(0..32).unpack('C*')
-            x
-          end
-        end
-        
-        def get_keyboard_control ()
-          get_keyboard_control!().wait
-        end
-      end
-      
-      module Methods
-        def bell! (percent)
-          s = 104.chr.encode('BINARY')
-          s << [percent].pack("c")
-          send_request(s)
-        end
-        
-        def bell (percent)
-          bell!(percent).wait
-        end
-      end
-      
-      module Methods
-        def change_pointer_control! (acceleration_numerator, acceleration_denominator, threshold, do_acceleration, do_threshold)
-          s = 105.chr.encode('BINARY')
-          s << [acceleration_numerator, acceleration_denominator, threshold, do_acceleration ? 1 : 0, do_threshold ? 1 : 0].pack("x1sssCC")
-          send_request(s)
-        end
-        
-        def change_pointer_control (acceleration_numerator, acceleration_denominator, threshold, do_acceleration, do_threshold)
-          change_pointer_control!(acceleration_numerator, acceleration_denominator, threshold, do_acceleration, do_threshold).wait
-        end
-      end
-      
-      GetPointerControlReply = Struct.new(:acceleration_numerator, :acceleration_denominator, :threshold)
-      
-      module Methods
-        def get_pointer_control! ()
-          s = 106.chr.encode('BINARY')
-          send_request(s) do |s|
-            x = GetPointerControlReply.new
-            x.acceleration_numerator, x.acceleration_denominator, x.threshold, = s.slice!(0, 25).unpack("x1SSSx18")
-            x
-          end
-        end
-        
-        def get_pointer_control ()
-          get_pointer_control!().wait
-        end
-      end
-      
       BLANKING = {:not_preferred=>0, :preferred=>1, :default=>2}
       BLANKING_I = {0=>:not_preferred, 1=>:preferred, 2=>:default}
       
@@ -3616,35 +882,6 @@ module Alembic
       EXPOSURES_DEFAULT = 2
       
       EXPOSURES.extend Alembic::ValueParamHelper
-      
-      module Methods
-        def set_screen_saver! (timeout, interval, prefer_blanking, allow_exposures)
-          s = 107.chr.encode('BINARY')
-          s << [timeout, interval, prefer_blanking, allow_exposures].pack("x1ssCC")
-          send_request(s)
-        end
-        
-        def set_screen_saver (timeout, interval, prefer_blanking, allow_exposures)
-          set_screen_saver!(timeout, interval, prefer_blanking, allow_exposures).wait
-        end
-      end
-      
-      GetScreenSaverReply = Struct.new(:timeout, :interval, :prefer_blanking, :allow_exposures)
-      
-      module Methods
-        def get_screen_saver! ()
-          s = 108.chr.encode('BINARY')
-          send_request(s) do |s|
-            x = GetScreenSaverReply.new
-            x.timeout, x.interval, x.prefer_blanking, x.allow_exposures, = s.slice!(0, 25).unpack("x1SSCCx18")
-            x
-          end
-        end
-        
-        def get_screen_saver ()
-          get_screen_saver!().wait
-        end
-      end
       
       HOST_MODE = {:insert=>0, :delete=>1}
       HOST_MODE_I = {0=>:insert, 1=>:delete}
@@ -3665,56 +902,6 @@ module Alembic
       
       FAMILY.extend Alembic::ValueParamHelper
       
-      module Methods
-        def change_hosts! (mode, family, address)
-          s = 109.chr.encode('BINARY')
-          address_len = address.length
-          s << [mode, family, address_len, pad(address)].pack("CCx1SA*")
-          send_request(s)
-        end
-        
-        def change_hosts (mode, family, address)
-          change_hosts!(mode, family, address).wait
-        end
-      end
-      
-      HOST = Struct.new(:family, :address_len, :address)
-      
-      module Methods
-        def encode_host (s, family, address)
-          address_len = address.length
-          s << [family, address_len, pad(address)].pack("Cx1SA*")
-          s
-        end
-      end
-      
-      module Methods
-        def decode_host (s)
-          x = HOST.new
-          x.family, x.address_len, = s.slice!(0, 4).unpack("Cx1S")
-          x.address = s.slice!(0, x.address_len)
-          x
-        end
-      end
-      
-      ListHostsReply = Struct.new(:mode, :hosts_len, :hosts)
-      
-      module Methods
-        def list_hosts! ()
-          s = 110.chr.encode('BINARY')
-          send_request(s) do |s|
-            x = ListHostsReply.new
-            x.mode, x.hosts_len, = s.slice!(0, 25).unpack("CSx22")
-            x.hosts = x.hosts_len.times.map{decode_host(s)}
-            x
-          end
-        end
-        
-        def list_hosts ()
-          list_hosts!().wait
-        end
-      end
-      
       ACCESS_CONTROL = {:disable=>0, :enable=>1}
       ACCESS_CONTROL_I = {0=>:disable, 1=>:enable}
       
@@ -3722,18 +909,6 @@ module Alembic
       ACCESS_CONTROL_ENABLE = 1
       
       ACCESS_CONTROL.extend Alembic::ValueParamHelper
-      
-      module Methods
-        def set_access_control! (mode)
-          s = 111.chr.encode('BINARY')
-          s << [mode].pack("C")
-          send_request(s)
-        end
-        
-        def set_access_control (mode)
-          set_access_control!(mode).wait
-        end
-      end
       
       CLOSE_DOWN = {:destroy_all=>0, :retain_permanent=>1, :retain_temporary=>2}
       CLOSE_DOWN_I = {0=>:destroy_all, 1=>:retain_permanent, 2=>:retain_temporary}
@@ -3744,49 +919,12 @@ module Alembic
       
       CLOSE_DOWN.extend Alembic::ValueParamHelper
       
-      module Methods
-        def set_close_down_mode! (mode)
-          s = 112.chr.encode('BINARY')
-          s << [mode].pack("C")
-          send_request(s)
-        end
-        
-        def set_close_down_mode (mode)
-          set_close_down_mode!(mode).wait
-        end
-      end
-      
       KILL = {:all_temporary=>0}
       KILL_I = {0=>:all_temporary}
       
       KILL_ALL_TEMPORARY = 0
       
       KILL.extend Alembic::ValueParamHelper
-      
-      module Methods
-        def kill_client! (resource)
-          s = 113.chr.encode('BINARY')
-          s << [resource].pack("x1L")
-          send_request(s)
-        end
-        
-        def kill_client (resource)
-          kill_client!(resource).wait
-        end
-      end
-      
-      module Methods
-        def rotate_properties! (window, delta, atoms)
-          s = 114.chr.encode('BINARY')
-          atoms_len = atoms.length
-          s << [Window.to_xid(self, window), atoms_len, delta, *atoms].pack("x1LSsL*")
-          send_request(s)
-        end
-        
-        def rotate_properties (window, delta, atoms)
-          rotate_properties!(window, delta, atoms).wait
-        end
-      end
       
       SCREEN_SAVER = {:reset=>0, :active=>1}
       SCREEN_SAVER_I = {0=>:reset, 1=>:active}
@@ -3796,18 +934,6 @@ module Alembic
       
       SCREEN_SAVER.extend Alembic::ValueParamHelper
       
-      module Methods
-        def force_screen_saver! (mode)
-          s = 115.chr.encode('BINARY')
-          s << [mode].pack("C")
-          send_request(s)
-        end
-        
-        def force_screen_saver (mode)
-          force_screen_saver!(mode).wait
-        end
-      end
-      
       MAPPING_STATUS = {:success=>0, :busy=>1, :failure=>2}
       MAPPING_STATUS_I = {0=>:success, 1=>:busy, 2=>:failure}
       
@@ -3816,43 +942,6 @@ module Alembic
       MAPPING_STATUS_FAILURE = 2
       
       MAPPING_STATUS.extend Alembic::ValueParamHelper
-      
-      SetPointerMappingReply = Struct.new(:status)
-      
-      module Methods
-        def set_pointer_mapping! (map)
-          s = 116.chr.encode('BINARY')
-          map_len = map.length
-          s << [map_len, *map].pack("CC*")
-          send_request(s) do |s|
-            x = SetPointerMappingReply.new
-            x.status, = s.slice!(0, 1).unpack("C")
-            x.status
-          end
-        end
-        
-        def set_pointer_mapping (map)
-          set_pointer_mapping!(map).wait
-        end
-      end
-      
-      GetPointerMappingReply = Struct.new(:map_len, :map)
-      
-      module Methods
-        def get_pointer_mapping! ()
-          s = 117.chr.encode('BINARY')
-          send_request(s) do |s|
-            x = GetPointerMappingReply.new
-            x.map_len, = s.slice!(0, 25).unpack("Cx24")
-            x.map = s.slice!(0..x.map_len).unpack('C*')
-            x.map
-          end
-        end
-        
-        def get_pointer_mapping ()
-          get_pointer_mapping!().wait
-        end
-      end
       
       MAP_INDEX = {:shift=>0, :lock=>1, :control=>2, :"1"=>3, :"2"=>4, :"3"=>5, :"4"=>6, :"5"=>7}
       MAP_INDEX_I = {0=>:shift, 1=>:lock, 2=>:control, 3=>:"1", 4=>:"2", 5=>:"3", 6=>:"4", 7=>:"5"}
@@ -3868,33 +957,1479 @@ module Alembic
       
       MAP_INDEX.extend Alembic::ValueParamHelper
       
-      SetModifierMappingReply = Struct.new(:status)
+      define_event 2, :key_press_event, false
+      define_event 3, :key_release_event, false
+      define_event 4, :button_press_event, false
+      define_event 5, :button_release_event, false
+      define_event 6, :motion_notify_event, false
+      define_event 7, :enter_notify_event, false
+      define_event 8, :leave_notify_event, false
+      define_event 9, :focus_in_event, false
+      define_event 10, :focus_out_event, false
+      define_event 11, :keymap_notify_event, true
+      define_event 12, :expose_event, false
+      define_event 13, :graphics_exposure_event, false
+      define_event 14, :no_exposure_event, false
+      define_event 15, :visibility_notify_event, false
+      define_event 16, :create_notify_event, false
+      define_event 17, :destroy_notify_event, false
+      define_event 18, :unmap_notify_event, false
+      define_event 19, :map_notify_event, false
+      define_event 20, :map_request_event, false
+      define_event 21, :reparent_notify_event, false
+      define_event 22, :configure_notify_event, false
+      define_event 23, :configure_request_event, false
+      define_event 24, :gravity_notify_event, false
+      define_event 25, :resize_request_event, false
+      define_event 26, :circulate_notify_event, false
+      define_event 27, :circulate_request_event, false
+      define_event 28, :property_notify_event, false
+      define_event 29, :selection_clear_event, false
+      define_event 30, :selection_request_event, false
+      define_event 31, :selection_notify_event, false
+      define_event 32, :colormap_notify_event, false
+      define_event 33, :client_message_event, false
+      define_event 34, :mapping_notify_event, false
+      define_event 35, :ge_event, false
+      
+      define_error 1, RequestError = Class.new(X11Error)
+      define_error 2, ValueError = Class.new(X11Error)
+      define_error 3, WindowError = Class.new(X11Error)
+      define_error 4, PixmapError = Class.new(X11Error)
+      define_error 5, AtomError = Class.new(X11Error)
+      define_error 6, CursorError = Class.new(X11Error)
+      define_error 7, FontError = Class.new(X11Error)
+      define_error 8, MatchError = Class.new(X11Error)
+      define_error 9, DrawableError = Class.new(X11Error)
+      define_error 10, AccessError = Class.new(X11Error)
+      define_error 11, AllocError = Class.new(X11Error)
+      define_error 12, ColormapError = Class.new(X11Error)
+      define_error 13, GContextError = Class.new(X11Error)
+      define_error 14, IDChoiceError = Class.new(X11Error)
+      define_error 15, NameError = Class.new(X11Error)
+      define_error 16, LengthError = Class.new(X11Error)
+      define_error 17, ImplementationError = Class.new(X11Error)
+      
+      Drawable = Class.new(Resource)
+      Window = Class.new(Drawable)
+      Pixmap = Class.new(Drawable)
+      Cursor = Class.new(Resource)
+      Fontable = Class.new(Resource)
+      Font = Class.new(Fontable)
+      Gcontext = Class.new(Fontable)
+      Colormap = Class.new(Resource)
+      Atom = Class.new(Resource)
       
       module Methods
+        
+        def create_window! (depth, wid, parent, x, y, width, height, border_width, klass, visual, value_mask, *value_list)
+          s = 1.chr.encode('BINARY')
+          s << [depth, Window.to_xid(self, wid), Window.to_xid(self, parent), x, y, width, height, border_width, klass, visual, value_mask, *value_list].pack("CLLssSSSSLLL*")
+          send_request(s)
+        end
+        
+        def create_window (depth, wid, parent, x, y, width, height, border_width, klass, visual, value_mask, *value_list)
+          create_window!(depth, wid, parent, x, y, width, height, border_width, klass, visual, value_mask, *value_list)
+        end
+        
+        def change_window_attributes! (window, value_mask, *value_list)
+          s = 2.chr.encode('BINARY')
+          s << [Window.to_xid(self, window), value_mask, *value_list].pack("x1LLL*")
+          send_request(s)
+        end
+        
+        def change_window_attributes (window, value_mask, *value_list)
+          change_window_attributes!(window, value_mask, *value_list)
+        end
+        
+        def get_window_attributes! (window)
+          s = 3.chr.encode('BINARY')
+          s << [Window.to_xid(self, window)].pack("x1L")
+          send_request(s) do |s|
+            x = {}
+            x[:backing_store], x[:visual], x[:klass], x[:bit_gravity], x[:win_gravity], x[:backing_planes], x[:backing_pixel], x[:save_under], x[:map_is_installed], x[:map_state], x[:override_redirect], x[:colormap], x[:all_event_masks], x[:your_event_mask], x[:do_not_propagate_mask], = s.slice!(0, 37).unpack("CLSCCLLCCCCLLLSx2")
+            x[:save_under] = x[:save_under] != 0
+            x[:map_is_installed] = x[:map_is_installed] != 0
+            x[:override_redirect] = x[:override_redirect] != 0
+            x[:colormap] = Colormap[self, x[:colormap]]
+            x
+          end
+        end
+        
+        def get_window_attributes (window)
+          get_window_attributes!(window).wait
+        end
+        
+        def destroy_window! (window)
+          s = 4.chr.encode('BINARY')
+          s << [Window.to_xid(self, window)].pack("x1L")
+          send_request(s)
+        end
+        
+        def destroy_window (window)
+          destroy_window!(window)
+        end
+        
+        def destroy_subwindows! (window)
+          s = 5.chr.encode('BINARY')
+          s << [Window.to_xid(self, window)].pack("x1L")
+          send_request(s)
+        end
+        
+        def destroy_subwindows (window)
+          destroy_subwindows!(window)
+        end
+        
+        def change_save_set! (mode, window)
+          s = 6.chr.encode('BINARY')
+          s << [mode, Window.to_xid(self, window)].pack("CL")
+          send_request(s)
+        end
+        
+        def change_save_set (mode, window)
+          change_save_set!(mode, window)
+        end
+        
+        def reparent_window! (window, parent, x, y)
+          s = 7.chr.encode('BINARY')
+          s << [Window.to_xid(self, window), Window.to_xid(self, parent), x, y].pack("x1LLss")
+          send_request(s)
+        end
+        
+        def reparent_window (window, parent, x, y)
+          reparent_window!(window, parent, x, y)
+        end
+        
+        def map_window! (window)
+          s = 8.chr.encode('BINARY')
+          s << [Window.to_xid(self, window)].pack("x1L")
+          send_request(s)
+        end
+        
+        def map_window (window)
+          map_window!(window)
+        end
+        
+        def map_subwindows! (window)
+          s = 9.chr.encode('BINARY')
+          s << [Window.to_xid(self, window)].pack("x1L")
+          send_request(s)
+        end
+        
+        def map_subwindows (window)
+          map_subwindows!(window)
+        end
+        
+        def unmap_window! (window)
+          s = 10.chr.encode('BINARY')
+          s << [Window.to_xid(self, window)].pack("x1L")
+          send_request(s)
+        end
+        
+        def unmap_window (window)
+          unmap_window!(window)
+        end
+        
+        def unmap_subwindows! (window)
+          s = 11.chr.encode('BINARY')
+          s << [Window.to_xid(self, window)].pack("x1L")
+          send_request(s)
+        end
+        
+        def unmap_subwindows (window)
+          unmap_subwindows!(window)
+        end
+        
+        def configure_window! (window, value_mask, *value_list)
+          s = 12.chr.encode('BINARY')
+          s << [Window.to_xid(self, window), value_mask, *value_list].pack("x1LSx2L*")
+          send_request(s)
+        end
+        
+        def configure_window (window, value_mask, *value_list)
+          configure_window!(window, value_mask, *value_list)
+        end
+        
+        def circulate_window! (direction, window)
+          s = 13.chr.encode('BINARY')
+          s << [direction, Window.to_xid(self, window)].pack("CL")
+          send_request(s)
+        end
+        
+        def circulate_window (direction, window)
+          circulate_window!(direction, window)
+        end
+        
+        def get_geometry! (drawable)
+          s = 14.chr.encode('BINARY')
+          s << [Drawable.to_xid(self, drawable)].pack("x1L")
+          send_request(s) do |s|
+            x = {}
+            x[:depth], x[:root], x[:x], x[:y], x[:width], x[:height], x[:border_width], = s.slice!(0, 17).unpack("CLssSSSx2")
+            x[:root] = Window[self, x[:root]]
+            x
+          end
+        end
+        
+        def get_geometry (drawable)
+          get_geometry!(drawable).wait
+        end
+        
+        def query_tree! (window)
+          s = 15.chr.encode('BINARY')
+          s << [Window.to_xid(self, window)].pack("x1L")
+          send_request(s) do |s|
+            x = {}
+            x[:root], x[:parent], x[:children_len], *x[:children] = s.unpack("x1LLSx14L*")
+            x[:root] = Window[self, x[:root]]
+            x[:parent] = Window[self, x[:parent]]
+            x[:children] = x[:children] ? x[:children].map{|x|Window[self, x]} : []
+            x
+          end
+        end
+        
+        def query_tree (window)
+          query_tree!(window).wait
+        end
+        
+        def intern_atom! (only_if_exists, name)
+          s = 16.chr.encode('BINARY')
+          name_len = name.length
+          s << [only_if_exists ? 1 : 0, name_len, pad(name)].pack("CSx2A*")
+          send_request(s) do |s|
+            x = {}
+            x[:atom], = s.slice!(0, 5).unpack("x1L")
+            x[:atom] = Atom[self, x[:atom]]
+            x[:atom]
+          end
+        end
+        
+        def intern_atom (only_if_exists, name)
+          intern_atom!(only_if_exists, name).wait
+        end
+        
+        def get_atom_name! (atom)
+          s = 17.chr.encode('BINARY')
+          s << [Atom.to_xid(self, atom)].pack("x1L")
+          send_request(s) do |s|
+            x = {}
+            x[:name_len], = s.slice!(0, 25).unpack("x1Sx22")
+            x[:name] = s.slice!(0, x[:name_len])
+            x[:name]
+          end
+        end
+        
+        def get_atom_name (atom)
+          get_atom_name!(atom).wait
+        end
+        
+        def change_property! (mode, window, property, type, format, data_len, data)
+          s = 18.chr.encode('BINARY')
+          s << [mode, Window.to_xid(self, window), Atom.to_xid(self, property), Atom.to_xid(self, type), format, data_len, pad(data)].pack("CLLLCx3LA*")
+          send_request(s)
+        end
+        
+        def change_property (mode, window, property, type, format, data_len, data)
+          change_property!(mode, window, property, type, format, data_len, data)
+        end
+        
+        def delete_property! (window, property)
+          s = 19.chr.encode('BINARY')
+          s << [Window.to_xid(self, window), Atom.to_xid(self, property)].pack("x1LL")
+          send_request(s)
+        end
+        
+        def delete_property (window, property)
+          delete_property!(window, property)
+        end
+        
+        def get_property! (delete, window, property, type, long_offset, long_length)
+          s = 20.chr.encode('BINARY')
+          s << [delete ? 1 : 0, Window.to_xid(self, window), Atom.to_xid(self, property), Atom.to_xid(self, type), long_offset, long_length].pack("CLLLLL")
+          send_request(s) do |s|
+            x = {}
+            x[:format], x[:type], x[:bytes_after], x[:value_len], = s.slice!(0, 25).unpack("CLLLx12")
+            x[:type] = Atom[self, x[:type]]
+            x[:value] = s.slice!(0, (x[:value_len] * (x[:format] / 8)))
+            x
+          end
+        end
+        
+        def get_property (delete, window, property, type, long_offset, long_length)
+          get_property!(delete, window, property, type, long_offset, long_length).wait
+        end
+        
+        def list_properties! (window)
+          s = 21.chr.encode('BINARY')
+          s << [Window.to_xid(self, window)].pack("x1L")
+          send_request(s) do |s|
+            x = {}
+            x[:atoms_len], *x[:atoms] = s.unpack("x1Sx22L*")
+            x[:atoms] = x[:atoms] ? x[:atoms].map{|x|Atom[self, x]} : []
+            x[:atoms]
+          end
+        end
+        
+        def list_properties (window)
+          list_properties!(window).wait
+        end
+        
+        def set_selection_owner! (owner, selection, time)
+          s = 22.chr.encode('BINARY')
+          s << [Window.to_xid(self, owner), Atom.to_xid(self, selection), time].pack("x1LLL")
+          send_request(s)
+        end
+        
+        def set_selection_owner (owner, selection, time)
+          set_selection_owner!(owner, selection, time)
+        end
+        
+        def get_selection_owner! (selection)
+          s = 23.chr.encode('BINARY')
+          s << [Atom.to_xid(self, selection)].pack("x1L")
+          send_request(s) do |s|
+            x = {}
+            x[:owner], = s.slice!(0, 5).unpack("x1L")
+            x[:owner] = Window[self, x[:owner]]
+            x[:owner]
+          end
+        end
+        
+        def get_selection_owner (selection)
+          get_selection_owner!(selection).wait
+        end
+        
+        def convert_selection! (requestor, selection, target, property, time)
+          s = 24.chr.encode('BINARY')
+          s << [Window.to_xid(self, requestor), Atom.to_xid(self, selection), Atom.to_xid(self, target), Atom.to_xid(self, property), time].pack("x1LLLLL")
+          send_request(s)
+        end
+        
+        def convert_selection (requestor, selection, target, property, time)
+          convert_selection!(requestor, selection, target, property, time)
+        end
+        
+        def send_event! (propagate, destination, event_mask, event)
+          s = 25.chr.encode('BINARY')
+          s << [propagate ? 1 : 0, Window.to_xid(self, destination), event_mask, pad(event)].pack("CLLA*")
+          send_request(s)
+        end
+        
+        def send_event (propagate, destination, event_mask, event)
+          send_event!(propagate, destination, event_mask, event)
+        end
+        
+        def grab_pointer! (owner_events, grab_window, event_mask, pointer_mode, keyboard_mode, confine_to, cursor, time)
+          s = 26.chr.encode('BINARY')
+          s << [owner_events ? 1 : 0, Window.to_xid(self, grab_window), event_mask, pointer_mode, keyboard_mode, Window.to_xid(self, confine_to), Cursor.to_xid(self, cursor), time].pack("CLSCCLLL")
+          send_request(s) do |s|
+            x = {}
+            x[:status], = s.slice!(0, 1).unpack("C")
+            x[:status]
+          end
+        end
+        
+        def grab_pointer (owner_events, grab_window, event_mask, pointer_mode, keyboard_mode, confine_to, cursor, time)
+          grab_pointer!(owner_events, grab_window, event_mask, pointer_mode, keyboard_mode, confine_to, cursor, time).wait
+        end
+        
+        def ungrab_pointer! (time)
+          s = 27.chr.encode('BINARY')
+          s << [time].pack("x1L")
+          send_request(s)
+        end
+        
+        def ungrab_pointer (time)
+          ungrab_pointer!(time)
+        end
+        
+        def grab_button! (owner_events, grab_window, event_mask, pointer_mode, keyboard_mode, confine_to, cursor, button, modifiers)
+          s = 28.chr.encode('BINARY')
+          s << [owner_events ? 1 : 0, Window.to_xid(self, grab_window), event_mask, pointer_mode, keyboard_mode, Window.to_xid(self, confine_to), Cursor.to_xid(self, cursor), button, modifiers].pack("CLSCCLLCx1S")
+          send_request(s)
+        end
+        
+        def grab_button (owner_events, grab_window, event_mask, pointer_mode, keyboard_mode, confine_to, cursor, button, modifiers)
+          grab_button!(owner_events, grab_window, event_mask, pointer_mode, keyboard_mode, confine_to, cursor, button, modifiers)
+        end
+        
+        def ungrab_button! (button, grab_window, modifiers)
+          s = 29.chr.encode('BINARY')
+          s << [button, Window.to_xid(self, grab_window), modifiers].pack("CLSx2")
+          send_request(s)
+        end
+        
+        def ungrab_button (button, grab_window, modifiers)
+          ungrab_button!(button, grab_window, modifiers)
+        end
+        
+        def change_active_pointer_grab! (cursor, time, event_mask)
+          s = 30.chr.encode('BINARY')
+          s << [Cursor.to_xid(self, cursor), time, event_mask].pack("x1LLSx2")
+          send_request(s)
+        end
+        
+        def change_active_pointer_grab (cursor, time, event_mask)
+          change_active_pointer_grab!(cursor, time, event_mask)
+        end
+        
+        def grab_keyboard! (owner_events, grab_window, time, pointer_mode, keyboard_mode)
+          s = 31.chr.encode('BINARY')
+          s << [owner_events ? 1 : 0, Window.to_xid(self, grab_window), time, pointer_mode, keyboard_mode].pack("CLLCCx2")
+          send_request(s) do |s|
+            x = {}
+            x[:status], = s.slice!(0, 1).unpack("C")
+            x[:status]
+          end
+        end
+        
+        def grab_keyboard (owner_events, grab_window, time, pointer_mode, keyboard_mode)
+          grab_keyboard!(owner_events, grab_window, time, pointer_mode, keyboard_mode).wait
+        end
+        
+        def ungrab_keyboard! (time)
+          s = 32.chr.encode('BINARY')
+          s << [time].pack("x1L")
+          send_request(s)
+        end
+        
+        def ungrab_keyboard (time)
+          ungrab_keyboard!(time)
+        end
+        
+        def grab_key! (owner_events, grab_window, modifiers, key, pointer_mode, keyboard_mode)
+          s = 33.chr.encode('BINARY')
+          s << [owner_events ? 1 : 0, Window.to_xid(self, grab_window), modifiers, key, pointer_mode, keyboard_mode].pack("CLSCCCx3")
+          send_request(s)
+        end
+        
+        def grab_key (owner_events, grab_window, modifiers, key, pointer_mode, keyboard_mode)
+          grab_key!(owner_events, grab_window, modifiers, key, pointer_mode, keyboard_mode)
+        end
+        
+        def ungrab_key! (key, grab_window, modifiers)
+          s = 34.chr.encode('BINARY')
+          s << [key, Window.to_xid(self, grab_window), modifiers].pack("CLSx2")
+          send_request(s)
+        end
+        
+        def ungrab_key (key, grab_window, modifiers)
+          ungrab_key!(key, grab_window, modifiers)
+        end
+        
+        def allow_events! (mode, time)
+          s = 35.chr.encode('BINARY')
+          s << [mode, time].pack("CL")
+          send_request(s)
+        end
+        
+        def allow_events (mode, time)
+          allow_events!(mode, time)
+        end
+        
+        def grab_server! ()
+          s = 36.chr.encode('BINARY')
+          send_request(s)
+        end
+        
+        def grab_server ()
+          grab_server!()
+        end
+        
+        def ungrab_server! ()
+          s = 37.chr.encode('BINARY')
+          send_request(s)
+        end
+        
+        def ungrab_server ()
+          ungrab_server!()
+        end
+        
+        def query_pointer! (window)
+          s = 38.chr.encode('BINARY')
+          s << [Window.to_xid(self, window)].pack("x1L")
+          send_request(s) do |s|
+            x = {}
+            x[:same_screen], x[:root], x[:child], x[:root_x], x[:root_y], x[:win_x], x[:win_y], x[:mask], = s.slice!(0, 21).unpack("CLLssssSx2")
+            x[:same_screen] = x[:same_screen] != 0
+            x[:root] = Window[self, x[:root]]
+            x[:child] = Window[self, x[:child]]
+            x
+          end
+        end
+        
+        def query_pointer (window)
+          query_pointer!(window).wait
+        end
+        
+        def get_motion_events! (window, start, stop)
+          s = 39.chr.encode('BINARY')
+          s << [Window.to_xid(self, window), start, stop].pack("x1LLL")
+          send_request(s) do |s|
+            x = {}
+            x[:events_len], = s.slice!(0, 25).unpack("x1Lx20")
+            x[:events] = x[:events_len].times.map{decode_timecoord(s)}
+            x[:events]
+          end
+        end
+        
+        def get_motion_events (window, start, stop)
+          get_motion_events!(window, start, stop).wait
+        end
+        
+        def translate_coordinates! (src_window, dst_window, src_x, src_y)
+          s = 40.chr.encode('BINARY')
+          s << [Window.to_xid(self, src_window), Window.to_xid(self, dst_window), src_x, src_y].pack("x1LLss")
+          send_request(s) do |s|
+            x = {}
+            x[:same_screen], x[:child], x[:dst_x], x[:dst_y], = s.slice!(0, 9).unpack("CLss")
+            x[:same_screen] = x[:same_screen] != 0
+            x[:child] = Window[self, x[:child]]
+            x
+          end
+        end
+        
+        def translate_coordinates (src_window, dst_window, src_x, src_y)
+          translate_coordinates!(src_window, dst_window, src_x, src_y).wait
+        end
+        
+        def warp_pointer! (src_window, dst_window, src_x, src_y, src_width, src_height, dst_x, dst_y)
+          s = 41.chr.encode('BINARY')
+          s << [Window.to_xid(self, src_window), Window.to_xid(self, dst_window), src_x, src_y, src_width, src_height, dst_x, dst_y].pack("x1LLssSSss")
+          send_request(s)
+        end
+        
+        def warp_pointer (src_window, dst_window, src_x, src_y, src_width, src_height, dst_x, dst_y)
+          warp_pointer!(src_window, dst_window, src_x, src_y, src_width, src_height, dst_x, dst_y)
+        end
+        
+        def set_input_focus! (revert_to, focus, time)
+          s = 42.chr.encode('BINARY')
+          s << [revert_to, Window.to_xid(self, focus), time].pack("CLL")
+          send_request(s)
+        end
+        
+        def set_input_focus (revert_to, focus, time)
+          set_input_focus!(revert_to, focus, time)
+        end
+        
+        def get_input_focus! ()
+          s = 43.chr.encode('BINARY')
+          send_request(s) do |s|
+            x = {}
+            x[:revert_to], x[:focus], = s.slice!(0, 5).unpack("CL")
+            x[:focus] = Window[self, x[:focus]]
+            x
+          end
+        end
+        
+        def get_input_focus ()
+          get_input_focus!().wait
+        end
+        
+        def query_keymap! ()
+          s = 44.chr.encode('BINARY')
+          send_request(s) do |s|
+            x = {}
+            s.slice!(0, 1)
+            x[:keys] = s.slice!(0..32).unpack('C*')
+            x[:keys]
+          end
+        end
+        
+        def query_keymap ()
+          query_keymap!().wait
+        end
+        
+        def open_font! (fid, name)
+          s = 45.chr.encode('BINARY')
+          name_len = name.length
+          s << [Font.to_xid(self, fid), name_len, pad(name)].pack("x1LSx2A*")
+          send_request(s)
+        end
+        
+        def open_font (fid, name)
+          open_font!(fid, name)
+        end
+        
+        def close_font! (font)
+          s = 46.chr.encode('BINARY')
+          s << [Font.to_xid(self, font)].pack("x1L")
+          send_request(s)
+        end
+        
+        def close_font (font)
+          close_font!(font)
+        end
+        
+        def query_font! (font)
+          s = 47.chr.encode('BINARY')
+          s << [Fontable.to_xid(self, font)].pack("x1L")
+          send_request(s) do |s|
+            x = {}
+            s.slice!(0, 1)
+            x[:min_bounds] = decode_charinfo(s)
+            s.slice!(0, 4)
+            x[:max_bounds] = decode_charinfo(s)
+            x[:min_char_or_byte2], x[:max_char_or_byte2], x[:default_char], x[:properties_len], x[:draw_direction], x[:min_byte1], x[:max_byte1], x[:all_chars_exist], x[:font_ascent], x[:font_descent], x[:char_infos_len], = s.slice!(0, 24).unpack("x4SSSSCCCCssL")
+            x[:all_chars_exist] = x[:all_chars_exist] != 0
+            x[:properties] = x[:properties_len].times.map{decode_fontprop(s)}
+            x[:char_infos] = x[:char_infos_len].times.map{decode_charinfo(s)}
+            x
+          end
+        end
+        
+        def query_font (font)
+          query_font!(font).wait
+        end
+        
+        def query_text_extents! (font, string)
+          s = 48.chr.encode('BINARY')
+          s << raise('this doesn\'t work')
+          s << [Fontable.to_xid(self, font)].pack("L")
+          s << string.map{|x|encode_char2b(''.encode('BINARY'), *x)}.join
+          send_request(s) do |s|
+            x = {}
+            x[:draw_direction], x[:font_ascent], x[:font_descent], x[:overall_ascent], x[:overall_descent], x[:overall_width], x[:overall_left], x[:overall_right], = s.slice!(0, 21).unpack("Csssslll")
+            x
+          end
+        end
+        
+        def query_text_extents (font, string)
+          query_text_extents!(font, string).wait
+        end
+        
+        def list_fonts! (max_names, pattern)
+          s = 49.chr.encode('BINARY')
+          pattern_len = pattern.length
+          s << [max_names, pattern_len, pad(pattern)].pack("x1SSA*")
+          send_request(s) do |s|
+            x = {}
+            x[:names_len], = s.slice!(0, 25).unpack("x1Sx22")
+            x[:names] = x[:names_len].times.map{decode_str(s)}
+            x[:names]
+          end
+        end
+        
+        def list_fonts (max_names, pattern)
+          list_fonts!(max_names, pattern).wait
+        end
+        
+        def list_fonts_with_info! (max_names, pattern)
+          s = 50.chr.encode('BINARY')
+          pattern_len = pattern.length
+          s << [max_names, pattern_len, pad(pattern)].pack("x1SSA*")
+          send_request(s) do |s|
+            x = {}
+            x[:name_len], = s.slice!(0, 1).unpack("C")
+            x[:min_bounds] = decode_charinfo(s)
+            s.slice!(0, 4)
+            x[:max_bounds] = decode_charinfo(s)
+            x[:min_char_or_byte2], x[:max_char_or_byte2], x[:default_char], x[:properties_len], x[:draw_direction], x[:min_byte1], x[:max_byte1], x[:all_chars_exist], x[:font_ascent], x[:font_descent], x[:replies_hint], = s.slice!(0, 24).unpack("x4SSSSCCCCssL")
+            x[:all_chars_exist] = x[:all_chars_exist] != 0
+            x[:properties] = x[:properties_len].times.map{decode_fontprop(s)}
+            x[:name] = s.slice!(0, x[:name_len])
+            x
+          end
+        end
+        
+        def list_fonts_with_info (max_names, pattern)
+          list_fonts_with_info!(max_names, pattern).wait
+        end
+        
+        def set_font_path! (font)
+          s = 51.chr.encode('BINARY')
+          font_qty = font.length
+          s << [font_qty].pack("x1Sx2")
+          s << font.map{|x|encode_str(''.encode('BINARY'), *x)}.join
+          send_request(s)
+        end
+        
+        def set_font_path (font)
+          set_font_path!(font)
+        end
+        
+        def get_font_path! ()
+          s = 52.chr.encode('BINARY')
+          send_request(s) do |s|
+            x = {}
+            x[:path_len], = s.slice!(0, 25).unpack("x1Sx22")
+            x[:path] = x[:path_len].times.map{decode_str(s)}
+            x[:path]
+          end
+        end
+        
+        def get_font_path ()
+          get_font_path!().wait
+        end
+        
+        def create_pixmap! (depth, pid, drawable, width, height)
+          s = 53.chr.encode('BINARY')
+          s << [depth, Pixmap.to_xid(self, pid), Drawable.to_xid(self, drawable), width, height].pack("CLLSS")
+          send_request(s)
+        end
+        
+        def create_pixmap (depth, pid, drawable, width, height)
+          create_pixmap!(depth, pid, drawable, width, height)
+        end
+        
+        def free_pixmap! (pixmap)
+          s = 54.chr.encode('BINARY')
+          s << [Pixmap.to_xid(self, pixmap)].pack("x1L")
+          send_request(s)
+        end
+        
+        def free_pixmap (pixmap)
+          free_pixmap!(pixmap)
+        end
+        
+        def create_gc! (cid, drawable, value_mask, *value_list)
+          s = 55.chr.encode('BINARY')
+          s << [Gcontext.to_xid(self, cid), Drawable.to_xid(self, drawable), value_mask, *value_list].pack("x1LLLL*")
+          send_request(s)
+        end
+        
+        def create_gc (cid, drawable, value_mask, *value_list)
+          create_gc!(cid, drawable, value_mask, *value_list)
+        end
+        
+        def change_gc! (gc, value_mask, *value_list)
+          s = 56.chr.encode('BINARY')
+          s << [Gcontext.to_xid(self, gc), value_mask, *value_list].pack("x1LLL*")
+          send_request(s)
+        end
+        
+        def change_gc (gc, value_mask, *value_list)
+          change_gc!(gc, value_mask, *value_list)
+        end
+        
+        def copy_gc! (src_gc, dst_gc, value_mask)
+          s = 57.chr.encode('BINARY')
+          s << [Gcontext.to_xid(self, src_gc), Gcontext.to_xid(self, dst_gc), value_mask].pack("x1LLL")
+          send_request(s)
+        end
+        
+        def copy_gc (src_gc, dst_gc, value_mask)
+          copy_gc!(src_gc, dst_gc, value_mask)
+        end
+        
+        def set_dashes! (gc, dash_offset, dashes)
+          s = 58.chr.encode('BINARY')
+          dashes_len = dashes.length
+          s << [Gcontext.to_xid(self, gc), dash_offset, dashes_len, *dashes].pack("x1LSSC*")
+          send_request(s)
+        end
+        
+        def set_dashes (gc, dash_offset, dashes)
+          set_dashes!(gc, dash_offset, dashes)
+        end
+        
+        def set_clip_rectangles! (ordering, gc, clip_x_origin, clip_y_origin, rectangles)
+          s = 59.chr.encode('BINARY')
+          s << [ordering, Gcontext.to_xid(self, gc), clip_x_origin, clip_y_origin].pack("CLss")
+          s << rectangles.map{|x|encode_rectangle(''.encode('BINARY'), *x)}.join
+          send_request(s)
+        end
+        
+        def set_clip_rectangles (ordering, gc, clip_x_origin, clip_y_origin, rectangles)
+          set_clip_rectangles!(ordering, gc, clip_x_origin, clip_y_origin, rectangles)
+        end
+        
+        def free_gc! (gc)
+          s = 60.chr.encode('BINARY')
+          s << [Gcontext.to_xid(self, gc)].pack("x1L")
+          send_request(s)
+        end
+        
+        def free_gc (gc)
+          free_gc!(gc)
+        end
+        
+        def clear_area! (exposures, window, x, y, width, height)
+          s = 61.chr.encode('BINARY')
+          s << [exposures ? 1 : 0, Window.to_xid(self, window), x, y, width, height].pack("CLssSS")
+          send_request(s)
+        end
+        
+        def clear_area (exposures, window, x, y, width, height)
+          clear_area!(exposures, window, x, y, width, height)
+        end
+        
+        def copy_area! (src_drawable, dst_drawable, gc, src_x, src_y, dst_x, dst_y, width, height)
+          s = 62.chr.encode('BINARY')
+          s << [Drawable.to_xid(self, src_drawable), Drawable.to_xid(self, dst_drawable), Gcontext.to_xid(self, gc), src_x, src_y, dst_x, dst_y, width, height].pack("x1LLLssssSS")
+          send_request(s)
+        end
+        
+        def copy_area (src_drawable, dst_drawable, gc, src_x, src_y, dst_x, dst_y, width, height)
+          copy_area!(src_drawable, dst_drawable, gc, src_x, src_y, dst_x, dst_y, width, height)
+        end
+        
+        def copy_plane! (src_drawable, dst_drawable, gc, src_x, src_y, dst_x, dst_y, width, height, bit_plane)
+          s = 63.chr.encode('BINARY')
+          s << [Drawable.to_xid(self, src_drawable), Drawable.to_xid(self, dst_drawable), Gcontext.to_xid(self, gc), src_x, src_y, dst_x, dst_y, width, height, bit_plane].pack("x1LLLssssSSL")
+          send_request(s)
+        end
+        
+        def copy_plane (src_drawable, dst_drawable, gc, src_x, src_y, dst_x, dst_y, width, height, bit_plane)
+          copy_plane!(src_drawable, dst_drawable, gc, src_x, src_y, dst_x, dst_y, width, height, bit_plane)
+        end
+        
+        def poly_point! (coordinate_mode, drawable, gc, points)
+          s = 64.chr.encode('BINARY')
+          s << [coordinate_mode, Drawable.to_xid(self, drawable), Gcontext.to_xid(self, gc)].pack("CLL")
+          s << points.map{|x|encode_point(''.encode('BINARY'), *x)}.join
+          send_request(s)
+        end
+        
+        def poly_point (coordinate_mode, drawable, gc, points)
+          poly_point!(coordinate_mode, drawable, gc, points)
+        end
+        
+        def poly_line! (coordinate_mode, drawable, gc, points)
+          s = 65.chr.encode('BINARY')
+          s << [coordinate_mode, Drawable.to_xid(self, drawable), Gcontext.to_xid(self, gc)].pack("CLL")
+          s << points.map{|x|encode_point(''.encode('BINARY'), *x)}.join
+          send_request(s)
+        end
+        
+        def poly_line (coordinate_mode, drawable, gc, points)
+          poly_line!(coordinate_mode, drawable, gc, points)
+        end
+        
+        def poly_segment! (drawable, gc, segments)
+          s = 66.chr.encode('BINARY')
+          s << [Drawable.to_xid(self, drawable), Gcontext.to_xid(self, gc)].pack("x1LL")
+          s << segments.map{|x|encode_segment(''.encode('BINARY'), *x)}.join
+          send_request(s)
+        end
+        
+        def poly_segment (drawable, gc, segments)
+          poly_segment!(drawable, gc, segments)
+        end
+        
+        def poly_rectangle! (drawable, gc, rectangles)
+          s = 67.chr.encode('BINARY')
+          s << [Drawable.to_xid(self, drawable), Gcontext.to_xid(self, gc)].pack("x1LL")
+          s << rectangles.map{|x|encode_rectangle(''.encode('BINARY'), *x)}.join
+          send_request(s)
+        end
+        
+        def poly_rectangle (drawable, gc, rectangles)
+          poly_rectangle!(drawable, gc, rectangles)
+        end
+        
+        def poly_arc! (drawable, gc, arcs)
+          s = 68.chr.encode('BINARY')
+          s << [Drawable.to_xid(self, drawable), Gcontext.to_xid(self, gc)].pack("x1LL")
+          s << arcs.map{|x|encode_arc(''.encode('BINARY'), *x)}.join
+          send_request(s)
+        end
+        
+        def poly_arc (drawable, gc, arcs)
+          poly_arc!(drawable, gc, arcs)
+        end
+        
+        def fill_poly! (drawable, gc, shape, coordinate_mode, points)
+          s = 69.chr.encode('BINARY')
+          s << [Drawable.to_xid(self, drawable), Gcontext.to_xid(self, gc), shape, coordinate_mode].pack("x1LLCCx2")
+          s << points.map{|x|encode_point(''.encode('BINARY'), *x)}.join
+          send_request(s)
+        end
+        
+        def fill_poly (drawable, gc, shape, coordinate_mode, points)
+          fill_poly!(drawable, gc, shape, coordinate_mode, points)
+        end
+        
+        def poly_fill_rectangle! (drawable, gc, rectangles)
+          s = 70.chr.encode('BINARY')
+          s << [Drawable.to_xid(self, drawable), Gcontext.to_xid(self, gc)].pack("x1LL")
+          s << rectangles.map{|x|encode_rectangle(''.encode('BINARY'), *x)}.join
+          send_request(s)
+        end
+        
+        def poly_fill_rectangle (drawable, gc, rectangles)
+          poly_fill_rectangle!(drawable, gc, rectangles)
+        end
+        
+        def poly_fill_arc! (drawable, gc, arcs)
+          s = 71.chr.encode('BINARY')
+          s << [Drawable.to_xid(self, drawable), Gcontext.to_xid(self, gc)].pack("x1LL")
+          s << arcs.map{|x|encode_arc(''.encode('BINARY'), *x)}.join
+          send_request(s)
+        end
+        
+        def poly_fill_arc (drawable, gc, arcs)
+          poly_fill_arc!(drawable, gc, arcs)
+        end
+        
+        def put_image! (format, drawable, gc, width, height, dst_x, dst_y, left_pad, depth, data)
+          s = 72.chr.encode('BINARY')
+          s << [format, Drawable.to_xid(self, drawable), Gcontext.to_xid(self, gc), width, height, dst_x, dst_y, left_pad, depth, pad(data)].pack("CLLSSssCCx2A*")
+          send_request(s)
+        end
+        
+        def put_image (format, drawable, gc, width, height, dst_x, dst_y, left_pad, depth, data)
+          put_image!(format, drawable, gc, width, height, dst_x, dst_y, left_pad, depth, data)
+        end
+        
+        def get_image! (format, drawable, x, y, width, height, plane_mask)
+          s = 73.chr.encode('BINARY')
+          s << [format, Drawable.to_xid(self, drawable), x, y, width, height, plane_mask].pack("CLssSSL")
+          send_request(s) do |s|
+            x = {}
+            x[:depth], x[:visual], = s.slice!(0, 25).unpack("CLx20")
+            x[:data] = s.slice!(0, (x[:length] * 4))
+            x
+          end
+        end
+        
+        def get_image (format, drawable, x, y, width, height, plane_mask)
+          get_image!(format, drawable, x, y, width, height, plane_mask).wait
+        end
+        
+        def poly_text8! (drawable, gc, x, y, items)
+          s = 74.chr.encode('BINARY')
+          s << [Drawable.to_xid(self, drawable), Gcontext.to_xid(self, gc), x, y, pad(items)].pack("x1LLssA*")
+          send_request(s)
+        end
+        
+        def poly_text8 (drawable, gc, x, y, items)
+          poly_text8!(drawable, gc, x, y, items)
+        end
+        
+        def poly_text16! (drawable, gc, x, y, items)
+          s = 75.chr.encode('BINARY')
+          s << [Drawable.to_xid(self, drawable), Gcontext.to_xid(self, gc), x, y, pad(items)].pack("x1LLssA*")
+          send_request(s)
+        end
+        
+        def poly_text16 (drawable, gc, x, y, items)
+          poly_text16!(drawable, gc, x, y, items)
+        end
+        
+        def image_text8! (drawable, gc, x, y, string)
+          s = 76.chr.encode('BINARY')
+          string_len = string.length
+          s << [string_len, Drawable.to_xid(self, drawable), Gcontext.to_xid(self, gc), x, y, pad(string)].pack("CLLssA*")
+          send_request(s)
+        end
+        
+        def image_text8 (drawable, gc, x, y, string)
+          image_text8!(drawable, gc, x, y, string)
+        end
+        
+        def image_text16! (drawable, gc, x, y, string)
+          s = 77.chr.encode('BINARY')
+          string_len = string.length
+          s << [string_len, Drawable.to_xid(self, drawable), Gcontext.to_xid(self, gc), x, y].pack("CLLss")
+          s << string.map{|x|encode_char2b(''.encode('BINARY'), *x)}.join
+          send_request(s)
+        end
+        
+        def image_text16 (drawable, gc, x, y, string)
+          image_text16!(drawable, gc, x, y, string)
+        end
+        
+        def create_colormap! (alloc, mid, window, visual)
+          s = 78.chr.encode('BINARY')
+          s << [alloc, Colormap.to_xid(self, mid), Window.to_xid(self, window), visual].pack("CLLL")
+          send_request(s)
+        end
+        
+        def create_colormap (alloc, mid, window, visual)
+          create_colormap!(alloc, mid, window, visual)
+        end
+        
+        def free_colormap! (cmap)
+          s = 79.chr.encode('BINARY')
+          s << [Colormap.to_xid(self, cmap)].pack("x1L")
+          send_request(s)
+        end
+        
+        def free_colormap (cmap)
+          free_colormap!(cmap)
+        end
+        
+        def copy_colormap_and_free! (mid, src_cmap)
+          s = 80.chr.encode('BINARY')
+          s << [Colormap.to_xid(self, mid), Colormap.to_xid(self, src_cmap)].pack("x1LL")
+          send_request(s)
+        end
+        
+        def copy_colormap_and_free (mid, src_cmap)
+          copy_colormap_and_free!(mid, src_cmap)
+        end
+        
+        def install_colormap! (cmap)
+          s = 81.chr.encode('BINARY')
+          s << [Colormap.to_xid(self, cmap)].pack("x1L")
+          send_request(s)
+        end
+        
+        def install_colormap (cmap)
+          install_colormap!(cmap)
+        end
+        
+        def uninstall_colormap! (cmap)
+          s = 82.chr.encode('BINARY')
+          s << [Colormap.to_xid(self, cmap)].pack("x1L")
+          send_request(s)
+        end
+        
+        def uninstall_colormap (cmap)
+          uninstall_colormap!(cmap)
+        end
+        
+        def list_installed_colormaps! (window)
+          s = 83.chr.encode('BINARY')
+          s << [Window.to_xid(self, window)].pack("x1L")
+          send_request(s) do |s|
+            x = {}
+            x[:cmaps_len], *x[:cmaps] = s.unpack("x1Sx22L*")
+            x[:cmaps] = x[:cmaps] ? x[:cmaps].map{|x|Colormap[self, x]} : []
+            x[:cmaps]
+          end
+        end
+        
+        def list_installed_colormaps (window)
+          list_installed_colormaps!(window).wait
+        end
+        
+        def alloc_color! (cmap, red, green, blue)
+          s = 84.chr.encode('BINARY')
+          s << [Colormap.to_xid(self, cmap), red, green, blue].pack("x1LSSSx2")
+          send_request(s) do |s|
+            x = {}
+            x[:red], x[:green], x[:blue], x[:pixel], = s.slice!(0, 13).unpack("x1SSSx2L")
+            x
+          end
+        end
+        
+        def alloc_color (cmap, red, green, blue)
+          alloc_color!(cmap, red, green, blue).wait
+        end
+        
+        def alloc_named_color! (cmap, name)
+          s = 85.chr.encode('BINARY')
+          name_len = name.length
+          s << [Colormap.to_xid(self, cmap), name_len, pad(name)].pack("x1LSx2A*")
+          send_request(s) do |s|
+            x = {}
+            x[:pixel], x[:exact_red], x[:exact_green], x[:exact_blue], x[:visual_red], x[:visual_green], x[:visual_blue], = s.slice!(0, 17).unpack("x1LSSSSSS")
+            x
+          end
+        end
+        
+        def alloc_named_color (cmap, name)
+          alloc_named_color!(cmap, name).wait
+        end
+        
+        def alloc_color_cells! (contiguous, cmap, colors, planes)
+          s = 86.chr.encode('BINARY')
+          s << [contiguous ? 1 : 0, Colormap.to_xid(self, cmap), colors, planes].pack("CLSS")
+          send_request(s) do |s|
+            x = {}
+            x[:pixels_len], x[:masks_len], = s.slice!(0, 25).unpack("x1SSx20")
+            x[:pixels] = s.slice!(0..4*(x[:pixels_len])).unpack('L*')
+            *x[:masks] = s.unpack("L*")
+            x
+          end
+        end
+        
+        def alloc_color_cells (contiguous, cmap, colors, planes)
+          alloc_color_cells!(contiguous, cmap, colors, planes).wait
+        end
+        
+        def alloc_color_planes! (contiguous, cmap, colors, reds, greens, blues)
+          s = 87.chr.encode('BINARY')
+          s << [contiguous ? 1 : 0, Colormap.to_xid(self, cmap), colors, reds, greens, blues].pack("CLSSSS")
+          send_request(s) do |s|
+            x = {}
+            x[:pixels_len], x[:red_mask], x[:green_mask], x[:blue_mask], *x[:pixels] = s.unpack("x1Sx2LLLx8L*")
+            x
+          end
+        end
+        
+        def alloc_color_planes (contiguous, cmap, colors, reds, greens, blues)
+          alloc_color_planes!(contiguous, cmap, colors, reds, greens, blues).wait
+        end
+        
+        def free_colors! (cmap, plane_mask, pixels)
+          s = 88.chr.encode('BINARY')
+          s << [Colormap.to_xid(self, cmap), plane_mask, *pixels].pack("x1LLL*")
+          send_request(s)
+        end
+        
+        def free_colors (cmap, plane_mask, pixels)
+          free_colors!(cmap, plane_mask, pixels)
+        end
+        
+        def store_colors! (cmap, items)
+          s = 89.chr.encode('BINARY')
+          s << [Colormap.to_xid(self, cmap)].pack("x1L")
+          s << items.map{|x|encode_coloritem(''.encode('BINARY'), *x)}.join
+          send_request(s)
+        end
+        
+        def store_colors (cmap, items)
+          store_colors!(cmap, items)
+        end
+        
+        def store_named_color! (flags, cmap, pixel, name)
+          s = 90.chr.encode('BINARY')
+          name_len = name.length
+          s << [flags, Colormap.to_xid(self, cmap), pixel, name_len, pad(name)].pack("CLLSx2A*")
+          send_request(s)
+        end
+        
+        def store_named_color (flags, cmap, pixel, name)
+          store_named_color!(flags, cmap, pixel, name)
+        end
+        
+        def query_colors! (cmap, pixels)
+          s = 91.chr.encode('BINARY')
+          s << [Colormap.to_xid(self, cmap), *pixels].pack("x1LL*")
+          send_request(s) do |s|
+            x = {}
+            x[:colors_len], = s.slice!(0, 25).unpack("x1Sx22")
+            x[:colors] = x[:colors_len].times.map{decode_rgb(s)}
+            x[:colors]
+          end
+        end
+        
+        def query_colors (cmap, pixels)
+          query_colors!(cmap, pixels).wait
+        end
+        
+        def lookup_color! (cmap, name)
+          s = 92.chr.encode('BINARY')
+          name_len = name.length
+          s << [Colormap.to_xid(self, cmap), name_len, pad(name)].pack("x1LSx2A*")
+          send_request(s) do |s|
+            x = {}
+            x[:exact_red], x[:exact_green], x[:exact_blue], x[:visual_red], x[:visual_green], x[:visual_blue], = s.slice!(0, 13).unpack("x1SSSSSS")
+            x
+          end
+        end
+        
+        def lookup_color (cmap, name)
+          lookup_color!(cmap, name).wait
+        end
+        
+        def create_cursor! (cid, source, mask, fore_red, fore_green, fore_blue, back_red, back_green, back_blue, x, y)
+          s = 93.chr.encode('BINARY')
+          s << [Cursor.to_xid(self, cid), Pixmap.to_xid(self, source), Pixmap.to_xid(self, mask), fore_red, fore_green, fore_blue, back_red, back_green, back_blue, x, y].pack("x1LLLSSSSSSSS")
+          send_request(s)
+        end
+        
+        def create_cursor (cid, source, mask, fore_red, fore_green, fore_blue, back_red, back_green, back_blue, x, y)
+          create_cursor!(cid, source, mask, fore_red, fore_green, fore_blue, back_red, back_green, back_blue, x, y)
+        end
+        
+        def create_glyph_cursor! (cid, source_font, mask_font, source_char, mask_char, fore_red, fore_green, fore_blue, back_red, back_green, back_blue)
+          s = 94.chr.encode('BINARY')
+          s << [Cursor.to_xid(self, cid), Font.to_xid(self, source_font), Font.to_xid(self, mask_font), source_char, mask_char, fore_red, fore_green, fore_blue, back_red, back_green, back_blue].pack("x1LLLSSSSSSSS")
+          send_request(s)
+        end
+        
+        def create_glyph_cursor (cid, source_font, mask_font, source_char, mask_char, fore_red, fore_green, fore_blue, back_red, back_green, back_blue)
+          create_glyph_cursor!(cid, source_font, mask_font, source_char, mask_char, fore_red, fore_green, fore_blue, back_red, back_green, back_blue)
+        end
+        
+        def free_cursor! (cursor)
+          s = 95.chr.encode('BINARY')
+          s << [Cursor.to_xid(self, cursor)].pack("x1L")
+          send_request(s)
+        end
+        
+        def free_cursor (cursor)
+          free_cursor!(cursor)
+        end
+        
+        def recolor_cursor! (cursor, fore_red, fore_green, fore_blue, back_red, back_green, back_blue)
+          s = 96.chr.encode('BINARY')
+          s << [Cursor.to_xid(self, cursor), fore_red, fore_green, fore_blue, back_red, back_green, back_blue].pack("x1LSSSSSS")
+          send_request(s)
+        end
+        
+        def recolor_cursor (cursor, fore_red, fore_green, fore_blue, back_red, back_green, back_blue)
+          recolor_cursor!(cursor, fore_red, fore_green, fore_blue, back_red, back_green, back_blue)
+        end
+        
+        def query_best_size! (klass, drawable, width, height)
+          s = 97.chr.encode('BINARY')
+          s << [klass, Drawable.to_xid(self, drawable), width, height].pack("CLSS")
+          send_request(s) do |s|
+            x = {}
+            x[:width], x[:height], = s.slice!(0, 5).unpack("x1SS")
+            x
+          end
+        end
+        
+        def query_best_size (klass, drawable, width, height)
+          query_best_size!(klass, drawable, width, height).wait
+        end
+        
+        def query_extension! (name)
+          s = 98.chr.encode('BINARY')
+          name_len = name.length
+          s << [name_len, pad(name)].pack("x1Sx2A*")
+          send_request(s) do |s|
+            x = {}
+            x[:present], x[:major_opcode], x[:first_event], x[:first_error], = s.slice!(0, 5).unpack("x1CCCC")
+            x[:present] = x[:present] != 0
+            x
+          end
+        end
+        
+        def query_extension (name)
+          query_extension!(name).wait
+        end
+        
+        def list_extensions! ()
+          s = 99.chr.encode('BINARY')
+          send_request(s) do |s|
+            x = {}
+            x[:names_len], = s.slice!(0, 25).unpack("Cx24")
+            x[:names] = x[:names_len].times.map{decode_str(s)}
+            x[:names]
+          end
+        end
+        
+        def list_extensions ()
+          list_extensions!().wait
+        end
+        
+        def change_keyboard_mapping! (keycode_count, first_keycode, keysyms_per_keycode, keysyms)
+          s = 100.chr.encode('BINARY')
+          s << [keycode_count, first_keycode, keysyms_per_keycode, *keysyms].pack("CCCx2L*")
+          send_request(s)
+        end
+        
+        def change_keyboard_mapping (keycode_count, first_keycode, keysyms_per_keycode, keysyms)
+          change_keyboard_mapping!(keycode_count, first_keycode, keysyms_per_keycode, keysyms)
+        end
+        
+        def get_keyboard_mapping! (first_keycode, count)
+          s = 101.chr.encode('BINARY')
+          s << [first_keycode, count].pack("x1CC")
+          send_request(s) do |s|
+            x = {}
+            x[:keysyms_per_keycode], *x[:keysyms] = s.unpack("Cx24L*")
+            x
+          end
+        end
+        
+        def get_keyboard_mapping (first_keycode, count)
+          get_keyboard_mapping!(first_keycode, count).wait
+        end
+        
+        def change_keyboard_control! (value_mask, *value_list)
+          s = 102.chr.encode('BINARY')
+          s << [value_mask, *value_list].pack("x1LL*")
+          send_request(s)
+        end
+        
+        def change_keyboard_control (value_mask, *value_list)
+          change_keyboard_control!(value_mask, *value_list)
+        end
+        
+        def get_keyboard_control! ()
+          s = 103.chr.encode('BINARY')
+          send_request(s) do |s|
+            x = {}
+            x[:global_auto_repeat], x[:led_mask], x[:key_click_percent], x[:bell_percent], x[:bell_pitch], x[:bell_duration], = s.slice!(0, 13).unpack("CLCCSSx2")
+            x[:auto_repeats] = s.slice!(0..32).unpack('C*')
+            x
+          end
+        end
+        
+        def get_keyboard_control ()
+          get_keyboard_control!().wait
+        end
+        
+        def bell! (percent)
+          s = 104.chr.encode('BINARY')
+          s << [percent].pack("c")
+          send_request(s)
+        end
+        
+        def bell (percent)
+          bell!(percent)
+        end
+        
+        def change_pointer_control! (acceleration_numerator, acceleration_denominator, threshold, do_acceleration, do_threshold)
+          s = 105.chr.encode('BINARY')
+          s << [acceleration_numerator, acceleration_denominator, threshold, do_acceleration ? 1 : 0, do_threshold ? 1 : 0].pack("x1sssCC")
+          send_request(s)
+        end
+        
+        def change_pointer_control (acceleration_numerator, acceleration_denominator, threshold, do_acceleration, do_threshold)
+          change_pointer_control!(acceleration_numerator, acceleration_denominator, threshold, do_acceleration, do_threshold)
+        end
+        
+        def get_pointer_control! ()
+          s = 106.chr.encode('BINARY')
+          send_request(s) do |s|
+            x = {}
+            x[:acceleration_numerator], x[:acceleration_denominator], x[:threshold], = s.slice!(0, 25).unpack("x1SSSx18")
+            x
+          end
+        end
+        
+        def get_pointer_control ()
+          get_pointer_control!().wait
+        end
+        
+        def set_screen_saver! (timeout, interval, prefer_blanking, allow_exposures)
+          s = 107.chr.encode('BINARY')
+          s << [timeout, interval, prefer_blanking, allow_exposures].pack("x1ssCC")
+          send_request(s)
+        end
+        
+        def set_screen_saver (timeout, interval, prefer_blanking, allow_exposures)
+          set_screen_saver!(timeout, interval, prefer_blanking, allow_exposures)
+        end
+        
+        def get_screen_saver! ()
+          s = 108.chr.encode('BINARY')
+          send_request(s) do |s|
+            x = {}
+            x[:timeout], x[:interval], x[:prefer_blanking], x[:allow_exposures], = s.slice!(0, 25).unpack("x1SSCCx18")
+            x
+          end
+        end
+        
+        def get_screen_saver ()
+          get_screen_saver!().wait
+        end
+        
+        def change_hosts! (mode, family, address)
+          s = 109.chr.encode('BINARY')
+          address_len = address.length
+          s << [mode, family, address_len, pad(address)].pack("CCx1SA*")
+          send_request(s)
+        end
+        
+        def change_hosts (mode, family, address)
+          change_hosts!(mode, family, address)
+        end
+        
+        def list_hosts! ()
+          s = 110.chr.encode('BINARY')
+          send_request(s) do |s|
+            x = {}
+            x[:mode], x[:hosts_len], = s.slice!(0, 25).unpack("CSx22")
+            x[:hosts] = x[:hosts_len].times.map{decode_host(s)}
+            x
+          end
+        end
+        
+        def list_hosts ()
+          list_hosts!().wait
+        end
+        
+        def set_access_control! (mode)
+          s = 111.chr.encode('BINARY')
+          s << [mode].pack("C")
+          send_request(s)
+        end
+        
+        def set_access_control (mode)
+          set_access_control!(mode)
+        end
+        
+        def set_close_down_mode! (mode)
+          s = 112.chr.encode('BINARY')
+          s << [mode].pack("C")
+          send_request(s)
+        end
+        
+        def set_close_down_mode (mode)
+          set_close_down_mode!(mode)
+        end
+        
+        def kill_client! (resource)
+          s = 113.chr.encode('BINARY')
+          s << [resource].pack("x1L")
+          send_request(s)
+        end
+        
+        def kill_client (resource)
+          kill_client!(resource)
+        end
+        
+        def rotate_properties! (window, delta, atoms)
+          s = 114.chr.encode('BINARY')
+          atoms_len = atoms.length
+          s << [Window.to_xid(self, window), atoms_len, delta, *atoms].pack("x1LSsL*")
+          send_request(s)
+        end
+        
+        def rotate_properties (window, delta, atoms)
+          rotate_properties!(window, delta, atoms)
+        end
+        
+        def force_screen_saver! (mode)
+          s = 115.chr.encode('BINARY')
+          s << [mode].pack("C")
+          send_request(s)
+        end
+        
+        def force_screen_saver (mode)
+          force_screen_saver!(mode)
+        end
+        
+        def set_pointer_mapping! (map)
+          s = 116.chr.encode('BINARY')
+          map_len = map.length
+          s << [map_len, *map].pack("CC*")
+          send_request(s) do |s|
+            x = {}
+            x[:status], = s.slice!(0, 1).unpack("C")
+            x[:status]
+          end
+        end
+        
+        def set_pointer_mapping (map)
+          set_pointer_mapping!(map).wait
+        end
+        
+        def get_pointer_mapping! ()
+          s = 117.chr.encode('BINARY')
+          send_request(s) do |s|
+            x = {}
+            x[:map_len], = s.slice!(0, 25).unpack("Cx24")
+            x[:map] = s.slice!(0..x[:map_len]).unpack('C*')
+            x[:map]
+          end
+        end
+        
+        def get_pointer_mapping ()
+          get_pointer_mapping!().wait
+        end
+        
         def set_modifier_mapping! (keycodes_per_modifier, keycodes)
           s = 118.chr.encode('BINARY')
           s << [keycodes_per_modifier, *keycodes].pack("CC*")
           send_request(s) do |s|
-            x = SetModifierMappingReply.new
-            x.status, = s.slice!(0, 1).unpack("C")
-            x.status
+            x = {}
+            x[:status], = s.slice!(0, 1).unpack("C")
+            x[:status]
           end
         end
         
         def set_modifier_mapping (keycodes_per_modifier, keycodes)
           set_modifier_mapping!(keycodes_per_modifier, keycodes).wait
         end
-      end
-      
-      GetModifierMappingReply = Struct.new(:keycodes_per_modifier, :keycodes)
-      
-      module Methods
+        
         def get_modifier_mapping! ()
           s = 119.chr.encode('BINARY')
           send_request(s) do |s|
-            x = GetModifierMappingReply.new
-            x.keycodes_per_modifier, = s.slice!(0, 25).unpack("Cx24")
-            x.keycodes = s.slice!(0..(x.keycodes_per_modifier * 8)).unpack('C*')
+            x = {}
+            x[:keycodes_per_modifier], = s.slice!(0, 25).unpack("Cx24")
+            x[:keycodes] = s.slice!(0..(x[:keycodes_per_modifier] * 8)).unpack('C*')
             x
           end
         end
@@ -3902,17 +2437,859 @@ module Alembic
         def get_modifier_mapping ()
           get_modifier_mapping!().wait
         end
-      end
-      
-      module Methods
+        
         def no_operation! ()
           s = 127.chr.encode('BINARY')
           send_request(s)
         end
         
         def no_operation ()
-          no_operation!().wait
+          no_operation!()
         end
+        
+        def encode_key_press_event (detail, time, root, event, child, root_x, root_y, event_x, event_y, state, same_screen)
+          s = 2.chr.encode('BINARY')
+          s << [detail, time, Window.to_xid(self, root), Window.to_xid(self, event), Window.to_xid(self, child), root_x, root_y, event_x, event_y, state, same_screen ? 1 : 0].pack("CLLLLssssSCx1")
+          s = s.ljust(30, "\0")
+          s[2, 0] = "\0\0"
+          s
+        end
+        
+        def decode_key_press_event (s)
+          x = {}
+          x[:detail], x[:time], x[:root], x[:event], x[:child], x[:root_x], x[:root_y], x[:event_x], x[:event_y], x[:state], x[:same_screen], = s.slice!(0, 29).unpack("CLLLLssssSCx1")
+          x[:root] = Window[self, x[:root]]
+          x[:event] = Window[self, x[:event]]
+          x[:child] = Window[self, x[:child]]
+          x[:same_screen] = x[:same_screen] != 0
+          x
+        end
+        
+        def encode_key_release_event (detail, time, root, event, child, root_x, root_y, event_x, event_y, state, same_screen)
+          s = 3.chr.encode('BINARY')
+          s << [detail, time, Window.to_xid(self, root), Window.to_xid(self, event), Window.to_xid(self, child), root_x, root_y, event_x, event_y, state, same_screen ? 1 : 0].pack("CLLLLssssSCx1")
+          s = s.ljust(30, "\0")
+          s[2, 0] = "\0\0"
+          s
+        end
+        
+        def decode_key_release_event (s)
+          x = {}
+          x[:detail], x[:time], x[:root], x[:event], x[:child], x[:root_x], x[:root_y], x[:event_x], x[:event_y], x[:state], x[:same_screen], = s.slice!(0, 29).unpack("CLLLLssssSCx1")
+          x[:root] = Window[self, x[:root]]
+          x[:event] = Window[self, x[:event]]
+          x[:child] = Window[self, x[:child]]
+          x[:same_screen] = x[:same_screen] != 0
+          x
+        end
+        
+        def encode_button_press_event (detail, time, root, event, child, root_x, root_y, event_x, event_y, state, same_screen)
+          s = 4.chr.encode('BINARY')
+          s << [detail, time, Window.to_xid(self, root), Window.to_xid(self, event), Window.to_xid(self, child), root_x, root_y, event_x, event_y, state, same_screen ? 1 : 0].pack("CLLLLssssSCx1")
+          s = s.ljust(30, "\0")
+          s[2, 0] = "\0\0"
+          s
+        end
+        
+        def decode_button_press_event (s)
+          x = {}
+          x[:detail], x[:time], x[:root], x[:event], x[:child], x[:root_x], x[:root_y], x[:event_x], x[:event_y], x[:state], x[:same_screen], = s.slice!(0, 29).unpack("CLLLLssssSCx1")
+          x[:root] = Window[self, x[:root]]
+          x[:event] = Window[self, x[:event]]
+          x[:child] = Window[self, x[:child]]
+          x[:same_screen] = x[:same_screen] != 0
+          x
+        end
+        
+        def encode_button_release_event (detail, time, root, event, child, root_x, root_y, event_x, event_y, state, same_screen)
+          s = 5.chr.encode('BINARY')
+          s << [detail, time, Window.to_xid(self, root), Window.to_xid(self, event), Window.to_xid(self, child), root_x, root_y, event_x, event_y, state, same_screen ? 1 : 0].pack("CLLLLssssSCx1")
+          s = s.ljust(30, "\0")
+          s[2, 0] = "\0\0"
+          s
+        end
+        
+        def decode_button_release_event (s)
+          x = {}
+          x[:detail], x[:time], x[:root], x[:event], x[:child], x[:root_x], x[:root_y], x[:event_x], x[:event_y], x[:state], x[:same_screen], = s.slice!(0, 29).unpack("CLLLLssssSCx1")
+          x[:root] = Window[self, x[:root]]
+          x[:event] = Window[self, x[:event]]
+          x[:child] = Window[self, x[:child]]
+          x[:same_screen] = x[:same_screen] != 0
+          x
+        end
+        
+        def encode_motion_notify_event (detail, time, root, event, child, root_x, root_y, event_x, event_y, state, same_screen)
+          s = 6.chr.encode('BINARY')
+          s << [detail, time, Window.to_xid(self, root), Window.to_xid(self, event), Window.to_xid(self, child), root_x, root_y, event_x, event_y, state, same_screen ? 1 : 0].pack("CLLLLssssSCx1")
+          s = s.ljust(30, "\0")
+          s[2, 0] = "\0\0"
+          s
+        end
+        
+        def decode_motion_notify_event (s)
+          x = {}
+          x[:detail], x[:time], x[:root], x[:event], x[:child], x[:root_x], x[:root_y], x[:event_x], x[:event_y], x[:state], x[:same_screen], = s.slice!(0, 29).unpack("CLLLLssssSCx1")
+          x[:root] = Window[self, x[:root]]
+          x[:event] = Window[self, x[:event]]
+          x[:child] = Window[self, x[:child]]
+          x[:same_screen] = x[:same_screen] != 0
+          x
+        end
+        
+        def encode_enter_notify_event (detail, time, root, event, child, root_x, root_y, event_x, event_y, state, mode, same_screen_focus)
+          s = 7.chr.encode('BINARY')
+          s << [detail, time, Window.to_xid(self, root), Window.to_xid(self, event), Window.to_xid(self, child), root_x, root_y, event_x, event_y, state, mode, same_screen_focus].pack("CLLLLssssSCC")
+          s = s.ljust(30, "\0")
+          s[2, 0] = "\0\0"
+          s
+        end
+        
+        def decode_enter_notify_event (s)
+          x = {}
+          x[:detail], x[:time], x[:root], x[:event], x[:child], x[:root_x], x[:root_y], x[:event_x], x[:event_y], x[:state], x[:mode], x[:same_screen_focus], = s.slice!(0, 29).unpack("CLLLLssssSCC")
+          x[:root] = Window[self, x[:root]]
+          x[:event] = Window[self, x[:event]]
+          x[:child] = Window[self, x[:child]]
+          x
+        end
+        
+        def encode_leave_notify_event (detail, time, root, event, child, root_x, root_y, event_x, event_y, state, mode, same_screen_focus)
+          s = 8.chr.encode('BINARY')
+          s << [detail, time, Window.to_xid(self, root), Window.to_xid(self, event), Window.to_xid(self, child), root_x, root_y, event_x, event_y, state, mode, same_screen_focus].pack("CLLLLssssSCC")
+          s = s.ljust(30, "\0")
+          s[2, 0] = "\0\0"
+          s
+        end
+        
+        def decode_leave_notify_event (s)
+          x = {}
+          x[:detail], x[:time], x[:root], x[:event], x[:child], x[:root_x], x[:root_y], x[:event_x], x[:event_y], x[:state], x[:mode], x[:same_screen_focus], = s.slice!(0, 29).unpack("CLLLLssssSCC")
+          x[:root] = Window[self, x[:root]]
+          x[:event] = Window[self, x[:event]]
+          x[:child] = Window[self, x[:child]]
+          x
+        end
+        
+        def encode_focus_in_event (detail, event, mode)
+          s = 9.chr.encode('BINARY')
+          s << [detail, Window.to_xid(self, event), mode].pack("CLCx3")
+          s = s.ljust(30, "\0")
+          s[2, 0] = "\0\0"
+          s
+        end
+        
+        def decode_focus_in_event (s)
+          x = {}
+          x[:detail], x[:event], x[:mode], = s.slice!(0, 9).unpack("CLCx3")
+          x[:event] = Window[self, x[:event]]
+          x
+        end
+        
+        def encode_focus_out_event (detail, event, mode)
+          s = 10.chr.encode('BINARY')
+          s << [detail, Window.to_xid(self, event), mode].pack("CLCx3")
+          s = s.ljust(30, "\0")
+          s[2, 0] = "\0\0"
+          s
+        end
+        
+        def decode_focus_out_event (s)
+          x = {}
+          x[:detail], x[:event], x[:mode], = s.slice!(0, 9).unpack("CLCx3")
+          x[:event] = Window[self, x[:event]]
+          x
+        end
+        
+        def encode_keymap_notify_event (keys)
+          s = 11.chr.encode('BINARY')
+          s << [*keys].pack("C*")
+          s = s.ljust(30, "\0")
+          s[2, 0] = "\0\0"
+          s
+        end
+        
+        def decode_keymap_notify_event (s)
+          x = {}
+          x[:keys] = s.slice!(0..31).unpack('C*')
+          x
+        end
+        
+        def encode_expose_event (window, x, y, width, height, count)
+          s = 12.chr.encode('BINARY')
+          s << [Window.to_xid(self, window), x, y, width, height, count].pack("x1LSSSSSx2")
+          s = s.ljust(30, "\0")
+          s[2, 0] = "\0\0"
+          s
+        end
+        
+        def decode_expose_event (s)
+          x = {}
+          x[:window], x[:x], x[:y], x[:width], x[:height], x[:count], = s.slice!(0, 17).unpack("x1LSSSSSx2")
+          x[:window] = Window[self, x[:window]]
+          x
+        end
+        
+        def encode_graphics_exposure_event (drawable, x, y, width, height, minor_opcode, count, major_opcode)
+          s = 13.chr.encode('BINARY')
+          s << [Drawable.to_xid(self, drawable), x, y, width, height, minor_opcode, count, major_opcode].pack("x1LSSSSSSCx3")
+          s = s.ljust(30, "\0")
+          s[2, 0] = "\0\0"
+          s
+        end
+        
+        def decode_graphics_exposure_event (s)
+          x = {}
+          x[:drawable], x[:x], x[:y], x[:width], x[:height], x[:minor_opcode], x[:count], x[:major_opcode], = s.slice!(0, 21).unpack("x1LSSSSSSCx3")
+          x[:drawable] = Drawable[self, x[:drawable]]
+          x
+        end
+        
+        def encode_no_exposure_event (drawable, minor_opcode, major_opcode)
+          s = 14.chr.encode('BINARY')
+          s << [Drawable.to_xid(self, drawable), minor_opcode, major_opcode].pack("x1LSCx1")
+          s = s.ljust(30, "\0")
+          s[2, 0] = "\0\0"
+          s
+        end
+        
+        def decode_no_exposure_event (s)
+          x = {}
+          x[:drawable], x[:minor_opcode], x[:major_opcode], = s.slice!(0, 9).unpack("x1LSCx1")
+          x[:drawable] = Drawable[self, x[:drawable]]
+          x
+        end
+        
+        def encode_visibility_notify_event (window, state)
+          s = 15.chr.encode('BINARY')
+          s << [Window.to_xid(self, window), state].pack("x1LCx3")
+          s = s.ljust(30, "\0")
+          s[2, 0] = "\0\0"
+          s
+        end
+        
+        def decode_visibility_notify_event (s)
+          x = {}
+          x[:window], x[:state], = s.slice!(0, 9).unpack("x1LCx3")
+          x[:window] = Window[self, x[:window]]
+          x
+        end
+        
+        def encode_create_notify_event (parent, window, x, y, width, height, border_width, override_redirect)
+          s = 16.chr.encode('BINARY')
+          s << [Window.to_xid(self, parent), Window.to_xid(self, window), x, y, width, height, border_width, override_redirect ? 1 : 0].pack("x1LLssSSSCx1")
+          s = s.ljust(30, "\0")
+          s[2, 0] = "\0\0"
+          s
+        end
+        
+        def decode_create_notify_event (s)
+          x = {}
+          x[:parent], x[:window], x[:x], x[:y], x[:width], x[:height], x[:border_width], x[:override_redirect], = s.slice!(0, 21).unpack("x1LLssSSSCx1")
+          x[:parent] = Window[self, x[:parent]]
+          x[:window] = Window[self, x[:window]]
+          x[:override_redirect] = x[:override_redirect] != 0
+          x
+        end
+        
+        def encode_destroy_notify_event (event, window)
+          s = 17.chr.encode('BINARY')
+          s << [Window.to_xid(self, event), Window.to_xid(self, window)].pack("x1LL")
+          s = s.ljust(30, "\0")
+          s[2, 0] = "\0\0"
+          s
+        end
+        
+        def decode_destroy_notify_event (s)
+          x = {}
+          x[:event], x[:window], = s.slice!(0, 9).unpack("x1LL")
+          x[:event] = Window[self, x[:event]]
+          x[:window] = Window[self, x[:window]]
+          x
+        end
+        
+        def encode_unmap_notify_event (event, window, from_configure)
+          s = 18.chr.encode('BINARY')
+          s << [Window.to_xid(self, event), Window.to_xid(self, window), from_configure ? 1 : 0].pack("x1LLCx3")
+          s = s.ljust(30, "\0")
+          s[2, 0] = "\0\0"
+          s
+        end
+        
+        def decode_unmap_notify_event (s)
+          x = {}
+          x[:event], x[:window], x[:from_configure], = s.slice!(0, 13).unpack("x1LLCx3")
+          x[:event] = Window[self, x[:event]]
+          x[:window] = Window[self, x[:window]]
+          x[:from_configure] = x[:from_configure] != 0
+          x
+        end
+        
+        def encode_map_notify_event (event, window, override_redirect)
+          s = 19.chr.encode('BINARY')
+          s << [Window.to_xid(self, event), Window.to_xid(self, window), override_redirect ? 1 : 0].pack("x1LLCx3")
+          s = s.ljust(30, "\0")
+          s[2, 0] = "\0\0"
+          s
+        end
+        
+        def decode_map_notify_event (s)
+          x = {}
+          x[:event], x[:window], x[:override_redirect], = s.slice!(0, 13).unpack("x1LLCx3")
+          x[:event] = Window[self, x[:event]]
+          x[:window] = Window[self, x[:window]]
+          x[:override_redirect] = x[:override_redirect] != 0
+          x
+        end
+        
+        def encode_map_request_event (parent, window)
+          s = 20.chr.encode('BINARY')
+          s << [Window.to_xid(self, parent), Window.to_xid(self, window)].pack("x1LL")
+          s = s.ljust(30, "\0")
+          s[2, 0] = "\0\0"
+          s
+        end
+        
+        def decode_map_request_event (s)
+          x = {}
+          x[:parent], x[:window], = s.slice!(0, 9).unpack("x1LL")
+          x[:parent] = Window[self, x[:parent]]
+          x[:window] = Window[self, x[:window]]
+          x
+        end
+        
+        def encode_reparent_notify_event (event, window, parent, x, y, override_redirect)
+          s = 21.chr.encode('BINARY')
+          s << [Window.to_xid(self, event), Window.to_xid(self, window), Window.to_xid(self, parent), x, y, override_redirect ? 1 : 0].pack("x1LLLssCx3")
+          s = s.ljust(30, "\0")
+          s[2, 0] = "\0\0"
+          s
+        end
+        
+        def decode_reparent_notify_event (s)
+          x = {}
+          x[:event], x[:window], x[:parent], x[:x], x[:y], x[:override_redirect], = s.slice!(0, 21).unpack("x1LLLssCx3")
+          x[:event] = Window[self, x[:event]]
+          x[:window] = Window[self, x[:window]]
+          x[:parent] = Window[self, x[:parent]]
+          x[:override_redirect] = x[:override_redirect] != 0
+          x
+        end
+        
+        def encode_configure_notify_event (event, window, above_sibling, x, y, width, height, border_width, override_redirect)
+          s = 22.chr.encode('BINARY')
+          s << [Window.to_xid(self, event), Window.to_xid(self, window), Window.to_xid(self, above_sibling), x, y, width, height, border_width, override_redirect ? 1 : 0].pack("x1LLLssSSSCx1")
+          s = s.ljust(30, "\0")
+          s[2, 0] = "\0\0"
+          s
+        end
+        
+        def decode_configure_notify_event (s)
+          x = {}
+          x[:event], x[:window], x[:above_sibling], x[:x], x[:y], x[:width], x[:height], x[:border_width], x[:override_redirect], = s.slice!(0, 25).unpack("x1LLLssSSSCx1")
+          x[:event] = Window[self, x[:event]]
+          x[:window] = Window[self, x[:window]]
+          x[:above_sibling] = Window[self, x[:above_sibling]]
+          x[:override_redirect] = x[:override_redirect] != 0
+          x
+        end
+        
+        def encode_configure_request_event (stack_mode, parent, window, sibling, x, y, width, height, border_width, value_mask)
+          s = 23.chr.encode('BINARY')
+          s << [stack_mode, Window.to_xid(self, parent), Window.to_xid(self, window), Window.to_xid(self, sibling), x, y, width, height, border_width, value_mask].pack("CLLLssSSSS")
+          s = s.ljust(30, "\0")
+          s[2, 0] = "\0\0"
+          s
+        end
+        
+        def decode_configure_request_event (s)
+          x = {}
+          x[:stack_mode], x[:parent], x[:window], x[:sibling], x[:x], x[:y], x[:width], x[:height], x[:border_width], x[:value_mask], = s.slice!(0, 25).unpack("CLLLssSSSS")
+          x[:parent] = Window[self, x[:parent]]
+          x[:window] = Window[self, x[:window]]
+          x[:sibling] = Window[self, x[:sibling]]
+          x
+        end
+        
+        def encode_gravity_notify_event (event, window, x, y)
+          s = 24.chr.encode('BINARY')
+          s << [Window.to_xid(self, event), Window.to_xid(self, window), x, y].pack("x1LLss")
+          s = s.ljust(30, "\0")
+          s[2, 0] = "\0\0"
+          s
+        end
+        
+        def decode_gravity_notify_event (s)
+          x = {}
+          x[:event], x[:window], x[:x], x[:y], = s.slice!(0, 13).unpack("x1LLss")
+          x[:event] = Window[self, x[:event]]
+          x[:window] = Window[self, x[:window]]
+          x
+        end
+        
+        def encode_resize_request_event (window, width, height)
+          s = 25.chr.encode('BINARY')
+          s << [Window.to_xid(self, window), width, height].pack("x1LSS")
+          s = s.ljust(30, "\0")
+          s[2, 0] = "\0\0"
+          s
+        end
+        
+        def decode_resize_request_event (s)
+          x = {}
+          x[:window], x[:width], x[:height], = s.slice!(0, 9).unpack("x1LSS")
+          x[:window] = Window[self, x[:window]]
+          x
+        end
+        
+        def encode_circulate_notify_event (event, window, place)
+          s = 26.chr.encode('BINARY')
+          s << [Window.to_xid(self, event), Window.to_xid(self, window), place].pack("x1LLx4Cx3")
+          s = s.ljust(30, "\0")
+          s[2, 0] = "\0\0"
+          s
+        end
+        
+        def decode_circulate_notify_event (s)
+          x = {}
+          x[:event], x[:window], x[:place], = s.slice!(0, 17).unpack("x1LLx4Cx3")
+          x[:event] = Window[self, x[:event]]
+          x[:window] = Window[self, x[:window]]
+          x
+        end
+        
+        def encode_circulate_request_event (event, window, place)
+          s = 27.chr.encode('BINARY')
+          s << [Window.to_xid(self, event), Window.to_xid(self, window), place].pack("x1LLx4Cx3")
+          s = s.ljust(30, "\0")
+          s[2, 0] = "\0\0"
+          s
+        end
+        
+        def decode_circulate_request_event (s)
+          x = {}
+          x[:event], x[:window], x[:place], = s.slice!(0, 17).unpack("x1LLx4Cx3")
+          x[:event] = Window[self, x[:event]]
+          x[:window] = Window[self, x[:window]]
+          x
+        end
+        
+        def encode_property_notify_event (window, atom, time, state)
+          s = 28.chr.encode('BINARY')
+          s << [Window.to_xid(self, window), Atom.to_xid(self, atom), time, state].pack("x1LLLCx3")
+          s = s.ljust(30, "\0")
+          s[2, 0] = "\0\0"
+          s
+        end
+        
+        def decode_property_notify_event (s)
+          x = {}
+          x[:window], x[:atom], x[:time], x[:state], = s.slice!(0, 17).unpack("x1LLLCx3")
+          x[:window] = Window[self, x[:window]]
+          x[:atom] = Atom[self, x[:atom]]
+          x
+        end
+        
+        def encode_selection_clear_event (time, owner, selection)
+          s = 29.chr.encode('BINARY')
+          s << [time, Window.to_xid(self, owner), Atom.to_xid(self, selection)].pack("x1LLL")
+          s = s.ljust(30, "\0")
+          s[2, 0] = "\0\0"
+          s
+        end
+        
+        def decode_selection_clear_event (s)
+          x = {}
+          x[:time], x[:owner], x[:selection], = s.slice!(0, 13).unpack("x1LLL")
+          x[:owner] = Window[self, x[:owner]]
+          x[:selection] = Atom[self, x[:selection]]
+          x
+        end
+        
+        def encode_selection_request_event (time, owner, requestor, selection, target, property)
+          s = 30.chr.encode('BINARY')
+          s << [time, Window.to_xid(self, owner), Window.to_xid(self, requestor), Atom.to_xid(self, selection), Atom.to_xid(self, target), Atom.to_xid(self, property)].pack("x1LLLLLL")
+          s = s.ljust(30, "\0")
+          s[2, 0] = "\0\0"
+          s
+        end
+        
+        def decode_selection_request_event (s)
+          x = {}
+          x[:time], x[:owner], x[:requestor], x[:selection], x[:target], x[:property], = s.slice!(0, 25).unpack("x1LLLLLL")
+          x[:owner] = Window[self, x[:owner]]
+          x[:requestor] = Window[self, x[:requestor]]
+          x[:selection] = Atom[self, x[:selection]]
+          x[:target] = Atom[self, x[:target]]
+          x[:property] = Atom[self, x[:property]]
+          x
+        end
+        
+        def encode_selection_notify_event (time, requestor, selection, target, property)
+          s = 31.chr.encode('BINARY')
+          s << [time, Window.to_xid(self, requestor), Atom.to_xid(self, selection), Atom.to_xid(self, target), Atom.to_xid(self, property)].pack("x1LLLLL")
+          s = s.ljust(30, "\0")
+          s[2, 0] = "\0\0"
+          s
+        end
+        
+        def decode_selection_notify_event (s)
+          x = {}
+          x[:time], x[:requestor], x[:selection], x[:target], x[:property], = s.slice!(0, 21).unpack("x1LLLLL")
+          x[:requestor] = Window[self, x[:requestor]]
+          x[:selection] = Atom[self, x[:selection]]
+          x[:target] = Atom[self, x[:target]]
+          x[:property] = Atom[self, x[:property]]
+          x
+        end
+        
+        def encode_colormap_notify_event (window, colormap, new, state)
+          s = 32.chr.encode('BINARY')
+          s << [Window.to_xid(self, window), Colormap.to_xid(self, colormap), new ? 1 : 0, state].pack("x1LLCCx2")
+          s = s.ljust(30, "\0")
+          s[2, 0] = "\0\0"
+          s
+        end
+        
+        def decode_colormap_notify_event (s)
+          x = {}
+          x[:window], x[:colormap], x[:new], x[:state], = s.slice!(0, 13).unpack("x1LLCCx2")
+          x[:window] = Window[self, x[:window]]
+          x[:colormap] = Colormap[self, x[:colormap]]
+          x[:new] = x[:new] != 0
+          x
+        end
+        
+        def encode_client_message_event (format, window, type, data)
+          s = 33.chr.encode('BINARY')
+          s << [format, Window.to_xid(self, window), Atom.to_xid(self, type)].pack("CLL")
+          s << encode_client_message_data(''.encode('BINARY'), *data)
+          s = s.ljust(30, "\0")
+          s[2, 0] = "\0\0"
+          s
+        end
+        
+        def decode_client_message_event (s)
+          x = {}
+          x[:format], x[:window], x[:type], = s.slice!(0, 9).unpack("CLL")
+          x[:window] = Window[self, x[:window]]
+          x[:type] = Atom[self, x[:type]]
+          x[:data] = decode_client_message_data(s)
+          x
+        end
+        
+        def encode_mapping_notify_event (request, first_keycode, count)
+          s = 34.chr.encode('BINARY')
+          s << [request, first_keycode, count].pack("x1CCCx1")
+          s = s.ljust(30, "\0")
+          s[2, 0] = "\0\0"
+          s
+        end
+        
+        def decode_mapping_notify_event (s)
+          x = {}
+          x[:request], x[:first_keycode], x[:count], = s.slice!(0, 5).unpack("x1CCCx1")
+          x
+        end
+        
+        def encode_ge_event ()
+          s = 35.chr.encode('BINARY')
+          s = s.ljust(30, "\0")
+          s[2, 0] = "\0\0"
+          s
+        end
+        
+        def decode_ge_event (s)
+          x = {}
+          s.slice!(0, 22)
+          x
+        end
+        
+        def encode_char2b (s, byte1, byte2)
+          s << [byte1, byte2].pack("CC")
+          s
+        end
+        
+        def decode_char2b (s)
+          x = {}
+          x[:byte1], x[:byte2], = s.slice!(0, 2).unpack("CC")
+          x
+        end
+        
+        def encode_point (s, x, y)
+          s << [x, y].pack("ss")
+          s
+        end
+        
+        def decode_point (s)
+          x = {}
+          x[:x], x[:y], = s.slice!(0, 4).unpack("ss")
+          x
+        end
+        
+        def encode_rectangle (s, x, y, width, height)
+          s << [x, y, width, height].pack("ssSS")
+          s
+        end
+        
+        def decode_rectangle (s)
+          x = {}
+          x[:x], x[:y], x[:width], x[:height], = s.slice!(0, 8).unpack("ssSS")
+          x
+        end
+        
+        def encode_arc (s, x, y, width, height, angle1, angle2)
+          s << [x, y, width, height, angle1, angle2].pack("ssSSss")
+          s
+        end
+        
+        def decode_arc (s)
+          x = {}
+          x[:x], x[:y], x[:width], x[:height], x[:angle1], x[:angle2], = s.slice!(0, 12).unpack("ssSSss")
+          x
+        end
+        
+        def encode_format (s, depth, bits_per_pixel, scanline_pad)
+          s << [depth, bits_per_pixel, scanline_pad].pack("CCCx5")
+          s
+        end
+        
+        def decode_format (s)
+          x = {}
+          x[:depth], x[:bits_per_pixel], x[:scanline_pad], = s.slice!(0, 8).unpack("CCCx5")
+          x
+        end
+        
+        def encode_visualtype (s, visual_id, klass, bits_per_rgb_value, colormap_entries, red_mask, green_mask, blue_mask)
+          s << [visual_id, klass, bits_per_rgb_value, colormap_entries, red_mask, green_mask, blue_mask].pack("LCCSLLLx4")
+          s
+        end
+        
+        def decode_visualtype (s)
+          x = {}
+          x[:visual_id], x[:klass], x[:bits_per_rgb_value], x[:colormap_entries], x[:red_mask], x[:green_mask], x[:blue_mask], = s.slice!(0, 24).unpack("LCCSLLLx4")
+          x
+        end
+        
+        def encode_depth (s, depth, visuals)
+          visuals_len = visuals.length
+          s << [depth, visuals_len].pack("Cx1Sx4")
+          s << visuals.map{|x|encode_visualtype(''.encode('BINARY'), *x)}.join
+          s
+        end
+        
+        def decode_depth (s)
+          x = {}
+          x[:depth], x[:visuals_len], = s.slice!(0, 8).unpack("Cx1Sx4")
+          x[:visuals] = x[:visuals_len].times.map{decode_visualtype(s)}
+          x
+        end
+        
+        def encode_screen (s, root, default_colormap, white_pixel, black_pixel, current_input_masks, width_in_pixels, height_in_pixels, width_in_millimeters, height_in_millimeters, min_installed_maps, max_installed_maps, root_visual, backing_stores, save_unders, root_depth, allowed_depths)
+          allowed_depths_len = allowed_depths.length
+          s << [Window.to_xid(self, root), Colormap.to_xid(self, default_colormap), white_pixel, black_pixel, current_input_masks, width_in_pixels, height_in_pixels, width_in_millimeters, height_in_millimeters, min_installed_maps, max_installed_maps, root_visual, backing_stores, save_unders ? 1 : 0, root_depth, allowed_depths_len].pack("LLLLLSSSSSSLCCCC")
+          s << allowed_depths.map{|x|encode_depth(''.encode('BINARY'), *x)}.join
+          s
+        end
+        
+        def decode_screen (s)
+          x = {}
+          x[:root], x[:default_colormap], x[:white_pixel], x[:black_pixel], x[:current_input_masks], x[:width_in_pixels], x[:height_in_pixels], x[:width_in_millimeters], x[:height_in_millimeters], x[:min_installed_maps], x[:max_installed_maps], x[:root_visual], x[:backing_stores], x[:save_unders], x[:root_depth], x[:allowed_depths_len], = s.slice!(0, 40).unpack("LLLLLSSSSSSLCCCC")
+          x[:root] = Window[self, x[:root]]
+          x[:default_colormap] = Colormap[self, x[:default_colormap]]
+          x[:save_unders] = x[:save_unders] != 0
+          x[:allowed_depths] = x[:allowed_depths_len].times.map{decode_depth(s)}
+          x
+        end
+        
+        def encode_setup_request (s, byte_order, protocol_major_version, protocol_minor_version, authorization_protocol_name, authorization_protocol_data)
+          authorization_protocol_name_len = authorization_protocol_name.length
+          authorization_protocol_data_len = authorization_protocol_data.length
+          s << [byte_order, protocol_major_version, protocol_minor_version, authorization_protocol_name_len, authorization_protocol_data_len, pad(authorization_protocol_name), pad(authorization_protocol_data)].pack("Cx1SSSSx2A*A*")
+          s
+        end
+        
+        def decode_setup_request (s)
+          x = {}
+          x[:byte_order], x[:protocol_major_version], x[:protocol_minor_version], x[:authorization_protocol_name_len], x[:authorization_protocol_data_len], = s.slice!(0, 12).unpack("Cx1SSSSx2")
+          x[:authorization_protocol_name] = s.slice!(0, x[:authorization_protocol_name_len])
+          x[:authorization_protocol_data] = s.slice!(0, x[:authorization_protocol_data_len])
+          x
+        end
+        
+        def encode_setup_failed (s, status, protocol_major_version, protocol_minor_version, length, reason)
+          reason_len = reason.length
+          s << [status, reason_len, protocol_major_version, protocol_minor_version, length, pad(reason)].pack("CCSSSA*")
+          s
+        end
+        
+        def decode_setup_failed (s)
+          x = {}
+          x[:status], x[:reason_len], x[:protocol_major_version], x[:protocol_minor_version], x[:length], = s.slice!(0, 8).unpack("CCSSS")
+          x[:reason] = s.slice!(0, x[:reason_len])
+          x
+        end
+        
+        def encode_setup_authenticate (s, status, length, reason)
+          s << [status, length, pad(reason)].pack("Cx5SA*")
+          s
+        end
+        
+        def decode_setup_authenticate (s)
+          x = {}
+          x[:status], x[:length], = s.slice!(0, 8).unpack("Cx5S")
+          x[:reason] = s.slice!(0, (x[:length] * 4))
+          x
+        end
+        
+        def encode_setup (s, status, protocol_major_version, protocol_minor_version, length, release_number, resource_id_base, resource_id_mask, motion_buffer_size, maximum_request_length, image_byte_order, bitmap_format_bit_order, bitmap_format_scanline_unit, bitmap_format_scanline_pad, min_keycode, max_keycode, vendor, pixmap_formats, roots)
+          vendor_len = vendor.length
+          pixmap_formats_len = pixmap_formats.length
+          roots_len = roots.length
+          s << [status, protocol_major_version, protocol_minor_version, length, release_number, resource_id_base, resource_id_mask, motion_buffer_size, vendor_len, maximum_request_length, roots_len, pixmap_formats_len, image_byte_order, bitmap_format_bit_order, bitmap_format_scanline_unit, bitmap_format_scanline_pad, min_keycode, max_keycode, pad(vendor)].pack("Cx1SSSLLLLSSCCCCCCCCx4A*")
+          s << pixmap_formats.map{|x|encode_format(''.encode('BINARY'), *x)}.join
+          s << roots.map{|x|encode_screen(''.encode('BINARY'), *x)}.join
+          s
+        end
+        
+        def decode_setup (s)
+          x = {}
+          x[:status], x[:protocol_major_version], x[:protocol_minor_version], x[:length], x[:release_number], x[:resource_id_base], x[:resource_id_mask], x[:motion_buffer_size], x[:vendor_len], x[:maximum_request_length], x[:roots_len], x[:pixmap_formats_len], x[:image_byte_order], x[:bitmap_format_bit_order], x[:bitmap_format_scanline_unit], x[:bitmap_format_scanline_pad], x[:min_keycode], x[:max_keycode], = s.slice!(0, 40).unpack("Cx1SSSLLLLSSCCCCCCCCx4")
+          x[:vendor] = s.slice!(0, x[:vendor_len])
+          x[:pixmap_formats] = x[:pixmap_formats_len].times.map{decode_format(s)}
+          x[:roots] = x[:roots_len].times.map{decode_screen(s)}
+          x
+        end
+        
+        def encode_timecoord (s, time, x, y)
+          s << [time, x, y].pack("Lss")
+          s
+        end
+        
+        def decode_timecoord (s)
+          x = {}
+          x[:time], x[:x], x[:y], = s.slice!(0, 8).unpack("Lss")
+          x
+        end
+        
+        def encode_fontprop (s, name, value)
+          s << [Atom.to_xid(self, name), value].pack("LL")
+          s
+        end
+        
+        def decode_fontprop (s)
+          x = {}
+          x[:name], x[:value], = s.slice!(0, 8).unpack("LL")
+          x[:name] = Atom[self, x[:name]]
+          x
+        end
+        
+        def encode_charinfo (s, left_side_bearing, right_side_bearing, character_width, ascent, descent, attributes)
+          s << [left_side_bearing, right_side_bearing, character_width, ascent, descent, attributes].pack("sssssS")
+          s
+        end
+        
+        def decode_charinfo (s)
+          x = {}
+          x[:left_side_bearing], x[:right_side_bearing], x[:character_width], x[:ascent], x[:descent], x[:attributes], = s.slice!(0, 12).unpack("sssssS")
+          x
+        end
+        
+        def encode_str (s, name)
+          name_len = name.length
+          s << [name_len, pad(name)].pack("CA*")
+          s
+        end
+        
+        def decode_str (s)
+          x = {}
+          x[:name_len], = s.slice!(0, 1).unpack("C")
+          x[:name] = s.slice!(0, x[:name_len])
+          x
+        end
+        
+        def encode_segment (s, x1, y1, x2, y2)
+          s << [x1, y1, x2, y2].pack("ssss")
+          s
+        end
+        
+        def decode_segment (s)
+          x = {}
+          x[:x1], x[:y1], x[:x2], x[:y2], = s.slice!(0, 8).unpack("ssss")
+          x
+        end
+        
+        def encode_coloritem (s, pixel, red, green, blue, flags)
+          s << [pixel, red, green, blue, flags].pack("LSSSCx1")
+          s
+        end
+        
+        def decode_coloritem (s)
+          x = {}
+          x[:pixel], x[:red], x[:green], x[:blue], x[:flags], = s.slice!(0, 12).unpack("LSSSCx1")
+          x
+        end
+        
+        def encode_rgb (s, red, green, blue)
+          s << [red, green, blue].pack("SSSx2")
+          s
+        end
+        
+        def decode_rgb (s)
+          x = {}
+          x[:red], x[:green], x[:blue], = s.slice!(0, 8).unpack("SSSx2")
+          x
+        end
+        
+        def encode_host (s, family, address)
+          address_len = address.length
+          s << [family, address_len, pad(address)].pack("Cx1SA*")
+          s
+        end
+        
+        def decode_host (s)
+          x = {}
+          x[:family], x[:address_len], = s.slice!(0, 4).unpack("Cx1S")
+          x[:address] = s.slice!(0, x[:address_len])
+          x
+        end
+        
+        def alloc_window ()
+          Window.new(self, alloc_xid)
+        end
+        
+        def alloc_pixmap ()
+          Pixmap.new(self, alloc_xid)
+        end
+        
+        def alloc_cursor ()
+          Cursor.new(self, alloc_xid)
+        end
+        
+        def alloc_font ()
+          Font.new(self, alloc_xid)
+        end
+        
+        def alloc_gcontext ()
+          Gcontext.new(self, alloc_xid)
+        end
+        
+        def alloc_colormap ()
+          Colormap.new(self, alloc_xid)
+        end
+        
+        def alloc_atom ()
+          Atom.new(self, alloc_xid)
+        end
+        
+        def alloc_drawable ()
+          Drawable.new(self, alloc_xid)
+        end
+        
+        def alloc_fontable ()
+          Fontable.new(self, alloc_xid)
+        end
+      
       end
       
     end

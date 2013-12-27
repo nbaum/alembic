@@ -4,8 +4,16 @@ module Alembic
     attr_reader :connection, :xid
     
     def self.[] (conn, xid)
+      new(conn, xid)
+    end
+    
+    def self.new (conn, xid)
       return nil if xid == 0
-      conn.resources[xid] ||= new(conn, xid)
+      if String === xid
+        conn.atoms[xid]
+      else
+        conn.resources[xid] ||= super(conn, xid)
+      end
     end
     
     def self.to_xid (conn, obj)
@@ -17,7 +25,7 @@ module Alembic
       when nil  
         0
       else
-        raise TypeError, "Can't convert object to XID"
+        raise TypeError, "Can't convert object to #{name}"
       end
     end
     

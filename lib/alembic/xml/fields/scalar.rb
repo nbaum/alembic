@@ -57,7 +57,7 @@ module Alembic
       end
       
       def decoder
-        "x.#{name} = #{lookup(type).decoder}"
+        "x[:#{name}] = #{lookup(type).decoder}"
       end
       
       def lengther

@@ -2097,6 +2097,8 @@ module Alembic
       "Sinh_kunddaliya" => 0x1000df4
     }
     
+    Keysyms_I = Keysyms.invert
+    
   end
 end
 

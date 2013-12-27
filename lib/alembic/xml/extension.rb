@@ -72,10 +72,18 @@ module Alembic
         
       }
       
-      def compile ()
-        code = items.values.flat_map do |item|
-          item.compile
+      def compile_types (type, mode)
+        items.values.flat_map do |item|
+          if type === item
+            item.__send__("compile_#{mode}")
+          else
+            []
+          end 
         end
+      end
+      
+      def compile ()
+        order = [Import, Request, Enum, Event, Error, Struct, Typedef, XidType]
         code = [
           "module Alembic",
           [
@@ -87,10 +95,34 @@ module Alembic
                 nil,
                 "extension_xname #{extension_xname.inspect}",
                 nil,
+                *order.flat_map do |type|
+                  [
+                    *compile_types(type, :comments).map do |comment|
+                      comment = "# #{comment}"
+                    end,
+                    nil
+                  ]
+                end,
+                nil,
+                *order.flat_map do |type|
+                  [
+                    *compile_types(type, :constants),
+                    nil
+                  ]
+                end,
+                nil,
                 "module Methods",
+                [
+                  nil,
+                  *order.flat_map do |type|
+                    [
+                      *compile_types(type, :methods),
+                      nil
+                    ]
+                  end,
+                ],
                 "end",
                 nil,
-                *code,
               ],
               "end",
             ],
@@ -119,7 +151,7 @@ module Alembic
           else
             "#{" " * indent}#{segment}"
           end
-        end.join("\n")
+        end.join("\n").gsub(/(\n +){3,}/, '\1\1')
       end
       
     end

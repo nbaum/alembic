@@ -30,7 +30,7 @@ module Alembic
       def decoder
         len = length.compile_length
         [
-          "x.#{name} = s.slice!(0, #{len})",
+          "x[:#{name}] = s.slice!(0, #{len})",
         ]
       end
       

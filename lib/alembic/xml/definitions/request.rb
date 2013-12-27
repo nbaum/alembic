@@ -18,47 +18,49 @@ module Alembic
         self.reply = reply[0] unless reply.empty?
       end
       
-      def struct_args
-        fields.map(&:name).compact.map{|n|":#{n}"}
+      def compile_comments
+        [
+          "#{var_name.snake_case} (#{params.join(", ")})"
+        ]
       end
       
       def caller_method
         [
-          "module Methods",
+          "def #{var_name.snake_case}! (#{params.join(", ")})",
           [
-            "def #{var_name.snake_case}! (#{params.join(", ")})",
-            [
-              *extension.extension_xname ? [
-                "s = opcodes[#{extension.extension_xname.inspect}].chr.encode('BINARY')",
-                "s << #{opcode}"
-              ] : [
-                "s = #{opcode}.chr.encode('BINARY')",
-              ],
-              *fields.flat_map(&:lengther),
-              *encoders,
-              *reply ? [
-                "send_request(s) do |s|",
-                reply.compile,
-                "end"
-              ] : [
-                "send_request(s)"
-              ]
+            *extension.extension_xname ? [
+              "s = opcodes[#{extension.extension_xname.inspect}].chr.encode('BINARY')",
+              "s << #{opcode}"
+            ] : [
+              "s = #{opcode}.chr.encode('BINARY')",
             ],
-            "end",
-            nil,
-            "def #{var_name.snake_case} (#{params.join(", ")})",
-            [
+            *fields.flat_map(&:lengther),
+            *encoders,
+            *reply ? [
+              "send_request(s) do |s|",
+              reply.compile,
+              "end"
+            ] : [
+              "send_request(s)"
+            ]
+          ],
+          "end",
+          nil,
+          "def #{var_name.snake_case} (#{params.join(", ")})",
+          [
+            *reply ? [
               "#{var_name.snake_case}!(#{params.join(", ")}).wait"
-            ],
-            "end",
+            ] : [
+              "#{var_name.snake_case}!(#{params.join(", ")})"
+            ]
           ],
           "end",
           nil
         ]
       end
       
-      def compile
-        (reply ? reply.struct_definition : []) + caller_method
+      def compile_methods
+        caller_method
       end
       
     end
@@ -80,9 +82,9 @@ module Alembic
       
       def compile
         [
-          "x = #{var_name}.new",
+          "x = {}",
           *decoders,
-          self.return ? "x.#{self.return}" : "x",
+          self.return ? "x[:#{self.return}]" : "x",
         ]
       end
       
