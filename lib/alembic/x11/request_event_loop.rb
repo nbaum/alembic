@@ -98,8 +98,9 @@ module Alembic
     
     def sweep_tickets (maxseq)
       @tickets.synchronize do
-        @tickets.each do |seq, ticket|
+        @tickets.keys.each do |seq|
           break if seq > maxseq
+          ticket = @tickets.delete(seq)
           ticket.succeed(true)
         end
       end
