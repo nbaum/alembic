@@ -36,7 +36,7 @@ module Alembic
   module RequestEventLoop
     
     def initialize (display)
-      @sequence_no = 0
+      @sequence_no = 1
       @tickets = {}
       @tickets.extend MonitorMixin
       @event_monitor = Monitor.new
@@ -157,7 +157,11 @@ module Alembic
       data[2, 0] = [(data.length + 2) / 4].pack("S")
       t = Ticket.new(self, block, caller[0])
       @tickets.synchronize do
-        @tickets[@sequence_no += 1] = t
+        if @sequence_no == 0xFFFF and !block
+          get_selection_owner!(1)
+        end
+        @tickets[@sequence_no] = t
+        @sequence_no = (@sequence_no + 1) % 0x10000
       end
       write(data)
       t
