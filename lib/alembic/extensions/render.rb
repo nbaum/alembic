@@ -194,7 +194,7 @@ module Alembic
         end
         
         def render_query_version (client_major_version, client_minor_version)
-          render_query_version!(client_major_version, client_minor_version).wait.value
+          render_query_version!(client_major_version, client_minor_version).sync.result
         end
         
         def render_query_pict_formats! ()
@@ -211,7 +211,7 @@ module Alembic
         end
         
         def render_query_pict_formats ()
-          render_query_pict_formats!().wait.value
+          render_query_pict_formats!().sync.result
         end
         
         def render_query_pict_index_values! (format)
@@ -227,7 +227,7 @@ module Alembic
         end
         
         def render_query_pict_index_values (format)
-          render_query_pict_index_values!(format).wait.value
+          render_query_pict_index_values!(format).sync.result
         end
         
         def render_create_picture! (pid, drawable, format, value_hash = {})
@@ -239,7 +239,7 @@ module Alembic
         end
         
         def render_create_picture (pid, drawable, format, value_hash = {})
-          render_create_picture!(pid, drawable, format, value_hash).value
+          render_create_picture!(pid, drawable, format, value_hash).sync.value
         end
         
         def render_change_picture! (picture, value_hash = {})
@@ -251,7 +251,7 @@ module Alembic
         end
         
         def render_change_picture (picture, value_hash = {})
-          render_change_picture!(picture, value_hash).value
+          render_change_picture!(picture, value_hash).sync.value
         end
         
         def render_set_picture_clip_rectangles! (picture, clip_x_origin, clip_y_origin, rectangles)
@@ -263,7 +263,7 @@ module Alembic
         end
         
         def render_set_picture_clip_rectangles (picture, clip_x_origin, clip_y_origin, rectangles)
-          render_set_picture_clip_rectangles!(picture, clip_x_origin, clip_y_origin, rectangles).value
+          render_set_picture_clip_rectangles!(picture, clip_x_origin, clip_y_origin, rectangles).sync.value
         end
         
         def render_free_picture! (picture)
@@ -274,7 +274,7 @@ module Alembic
         end
         
         def render_free_picture (picture)
-          render_free_picture!(picture).value
+          render_free_picture!(picture).sync.value
         end
         
         def render_composite! (op, src, mask, dst, src_x, src_y, mask_x, mask_y, dst_x, dst_y, width, height)
@@ -285,7 +285,7 @@ module Alembic
         end
         
         def render_composite (op, src, mask, dst, src_x, src_y, mask_x, mask_y, dst_x, dst_y, width, height)
-          render_composite!(op, src, mask, dst, src_x, src_y, mask_x, mask_y, dst_x, dst_y, width, height).value
+          render_composite!(op, src, mask, dst, src_x, src_y, mask_x, mask_y, dst_x, dst_y, width, height).sync.value
         end
         
         def render_trapezoids! (op, src, dst, mask_format, src_x, src_y, traps)
@@ -297,7 +297,7 @@ module Alembic
         end
         
         def render_trapezoids (op, src, dst, mask_format, src_x, src_y, traps)
-          render_trapezoids!(op, src, dst, mask_format, src_x, src_y, traps).value
+          render_trapezoids!(op, src, dst, mask_format, src_x, src_y, traps).sync.value
         end
         
         def render_triangles! (op, src, dst, mask_format, src_x, src_y, triangles)
@@ -309,7 +309,7 @@ module Alembic
         end
         
         def render_triangles (op, src, dst, mask_format, src_x, src_y, triangles)
-          render_triangles!(op, src, dst, mask_format, src_x, src_y, triangles).value
+          render_triangles!(op, src, dst, mask_format, src_x, src_y, triangles).sync.value
         end
         
         def render_tri_strip! (op, src, dst, mask_format, src_x, src_y, points)
@@ -321,7 +321,7 @@ module Alembic
         end
         
         def render_tri_strip (op, src, dst, mask_format, src_x, src_y, points)
-          render_tri_strip!(op, src, dst, mask_format, src_x, src_y, points).value
+          render_tri_strip!(op, src, dst, mask_format, src_x, src_y, points).sync.value
         end
         
         def render_tri_fan! (op, src, dst, mask_format, src_x, src_y, points)
@@ -333,7 +333,7 @@ module Alembic
         end
         
         def render_tri_fan (op, src, dst, mask_format, src_x, src_y, points)
-          render_tri_fan!(op, src, dst, mask_format, src_x, src_y, points).value
+          render_tri_fan!(op, src, dst, mask_format, src_x, src_y, points).sync.value
         end
         
         def render_create_glyph_set! (gsid, format)
@@ -344,7 +344,7 @@ module Alembic
         end
         
         def render_create_glyph_set (gsid, format)
-          render_create_glyph_set!(gsid, format).value
+          render_create_glyph_set!(gsid, format).sync.value
         end
         
         def render_reference_glyph_set! (gsid, existing)
@@ -355,7 +355,7 @@ module Alembic
         end
         
         def render_reference_glyph_set (gsid, existing)
-          render_reference_glyph_set!(gsid, existing).value
+          render_reference_glyph_set!(gsid, existing).sync.value
         end
         
         def render_free_glyph_set! (glyphset)
@@ -366,7 +366,7 @@ module Alembic
         end
         
         def render_free_glyph_set (glyphset)
-          render_free_glyph_set!(glyphset).value
+          render_free_glyph_set!(glyphset).sync.value
         end
         
         def render_add_glyphs! (glyphset, glyphids, glyphs, data)
@@ -382,7 +382,7 @@ module Alembic
         end
         
         def render_add_glyphs (glyphset, glyphids, glyphs, data)
-          render_add_glyphs!(glyphset, glyphids, glyphs, data).value
+          render_add_glyphs!(glyphset, glyphids, glyphs, data).sync.value
         end
         
         def render_free_glyphs! (glyphset, glyphs)
@@ -393,7 +393,7 @@ module Alembic
         end
         
         def render_free_glyphs (glyphset, glyphs)
-          render_free_glyphs!(glyphset, glyphs).value
+          render_free_glyphs!(glyphset, glyphs).sync.value
         end
         
         def render_composite_glyphs8! (op, src, dst, mask_format, glyphset, src_x, src_y, glyphcmds)
@@ -404,7 +404,7 @@ module Alembic
         end
         
         def render_composite_glyphs8 (op, src, dst, mask_format, glyphset, src_x, src_y, glyphcmds)
-          render_composite_glyphs8!(op, src, dst, mask_format, glyphset, src_x, src_y, glyphcmds).value
+          render_composite_glyphs8!(op, src, dst, mask_format, glyphset, src_x, src_y, glyphcmds).sync.value
         end
         
         def render_composite_glyphs16! (op, src, dst, mask_format, glyphset, src_x, src_y, glyphcmds)
@@ -415,7 +415,7 @@ module Alembic
         end
         
         def render_composite_glyphs16 (op, src, dst, mask_format, glyphset, src_x, src_y, glyphcmds)
-          render_composite_glyphs16!(op, src, dst, mask_format, glyphset, src_x, src_y, glyphcmds).value
+          render_composite_glyphs16!(op, src, dst, mask_format, glyphset, src_x, src_y, glyphcmds).sync.value
         end
         
         def render_composite_glyphs32! (op, src, dst, mask_format, glyphset, src_x, src_y, glyphcmds)
@@ -426,7 +426,7 @@ module Alembic
         end
         
         def render_composite_glyphs32 (op, src, dst, mask_format, glyphset, src_x, src_y, glyphcmds)
-          render_composite_glyphs32!(op, src, dst, mask_format, glyphset, src_x, src_y, glyphcmds).value
+          render_composite_glyphs32!(op, src, dst, mask_format, glyphset, src_x, src_y, glyphcmds).sync.value
         end
         
         def render_fill_rectangles! (op, dst, color, rects)
@@ -439,7 +439,7 @@ module Alembic
         end
         
         def render_fill_rectangles (op, dst, color, rects)
-          render_fill_rectangles!(op, dst, color, rects).value
+          render_fill_rectangles!(op, dst, color, rects).sync.value
         end
         
         def render_create_cursor! (cid, source, x, y)
@@ -450,7 +450,7 @@ module Alembic
         end
         
         def render_create_cursor (cid, source, x, y)
-          render_create_cursor!(cid, source, x, y).value
+          render_create_cursor!(cid, source, x, y).sync.value
         end
         
         def render_set_picture_transform! (picture, transform)
@@ -462,7 +462,7 @@ module Alembic
         end
         
         def render_set_picture_transform (picture, transform)
-          render_set_picture_transform!(picture, transform).value
+          render_set_picture_transform!(picture, transform).sync.value
         end
         
         def render_query_filters! (drawable)
@@ -479,7 +479,7 @@ module Alembic
         end
         
         def render_query_filters (drawable)
-          render_query_filters!(drawable).wait.value
+          render_query_filters!(drawable).sync.result
         end
         
         def render_set_picture_filter! (picture, filter, values)
@@ -491,7 +491,7 @@ module Alembic
         end
         
         def render_set_picture_filter (picture, filter, values)
-          render_set_picture_filter!(picture, filter, values).value
+          render_set_picture_filter!(picture, filter, values).sync.value
         end
         
         def render_create_anim_cursor! (cid, cursors)
@@ -503,7 +503,7 @@ module Alembic
         end
         
         def render_create_anim_cursor (cid, cursors)
-          render_create_anim_cursor!(cid, cursors).value
+          render_create_anim_cursor!(cid, cursors).sync.value
         end
         
         def render_add_traps! (picture, x_off, y_off, traps)
@@ -515,7 +515,7 @@ module Alembic
         end
         
         def render_add_traps (picture, x_off, y_off, traps)
-          render_add_traps!(picture, x_off, y_off, traps).value
+          render_add_traps!(picture, x_off, y_off, traps).sync.value
         end
         
         def render_create_solid_fill! (picture, color)
@@ -527,7 +527,7 @@ module Alembic
         end
         
         def render_create_solid_fill (picture, color)
-          render_create_solid_fill!(picture, color).value
+          render_create_solid_fill!(picture, color).sync.value
         end
         
         def render_create_linear_gradient! (picture, p1, p2, stops, colors)
@@ -545,7 +545,7 @@ module Alembic
         end
         
         def render_create_linear_gradient (picture, p1, p2, stops, colors)
-          render_create_linear_gradient!(picture, p1, p2, stops, colors).value
+          render_create_linear_gradient!(picture, p1, p2, stops, colors).sync.value
         end
         
         def render_create_radial_gradient! (picture, inner, outer, inner_radius, outer_radius, stops, colors)
@@ -563,7 +563,7 @@ module Alembic
         end
         
         def render_create_radial_gradient (picture, inner, outer, inner_radius, outer_radius, stops, colors)
-          render_create_radial_gradient!(picture, inner, outer, inner_radius, outer_radius, stops, colors).value
+          render_create_radial_gradient!(picture, inner, outer, inner_radius, outer_radius, stops, colors).sync.value
         end
         
         def render_create_conical_gradient! (picture, center, angle, stops, colors)
@@ -580,7 +580,7 @@ module Alembic
         end
         
         def render_create_conical_gradient (picture, center, angle, stops, colors)
-          render_create_conical_gradient!(picture, center, angle, stops, colors).value
+          render_create_conical_gradient!(picture, center, angle, stops, colors).sync.value
         end
         
         Directformat = Struct.new(:red_shift, :red_mask, :green_shift, :green_mask, :blue_shift, :blue_mask, :alpha_shift, :alpha_mask)

@@ -1018,7 +1018,7 @@ module Alembic
       Font = Class.new(Fontable)
       Gcontext = Class.new(Fontable)
       Colormap = Class.new(Resource)
-      Atom = Class.new(Resource)
+      Atom = Class.new()
       
       module Methods
         
@@ -1031,7 +1031,7 @@ module Alembic
         end
         
         def create_window (depth, parent, x, y, width, height, border_width, klass, visual, value_hash = {})
-          create_window!(depth, parent, x, y, width, height, border_width, klass, visual, value_hash).value
+          create_window!(depth, parent, x, y, width, height, border_width, klass, visual, value_hash).sync.value
         end
         
         def change_window_attributes! (window, value_hash = {})
@@ -1042,7 +1042,7 @@ module Alembic
         end
         
         def change_window_attributes (window, value_hash = {})
-          change_window_attributes!(window, value_hash).value
+          change_window_attributes!(window, value_hash).sync.value
         end
         
         def get_window_attributes! (window)
@@ -1060,7 +1060,7 @@ module Alembic
         end
         
         def get_window_attributes (window)
-          get_window_attributes!(window).wait.value
+          get_window_attributes!(window).sync.result
         end
         
         def destroy_window! (window)
@@ -1070,7 +1070,7 @@ module Alembic
         end
         
         def destroy_window (window)
-          destroy_window!(window).value
+          destroy_window!(window).sync.value
         end
         
         def destroy_subwindows! (window)
@@ -1080,7 +1080,7 @@ module Alembic
         end
         
         def destroy_subwindows (window)
-          destroy_subwindows!(window).value
+          destroy_subwindows!(window).sync.value
         end
         
         def change_save_set! (mode, window)
@@ -1090,7 +1090,7 @@ module Alembic
         end
         
         def change_save_set (mode, window)
-          change_save_set!(mode, window).value
+          change_save_set!(mode, window).sync.value
         end
         
         def reparent_window! (window, parent, x, y)
@@ -1100,7 +1100,7 @@ module Alembic
         end
         
         def reparent_window (window, parent, x, y)
-          reparent_window!(window, parent, x, y).value
+          reparent_window!(window, parent, x, y).sync.value
         end
         
         def map_window! (window)
@@ -1110,7 +1110,7 @@ module Alembic
         end
         
         def map_window (window)
-          map_window!(window).value
+          map_window!(window).sync.value
         end
         
         def map_subwindows! (window)
@@ -1120,7 +1120,7 @@ module Alembic
         end
         
         def map_subwindows (window)
-          map_subwindows!(window).value
+          map_subwindows!(window).sync.value
         end
         
         def unmap_window! (window)
@@ -1130,7 +1130,7 @@ module Alembic
         end
         
         def unmap_window (window)
-          unmap_window!(window).value
+          unmap_window!(window).sync.value
         end
         
         def unmap_subwindows! (window)
@@ -1140,7 +1140,7 @@ module Alembic
         end
         
         def unmap_subwindows (window)
-          unmap_subwindows!(window).value
+          unmap_subwindows!(window).sync.value
         end
         
         def configure_window! (window, value_hash = {})
@@ -1151,7 +1151,7 @@ module Alembic
         end
         
         def configure_window (window, value_hash = {})
-          configure_window!(window, value_hash).value
+          configure_window!(window, value_hash).sync.value
         end
         
         def circulate_window! (direction, window)
@@ -1161,7 +1161,7 @@ module Alembic
         end
         
         def circulate_window (direction, window)
-          circulate_window!(direction, window).value
+          circulate_window!(direction, window).sync.value
         end
         
         def get_geometry! (drawable)
@@ -1176,7 +1176,7 @@ module Alembic
         end
         
         def get_geometry (drawable)
-          get_geometry!(drawable).wait.value
+          get_geometry!(drawable).sync.result
         end
         
         def query_tree! (window)
@@ -1193,7 +1193,7 @@ module Alembic
         end
         
         def query_tree (window)
-          query_tree!(window).wait.value
+          query_tree!(window).sync.result
         end
         
         def intern_atom! (only_if_exists, name)
@@ -1209,7 +1209,7 @@ module Alembic
         end
         
         def intern_atom (only_if_exists, name)
-          intern_atom!(only_if_exists, name).wait.value
+          intern_atom!(only_if_exists, name).sync.result
         end
         
         def get_atom_name! (atom)
@@ -1224,7 +1224,7 @@ module Alembic
         end
         
         def get_atom_name (atom)
-          get_atom_name!(atom).wait.value
+          get_atom_name!(atom).sync.result
         end
         
         def change_property! (mode, window, property, type, format, data_len, data)
@@ -1234,7 +1234,7 @@ module Alembic
         end
         
         def change_property (mode, window, property, type, format, data_len, data)
-          change_property!(mode, window, property, type, format, data_len, data).value
+          change_property!(mode, window, property, type, format, data_len, data).sync.value
         end
         
         def delete_property! (window, property)
@@ -1244,7 +1244,7 @@ module Alembic
         end
         
         def delete_property (window, property)
-          delete_property!(window, property).value
+          delete_property!(window, property).sync.value
         end
         
         def get_property! (delete, window, property, type, long_offset, long_length)
@@ -1260,7 +1260,7 @@ module Alembic
         end
         
         def get_property (delete, window, property, type, long_offset, long_length)
-          get_property!(delete, window, property, type, long_offset, long_length).wait.value
+          get_property!(delete, window, property, type, long_offset, long_length).sync.result
         end
         
         def list_properties! (window)
@@ -1275,7 +1275,7 @@ module Alembic
         end
         
         def list_properties (window)
-          list_properties!(window).wait.value
+          list_properties!(window).sync.result
         end
         
         def set_selection_owner! (owner, selection, time)
@@ -1285,7 +1285,7 @@ module Alembic
         end
         
         def set_selection_owner (owner, selection, time)
-          set_selection_owner!(owner, selection, time).value
+          set_selection_owner!(owner, selection, time).sync.value
         end
         
         def get_selection_owner! (selection)
@@ -1300,7 +1300,7 @@ module Alembic
         end
         
         def get_selection_owner (selection)
-          get_selection_owner!(selection).wait.value
+          get_selection_owner!(selection).sync.result
         end
         
         def convert_selection! (requestor, selection, target, property, time)
@@ -1310,7 +1310,7 @@ module Alembic
         end
         
         def convert_selection (requestor, selection, target, property, time)
-          convert_selection!(requestor, selection, target, property, time).value
+          convert_selection!(requestor, selection, target, property, time).sync.value
         end
         
         def send_event! (propagate, destination, event_mask, event)
@@ -1320,7 +1320,7 @@ module Alembic
         end
         
         def send_event (propagate, destination, event_mask, event)
-          send_event!(propagate, destination, event_mask, event).value
+          send_event!(propagate, destination, event_mask, event).sync.value
         end
         
         def grab_pointer! (owner_events, grab_window, event_mask, pointer_mode, keyboard_mode, confine_to, cursor, time)
@@ -1334,7 +1334,7 @@ module Alembic
         end
         
         def grab_pointer (owner_events, grab_window, event_mask, pointer_mode, keyboard_mode, confine_to, cursor, time)
-          grab_pointer!(owner_events, grab_window, event_mask, pointer_mode, keyboard_mode, confine_to, cursor, time).wait.value
+          grab_pointer!(owner_events, grab_window, event_mask, pointer_mode, keyboard_mode, confine_to, cursor, time).sync.result
         end
         
         def ungrab_pointer! (time)
@@ -1344,7 +1344,7 @@ module Alembic
         end
         
         def ungrab_pointer (time)
-          ungrab_pointer!(time).value
+          ungrab_pointer!(time).sync.value
         end
         
         def grab_button! (owner_events, grab_window, event_mask, pointer_mode, keyboard_mode, confine_to, cursor, button, modifiers)
@@ -1354,7 +1354,7 @@ module Alembic
         end
         
         def grab_button (owner_events, grab_window, event_mask, pointer_mode, keyboard_mode, confine_to, cursor, button, modifiers)
-          grab_button!(owner_events, grab_window, event_mask, pointer_mode, keyboard_mode, confine_to, cursor, button, modifiers).value
+          grab_button!(owner_events, grab_window, event_mask, pointer_mode, keyboard_mode, confine_to, cursor, button, modifiers).sync.value
         end
         
         def ungrab_button! (button, grab_window, modifiers)
@@ -1364,7 +1364,7 @@ module Alembic
         end
         
         def ungrab_button (button, grab_window, modifiers)
-          ungrab_button!(button, grab_window, modifiers).value
+          ungrab_button!(button, grab_window, modifiers).sync.value
         end
         
         def change_active_pointer_grab! (cursor, time, event_mask)
@@ -1374,7 +1374,7 @@ module Alembic
         end
         
         def change_active_pointer_grab (cursor, time, event_mask)
-          change_active_pointer_grab!(cursor, time, event_mask).value
+          change_active_pointer_grab!(cursor, time, event_mask).sync.value
         end
         
         def grab_keyboard! (owner_events, grab_window, time, pointer_mode, keyboard_mode)
@@ -1388,7 +1388,7 @@ module Alembic
         end
         
         def grab_keyboard (owner_events, grab_window, time, pointer_mode, keyboard_mode)
-          grab_keyboard!(owner_events, grab_window, time, pointer_mode, keyboard_mode).wait.value
+          grab_keyboard!(owner_events, grab_window, time, pointer_mode, keyboard_mode).sync.result
         end
         
         def ungrab_keyboard! (time)
@@ -1398,7 +1398,7 @@ module Alembic
         end
         
         def ungrab_keyboard (time)
-          ungrab_keyboard!(time).value
+          ungrab_keyboard!(time).sync.value
         end
         
         def grab_key! (owner_events, grab_window, modifiers, key, pointer_mode, keyboard_mode)
@@ -1408,7 +1408,7 @@ module Alembic
         end
         
         def grab_key (owner_events, grab_window, modifiers, key, pointer_mode, keyboard_mode)
-          grab_key!(owner_events, grab_window, modifiers, key, pointer_mode, keyboard_mode).value
+          grab_key!(owner_events, grab_window, modifiers, key, pointer_mode, keyboard_mode).sync.value
         end
         
         def ungrab_key! (key, grab_window, modifiers)
@@ -1418,7 +1418,7 @@ module Alembic
         end
         
         def ungrab_key (key, grab_window, modifiers)
-          ungrab_key!(key, grab_window, modifiers).value
+          ungrab_key!(key, grab_window, modifiers).sync.value
         end
         
         def allow_events! (mode, time)
@@ -1428,7 +1428,7 @@ module Alembic
         end
         
         def allow_events (mode, time)
-          allow_events!(mode, time).value
+          allow_events!(mode, time).sync.value
         end
         
         def grab_server! ()
@@ -1437,7 +1437,7 @@ module Alembic
         end
         
         def grab_server ()
-          grab_server!().value
+          grab_server!().sync.value
         end
         
         def ungrab_server! ()
@@ -1446,7 +1446,7 @@ module Alembic
         end
         
         def ungrab_server ()
-          ungrab_server!().value
+          ungrab_server!().sync.value
         end
         
         def query_pointer! (window)
@@ -1463,7 +1463,7 @@ module Alembic
         end
         
         def query_pointer (window)
-          query_pointer!(window).wait.value
+          query_pointer!(window).sync.result
         end
         
         def get_motion_events! (window, start, stop)
@@ -1478,7 +1478,7 @@ module Alembic
         end
         
         def get_motion_events (window, start, stop)
-          get_motion_events!(window, start, stop).wait.value
+          get_motion_events!(window, start, stop).sync.result
         end
         
         def translate_coordinates! (src_window, dst_window, src_x, src_y)
@@ -1494,7 +1494,7 @@ module Alembic
         end
         
         def translate_coordinates (src_window, dst_window, src_x, src_y)
-          translate_coordinates!(src_window, dst_window, src_x, src_y).wait.value
+          translate_coordinates!(src_window, dst_window, src_x, src_y).sync.result
         end
         
         def warp_pointer! (src_window, dst_window, src_x, src_y, src_width, src_height, dst_x, dst_y)
@@ -1504,7 +1504,7 @@ module Alembic
         end
         
         def warp_pointer (src_window, dst_window, src_x, src_y, src_width, src_height, dst_x, dst_y)
-          warp_pointer!(src_window, dst_window, src_x, src_y, src_width, src_height, dst_x, dst_y).value
+          warp_pointer!(src_window, dst_window, src_x, src_y, src_width, src_height, dst_x, dst_y).sync.value
         end
         
         def set_input_focus! (revert_to, focus, time)
@@ -1514,7 +1514,7 @@ module Alembic
         end
         
         def set_input_focus (revert_to, focus, time)
-          set_input_focus!(revert_to, focus, time).value
+          set_input_focus!(revert_to, focus, time).sync.value
         end
         
         def get_input_focus! ()
@@ -1528,7 +1528,7 @@ module Alembic
         end
         
         def get_input_focus ()
-          get_input_focus!().wait.value
+          get_input_focus!().sync.result
         end
         
         def query_keymap! ()
@@ -1542,7 +1542,7 @@ module Alembic
         end
         
         def query_keymap ()
-          query_keymap!().wait.value
+          query_keymap!().sync.result
         end
         
         def open_font! (fid, name)
@@ -1553,7 +1553,7 @@ module Alembic
         end
         
         def open_font (fid, name)
-          open_font!(fid, name).value
+          open_font!(fid, name).sync.value
         end
         
         def close_font! (font)
@@ -1563,7 +1563,7 @@ module Alembic
         end
         
         def close_font (font)
-          close_font!(font).value
+          close_font!(font).sync.value
         end
         
         def query_font! (font)
@@ -1584,7 +1584,7 @@ module Alembic
         end
         
         def query_font (font)
-          query_font!(font).wait.value
+          query_font!(font).sync.result
         end
         
         def query_text_extents! (font, string)
@@ -1600,7 +1600,7 @@ module Alembic
         end
         
         def query_text_extents (font, string)
-          query_text_extents!(font, string).wait.value
+          query_text_extents!(font, string).sync.result
         end
         
         def list_fonts! (max_names, pattern)
@@ -1616,7 +1616,7 @@ module Alembic
         end
         
         def list_fonts (max_names, pattern)
-          list_fonts!(max_names, pattern).wait.value
+          list_fonts!(max_names, pattern).sync.result
         end
         
         def list_fonts_with_info! (max_names, pattern)
@@ -1638,7 +1638,7 @@ module Alembic
         end
         
         def list_fonts_with_info (max_names, pattern)
-          list_fonts_with_info!(max_names, pattern).wait.value
+          list_fonts_with_info!(max_names, pattern).sync.result
         end
         
         def set_font_path! (font)
@@ -1650,7 +1650,7 @@ module Alembic
         end
         
         def set_font_path (font)
-          set_font_path!(font).value
+          set_font_path!(font).sync.value
         end
         
         def get_font_path! ()
@@ -1664,7 +1664,7 @@ module Alembic
         end
         
         def get_font_path ()
-          get_font_path!().wait.value
+          get_font_path!().sync.result
         end
         
         def create_pixmap! (depth, drawable, width, height)
@@ -1675,7 +1675,7 @@ module Alembic
         end
         
         def create_pixmap (depth, drawable, width, height)
-          create_pixmap!(depth, drawable, width, height).value
+          create_pixmap!(depth, drawable, width, height).sync.value
         end
         
         def free_pixmap! (pixmap)
@@ -1685,7 +1685,7 @@ module Alembic
         end
         
         def free_pixmap (pixmap)
-          free_pixmap!(pixmap).value
+          free_pixmap!(pixmap).sync.value
         end
         
         def create_gc! (drawable, value_hash = {})
@@ -1697,7 +1697,7 @@ module Alembic
         end
         
         def create_gc (drawable, value_hash = {})
-          create_gc!(drawable, value_hash).value
+          create_gc!(drawable, value_hash).sync.value
         end
         
         def change_gc! (gc, value_hash = {})
@@ -1708,7 +1708,7 @@ module Alembic
         end
         
         def change_gc (gc, value_hash = {})
-          change_gc!(gc, value_hash).value
+          change_gc!(gc, value_hash).sync.value
         end
         
         def copy_gc! (src_gc, dst_gc, value_mask)
@@ -1718,7 +1718,7 @@ module Alembic
         end
         
         def copy_gc (src_gc, dst_gc, value_mask)
-          copy_gc!(src_gc, dst_gc, value_mask).value
+          copy_gc!(src_gc, dst_gc, value_mask).sync.value
         end
         
         def set_dashes! (gc, dash_offset, dashes)
@@ -1729,7 +1729,7 @@ module Alembic
         end
         
         def set_dashes (gc, dash_offset, dashes)
-          set_dashes!(gc, dash_offset, dashes).value
+          set_dashes!(gc, dash_offset, dashes).sync.value
         end
         
         def set_clip_rectangles! (ordering, gc, clip_x_origin, clip_y_origin, rectangles)
@@ -1740,7 +1740,7 @@ module Alembic
         end
         
         def set_clip_rectangles (ordering, gc, clip_x_origin, clip_y_origin, rectangles)
-          set_clip_rectangles!(ordering, gc, clip_x_origin, clip_y_origin, rectangles).value
+          set_clip_rectangles!(ordering, gc, clip_x_origin, clip_y_origin, rectangles).sync.value
         end
         
         def free_gc! (gc)
@@ -1750,7 +1750,7 @@ module Alembic
         end
         
         def free_gc (gc)
-          free_gc!(gc).value
+          free_gc!(gc).sync.value
         end
         
         def clear_area! (exposures, window, x, y, width, height)
@@ -1760,7 +1760,7 @@ module Alembic
         end
         
         def clear_area (exposures, window, x, y, width, height)
-          clear_area!(exposures, window, x, y, width, height).value
+          clear_area!(exposures, window, x, y, width, height).sync.value
         end
         
         def copy_area! (src_drawable, dst_drawable, gc, src_x, src_y, dst_x, dst_y, width, height)
@@ -1770,7 +1770,7 @@ module Alembic
         end
         
         def copy_area (src_drawable, dst_drawable, gc, src_x, src_y, dst_x, dst_y, width, height)
-          copy_area!(src_drawable, dst_drawable, gc, src_x, src_y, dst_x, dst_y, width, height).value
+          copy_area!(src_drawable, dst_drawable, gc, src_x, src_y, dst_x, dst_y, width, height).sync.value
         end
         
         def copy_plane! (src_drawable, dst_drawable, gc, src_x, src_y, dst_x, dst_y, width, height, bit_plane)
@@ -1780,7 +1780,7 @@ module Alembic
         end
         
         def copy_plane (src_drawable, dst_drawable, gc, src_x, src_y, dst_x, dst_y, width, height, bit_plane)
-          copy_plane!(src_drawable, dst_drawable, gc, src_x, src_y, dst_x, dst_y, width, height, bit_plane).value
+          copy_plane!(src_drawable, dst_drawable, gc, src_x, src_y, dst_x, dst_y, width, height, bit_plane).sync.value
         end
         
         def poly_point! (coordinate_mode, drawable, gc, points)
@@ -1791,7 +1791,7 @@ module Alembic
         end
         
         def poly_point (coordinate_mode, drawable, gc, points)
-          poly_point!(coordinate_mode, drawable, gc, points).value
+          poly_point!(coordinate_mode, drawable, gc, points).sync.value
         end
         
         def poly_line! (coordinate_mode, drawable, gc, points)
@@ -1802,7 +1802,7 @@ module Alembic
         end
         
         def poly_line (coordinate_mode, drawable, gc, points)
-          poly_line!(coordinate_mode, drawable, gc, points).value
+          poly_line!(coordinate_mode, drawable, gc, points).sync.value
         end
         
         def poly_segment! (drawable, gc, segments)
@@ -1813,7 +1813,7 @@ module Alembic
         end
         
         def poly_segment (drawable, gc, segments)
-          poly_segment!(drawable, gc, segments).value
+          poly_segment!(drawable, gc, segments).sync.value
         end
         
         def poly_rectangle! (drawable, gc, rectangles)
@@ -1824,7 +1824,7 @@ module Alembic
         end
         
         def poly_rectangle (drawable, gc, rectangles)
-          poly_rectangle!(drawable, gc, rectangles).value
+          poly_rectangle!(drawable, gc, rectangles).sync.value
         end
         
         def poly_arc! (drawable, gc, arcs)
@@ -1835,7 +1835,7 @@ module Alembic
         end
         
         def poly_arc (drawable, gc, arcs)
-          poly_arc!(drawable, gc, arcs).value
+          poly_arc!(drawable, gc, arcs).sync.value
         end
         
         def fill_poly! (drawable, gc, shape, coordinate_mode, points)
@@ -1846,7 +1846,7 @@ module Alembic
         end
         
         def fill_poly (drawable, gc, shape, coordinate_mode, points)
-          fill_poly!(drawable, gc, shape, coordinate_mode, points).value
+          fill_poly!(drawable, gc, shape, coordinate_mode, points).sync.value
         end
         
         def poly_fill_rectangle! (drawable, gc, rectangles)
@@ -1857,7 +1857,7 @@ module Alembic
         end
         
         def poly_fill_rectangle (drawable, gc, rectangles)
-          poly_fill_rectangle!(drawable, gc, rectangles).value
+          poly_fill_rectangle!(drawable, gc, rectangles).sync.value
         end
         
         def poly_fill_arc! (drawable, gc, arcs)
@@ -1868,7 +1868,7 @@ module Alembic
         end
         
         def poly_fill_arc (drawable, gc, arcs)
-          poly_fill_arc!(drawable, gc, arcs).value
+          poly_fill_arc!(drawable, gc, arcs).sync.value
         end
         
         def put_image! (format, drawable, gc, width, height, dst_x, dst_y, left_pad, depth, data)
@@ -1878,7 +1878,7 @@ module Alembic
         end
         
         def put_image (format, drawable, gc, width, height, dst_x, dst_y, left_pad, depth, data)
-          put_image!(format, drawable, gc, width, height, dst_x, dst_y, left_pad, depth, data).value
+          put_image!(format, drawable, gc, width, height, dst_x, dst_y, left_pad, depth, data).sync.value
         end
         
         def get_image! (format, drawable, x, y, width, height, plane_mask)
@@ -1893,7 +1893,7 @@ module Alembic
         end
         
         def get_image (format, drawable, x, y, width, height, plane_mask)
-          get_image!(format, drawable, x, y, width, height, plane_mask).wait.value
+          get_image!(format, drawable, x, y, width, height, plane_mask).sync.result
         end
         
         def poly_text8! (drawable, gc, x, y, items)
@@ -1903,7 +1903,7 @@ module Alembic
         end
         
         def poly_text8 (drawable, gc, x, y, items)
-          poly_text8!(drawable, gc, x, y, items).value
+          poly_text8!(drawable, gc, x, y, items).sync.value
         end
         
         def poly_text16! (drawable, gc, x, y, items)
@@ -1913,7 +1913,7 @@ module Alembic
         end
         
         def poly_text16 (drawable, gc, x, y, items)
-          poly_text16!(drawable, gc, x, y, items).value
+          poly_text16!(drawable, gc, x, y, items).sync.value
         end
         
         def image_text8! (drawable, gc, x, y, string)
@@ -1924,7 +1924,7 @@ module Alembic
         end
         
         def image_text8 (drawable, gc, x, y, string)
-          image_text8!(drawable, gc, x, y, string).value
+          image_text8!(drawable, gc, x, y, string).sync.value
         end
         
         def image_text16! (drawable, gc, x, y, string)
@@ -1936,7 +1936,7 @@ module Alembic
         end
         
         def image_text16 (drawable, gc, x, y, string)
-          image_text16!(drawable, gc, x, y, string).value
+          image_text16!(drawable, gc, x, y, string).sync.value
         end
         
         def create_colormap! (alloc, window, visual)
@@ -1947,7 +1947,7 @@ module Alembic
         end
         
         def create_colormap (alloc, window, visual)
-          create_colormap!(alloc, window, visual).value
+          create_colormap!(alloc, window, visual).sync.value
         end
         
         def free_colormap! (cmap)
@@ -1957,7 +1957,7 @@ module Alembic
         end
         
         def free_colormap (cmap)
-          free_colormap!(cmap).value
+          free_colormap!(cmap).sync.value
         end
         
         def copy_colormap_and_free! (mid, src_cmap)
@@ -1967,7 +1967,7 @@ module Alembic
         end
         
         def copy_colormap_and_free (mid, src_cmap)
-          copy_colormap_and_free!(mid, src_cmap).value
+          copy_colormap_and_free!(mid, src_cmap).sync.value
         end
         
         def install_colormap! (cmap)
@@ -1977,7 +1977,7 @@ module Alembic
         end
         
         def install_colormap (cmap)
-          install_colormap!(cmap).value
+          install_colormap!(cmap).sync.value
         end
         
         def uninstall_colormap! (cmap)
@@ -1987,7 +1987,7 @@ module Alembic
         end
         
         def uninstall_colormap (cmap)
-          uninstall_colormap!(cmap).value
+          uninstall_colormap!(cmap).sync.value
         end
         
         def list_installed_colormaps! (window)
@@ -2002,7 +2002,7 @@ module Alembic
         end
         
         def list_installed_colormaps (window)
-          list_installed_colormaps!(window).wait.value
+          list_installed_colormaps!(window).sync.result
         end
         
         def alloc_color! (cmap, red, green, blue)
@@ -2016,7 +2016,7 @@ module Alembic
         end
         
         def alloc_color (cmap, red, green, blue)
-          alloc_color!(cmap, red, green, blue).wait.value
+          alloc_color!(cmap, red, green, blue).sync.result
         end
         
         def alloc_named_color! (cmap, name)
@@ -2031,7 +2031,7 @@ module Alembic
         end
         
         def alloc_named_color (cmap, name)
-          alloc_named_color!(cmap, name).wait.value
+          alloc_named_color!(cmap, name).sync.result
         end
         
         def alloc_color_cells! (contiguous, cmap, colors, planes)
@@ -2047,7 +2047,7 @@ module Alembic
         end
         
         def alloc_color_cells (contiguous, cmap, colors, planes)
-          alloc_color_cells!(contiguous, cmap, colors, planes).wait.value
+          alloc_color_cells!(contiguous, cmap, colors, planes).sync.result
         end
         
         def alloc_color_planes! (contiguous, cmap, colors, reds, greens, blues)
@@ -2061,7 +2061,7 @@ module Alembic
         end
         
         def alloc_color_planes (contiguous, cmap, colors, reds, greens, blues)
-          alloc_color_planes!(contiguous, cmap, colors, reds, greens, blues).wait.value
+          alloc_color_planes!(contiguous, cmap, colors, reds, greens, blues).sync.result
         end
         
         def free_colors! (cmap, plane_mask, pixels)
@@ -2071,7 +2071,7 @@ module Alembic
         end
         
         def free_colors (cmap, plane_mask, pixels)
-          free_colors!(cmap, plane_mask, pixels).value
+          free_colors!(cmap, plane_mask, pixels).sync.value
         end
         
         def store_colors! (cmap, items)
@@ -2082,7 +2082,7 @@ module Alembic
         end
         
         def store_colors (cmap, items)
-          store_colors!(cmap, items).value
+          store_colors!(cmap, items).sync.value
         end
         
         def store_named_color! (flags, cmap, pixel, name)
@@ -2093,7 +2093,7 @@ module Alembic
         end
         
         def store_named_color (flags, cmap, pixel, name)
-          store_named_color!(flags, cmap, pixel, name).value
+          store_named_color!(flags, cmap, pixel, name).sync.value
         end
         
         def query_colors! (cmap, pixels)
@@ -2108,7 +2108,7 @@ module Alembic
         end
         
         def query_colors (cmap, pixels)
-          query_colors!(cmap, pixels).wait.value
+          query_colors!(cmap, pixels).sync.result
         end
         
         def lookup_color! (cmap, name)
@@ -2123,7 +2123,7 @@ module Alembic
         end
         
         def lookup_color (cmap, name)
-          lookup_color!(cmap, name).wait.value
+          lookup_color!(cmap, name).sync.result
         end
         
         def create_cursor! (source, mask, fore_red, fore_green, fore_blue, back_red, back_green, back_blue, x, y)
@@ -2134,7 +2134,7 @@ module Alembic
         end
         
         def create_cursor (source, mask, fore_red, fore_green, fore_blue, back_red, back_green, back_blue, x, y)
-          create_cursor!(source, mask, fore_red, fore_green, fore_blue, back_red, back_green, back_blue, x, y).value
+          create_cursor!(source, mask, fore_red, fore_green, fore_blue, back_red, back_green, back_blue, x, y).sync.value
         end
         
         def create_glyph_cursor! (source_font, mask_font, source_char, mask_char, fore_red, fore_green, fore_blue, back_red, back_green, back_blue)
@@ -2145,7 +2145,7 @@ module Alembic
         end
         
         def create_glyph_cursor (source_font, mask_font, source_char, mask_char, fore_red, fore_green, fore_blue, back_red, back_green, back_blue)
-          create_glyph_cursor!(source_font, mask_font, source_char, mask_char, fore_red, fore_green, fore_blue, back_red, back_green, back_blue).value
+          create_glyph_cursor!(source_font, mask_font, source_char, mask_char, fore_red, fore_green, fore_blue, back_red, back_green, back_blue).sync.value
         end
         
         def free_cursor! (cursor)
@@ -2155,7 +2155,7 @@ module Alembic
         end
         
         def free_cursor (cursor)
-          free_cursor!(cursor).value
+          free_cursor!(cursor).sync.value
         end
         
         def recolor_cursor! (cursor, fore_red, fore_green, fore_blue, back_red, back_green, back_blue)
@@ -2165,7 +2165,7 @@ module Alembic
         end
         
         def recolor_cursor (cursor, fore_red, fore_green, fore_blue, back_red, back_green, back_blue)
-          recolor_cursor!(cursor, fore_red, fore_green, fore_blue, back_red, back_green, back_blue).value
+          recolor_cursor!(cursor, fore_red, fore_green, fore_blue, back_red, back_green, back_blue).sync.value
         end
         
         def query_best_size! (klass, drawable, width, height)
@@ -2179,7 +2179,7 @@ module Alembic
         end
         
         def query_best_size (klass, drawable, width, height)
-          query_best_size!(klass, drawable, width, height).wait.value
+          query_best_size!(klass, drawable, width, height).sync.result
         end
         
         def query_extension! (name)
@@ -2195,7 +2195,7 @@ module Alembic
         end
         
         def query_extension (name)
-          query_extension!(name).wait.value
+          query_extension!(name).sync.result
         end
         
         def list_extensions! ()
@@ -2209,7 +2209,7 @@ module Alembic
         end
         
         def list_extensions ()
-          list_extensions!().wait.value
+          list_extensions!().sync.result
         end
         
         def change_keyboard_mapping! (keycode_count, first_keycode, keysyms_per_keycode, keysyms)
@@ -2219,7 +2219,7 @@ module Alembic
         end
         
         def change_keyboard_mapping (keycode_count, first_keycode, keysyms_per_keycode, keysyms)
-          change_keyboard_mapping!(keycode_count, first_keycode, keysyms_per_keycode, keysyms).value
+          change_keyboard_mapping!(keycode_count, first_keycode, keysyms_per_keycode, keysyms).sync.value
         end
         
         def get_keyboard_mapping! (first_keycode, count)
@@ -2233,7 +2233,7 @@ module Alembic
         end
         
         def get_keyboard_mapping (first_keycode, count)
-          get_keyboard_mapping!(first_keycode, count).wait.value
+          get_keyboard_mapping!(first_keycode, count).sync.result
         end
         
         def change_keyboard_control! (value_hash = {})
@@ -2244,7 +2244,7 @@ module Alembic
         end
         
         def change_keyboard_control (value_hash = {})
-          change_keyboard_control!(value_hash).value
+          change_keyboard_control!(value_hash).sync.value
         end
         
         def get_keyboard_control! ()
@@ -2258,7 +2258,7 @@ module Alembic
         end
         
         def get_keyboard_control ()
-          get_keyboard_control!().wait.value
+          get_keyboard_control!().sync.result
         end
         
         def bell! (percent)
@@ -2268,7 +2268,7 @@ module Alembic
         end
         
         def bell (percent)
-          bell!(percent).value
+          bell!(percent).sync.value
         end
         
         def change_pointer_control! (acceleration_numerator, acceleration_denominator, threshold, do_acceleration, do_threshold)
@@ -2278,7 +2278,7 @@ module Alembic
         end
         
         def change_pointer_control (acceleration_numerator, acceleration_denominator, threshold, do_acceleration, do_threshold)
-          change_pointer_control!(acceleration_numerator, acceleration_denominator, threshold, do_acceleration, do_threshold).value
+          change_pointer_control!(acceleration_numerator, acceleration_denominator, threshold, do_acceleration, do_threshold).sync.value
         end
         
         def get_pointer_control! ()
@@ -2291,7 +2291,7 @@ module Alembic
         end
         
         def get_pointer_control ()
-          get_pointer_control!().wait.value
+          get_pointer_control!().sync.result
         end
         
         def set_screen_saver! (timeout, interval, prefer_blanking, allow_exposures)
@@ -2301,7 +2301,7 @@ module Alembic
         end
         
         def set_screen_saver (timeout, interval, prefer_blanking, allow_exposures)
-          set_screen_saver!(timeout, interval, prefer_blanking, allow_exposures).value
+          set_screen_saver!(timeout, interval, prefer_blanking, allow_exposures).sync.value
         end
         
         def get_screen_saver! ()
@@ -2314,7 +2314,7 @@ module Alembic
         end
         
         def get_screen_saver ()
-          get_screen_saver!().wait.value
+          get_screen_saver!().sync.result
         end
         
         def change_hosts! (mode, family, address)
@@ -2325,7 +2325,7 @@ module Alembic
         end
         
         def change_hosts (mode, family, address)
-          change_hosts!(mode, family, address).value
+          change_hosts!(mode, family, address).sync.value
         end
         
         def list_hosts! ()
@@ -2339,7 +2339,7 @@ module Alembic
         end
         
         def list_hosts ()
-          list_hosts!().wait.value
+          list_hosts!().sync.result
         end
         
         def set_access_control! (mode)
@@ -2349,7 +2349,7 @@ module Alembic
         end
         
         def set_access_control (mode)
-          set_access_control!(mode).value
+          set_access_control!(mode).sync.value
         end
         
         def set_close_down_mode! (mode)
@@ -2359,7 +2359,7 @@ module Alembic
         end
         
         def set_close_down_mode (mode)
-          set_close_down_mode!(mode).value
+          set_close_down_mode!(mode).sync.value
         end
         
         def kill_client! (resource)
@@ -2369,7 +2369,7 @@ module Alembic
         end
         
         def kill_client (resource)
-          kill_client!(resource).value
+          kill_client!(resource).sync.value
         end
         
         def rotate_properties! (window, delta, atoms)
@@ -2380,7 +2380,7 @@ module Alembic
         end
         
         def rotate_properties (window, delta, atoms)
-          rotate_properties!(window, delta, atoms).value
+          rotate_properties!(window, delta, atoms).sync.value
         end
         
         def force_screen_saver! (mode)
@@ -2390,7 +2390,7 @@ module Alembic
         end
         
         def force_screen_saver (mode)
-          force_screen_saver!(mode).value
+          force_screen_saver!(mode).sync.value
         end
         
         def set_pointer_mapping! (map)
@@ -2405,7 +2405,7 @@ module Alembic
         end
         
         def set_pointer_mapping (map)
-          set_pointer_mapping!(map).wait.value
+          set_pointer_mapping!(map).sync.result
         end
         
         def get_pointer_mapping! ()
@@ -2419,7 +2419,7 @@ module Alembic
         end
         
         def get_pointer_mapping ()
-          get_pointer_mapping!().wait.value
+          get_pointer_mapping!().sync.result
         end
         
         def set_modifier_mapping! (keycodes_per_modifier, keycodes)
@@ -2433,7 +2433,7 @@ module Alembic
         end
         
         def set_modifier_mapping (keycodes_per_modifier, keycodes)
-          set_modifier_mapping!(keycodes_per_modifier, keycodes).wait.value
+          set_modifier_mapping!(keycodes_per_modifier, keycodes).sync.result
         end
         
         def get_modifier_mapping! ()
@@ -2447,7 +2447,7 @@ module Alembic
         end
         
         def get_modifier_mapping ()
-          get_modifier_mapping!().wait.value
+          get_modifier_mapping!().sync.result
         end
         
         def no_operation! ()
@@ -2456,7 +2456,7 @@ module Alembic
         end
         
         def no_operation ()
-          no_operation!().value
+          no_operation!().sync.value
         end
         
         class KeyPressEvent < Struct.new(:detail, :time, :root, :event, :child, :root_x, :root_y, :event_x, :event_y, :state, :same_screen, :synthetic)
