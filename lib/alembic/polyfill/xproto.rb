@@ -4,19 +4,38 @@ module Alembic
       
       class Atom
         
-        attr_accessor :name
+        attr_accessor :name, :xid
+        
+        def self.[] (conn, xid)
+          new(conn, xid)
+        end
+        
+        def self.new (conn, xid)
+          return nil if xid == 0
+          conn.atoms[xid] ||= super(conn, xid)
+        end
         
         def self.to_xid (conn, obj)
           case obj
           when String
-            super(conn, conn.atoms[obj] ||= conn.intern_atom(false, obj))
+            (conn.atoms[obj] ||= conn.intern_atom(false, obj)).xid
+          when Fixnum
+            obj
+          when Atom
+            obj.xid
+          when nil  
+            0
           else
-            super(conn, obj)
+            raise TypeError, "Can't convert object to #{name}"
           end
+        end
+            
+        def initialize (conn, xid)
+          @connection, @xid = conn, xid
         end
         
         def name
-          @name || connection.get_atom_name(self)
+          @name || @connection.get_atom_name(self)
         end
         
         def inspect

@@ -7,7 +7,6 @@ module Alembic
     
     def initialize (conn, value, stack, &block)
       extend MonitorMixin
-      @state = true
       @value = value
       @block = block
       @conn = conn
@@ -15,15 +14,28 @@ module Alembic
       @signal = new_cond
     end
     
-    def value
+    def result
       synchronize do
-        @triggered = true
         if @state
-          @value
+          @data
         else
-          raise @value, @value.message, caller[1..-1]
+          raise @data, nil, caller[1..-1]
         end
       end
+    end
+    
+    def value
+      @value
+    end
+    
+    def sync
+      wait if @block
+      self
+    end
+    
+    def sync
+      wait
+      self
     end
     
     def wait
@@ -33,16 +45,16 @@ module Alembic
       self
     end
     
-    def resolve (state, value)
+    def resolve (state, data)
       synchronize do
         if @triggered
           unless state
-            puts "Unwaited-for #{value.class}"
-            puts "  " + stack.join("\n  ")
-            puts
+            #STDERR.puts "Unwaited-for #{value.class}"
+            #STDERR.puts "  " + stack.join("\n  ")
+            #STDERR.puts
           end
         else
-          @state, @value = state, value
+          @state, @data = state, data
           @triggered = true
           @signal.broadcast
         end
@@ -63,6 +75,9 @@ module Alembic
       else
         succeed @value
       end
+    end
+    
+    def force
     end
     
   end
@@ -182,8 +197,6 @@ module Alembic
               record_event ev
             end
           end
-        rescue => e
-          p e
         end
       end
     end
@@ -197,6 +210,24 @@ module Alembic
         get_selection_owner!(1) if @sequence_no == 0xFFFF and !block
         @tickets[@sequence_no] = t
         @sequence_no = (@sequence_no + 1) % 0x10000
+      end
+      write(data)
+      t
+    end
+    
+    def send_request (data, value = nil, &block)
+      sync = true
+      data = pad(data, 2)
+      data[2, 0] = [(data.length + 2) / 4].pack("S")
+      t = Ticket.new(self, value, caller, &block || ->_{})
+      @tickets.synchronize do
+        @tickets[@sequence_no] = t
+        @sequence_no = (@sequence_no + 1) % 0x10000
+        unless block
+          @tickets[@sequence_no] = t
+          @sequence_no = (@sequence_no + 1) % 0x10000
+          data += [23, 2, 1].pack("Cx1SL")
+        end
       end
       write(data)
       t

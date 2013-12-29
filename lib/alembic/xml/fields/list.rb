@@ -69,13 +69,24 @@ module Alembic
       
       def decoder
         if lookup(type).type == "CARD8"
-          "x[:#{name}] = s.slice!(0..#{length.compile_length}).unpack('C*')"
+          [
+            "x[:#{name}] = s.slice!(0..#{length.compile_length}).unpack('C*')",
+            *unpack_post
+          ]
         elsif lookup(type).type == "CARD16"
-          "x[:#{name}] = s.slice!(0..2*(#{length.compile_length})).unpack('S*')"
+          [
+            "x[:#{name}] = s.slice!(0..2*(#{length.compile_length})).unpack('S*')",
+            *unpack_post
+          ]
         elsif lookup(type).type == "CARD32"
-          "x[:#{name}] = s.slice!(0..4*(#{length.compile_length})).unpack('L*')"
+          [
+            "x[:#{name}] = s.slice!(0..4*(#{length.compile_length})).unpack('L*')",
+            *unpack_post
+          ]
         else
-          "x[:#{name}] = #{length.compile_length}.times.map{#{lookup(type).decoder}}"
+          [
+            "x[:#{name}] = #{length.compile_length}.times.map{#{lookup(type).decoder}}"
+          ]
         end
       end
       

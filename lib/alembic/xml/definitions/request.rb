@@ -70,9 +70,9 @@ module Alembic
           "def #{var_name.snake_case} (#{params.join(", ")})",
           [
             *reply ? [
-              "#{var_name.snake_case}!(#{args.join(", ")}).wait.value"
+              "#{var_name.snake_case}!(#{args.join(", ")}).sync.result"
             ] : [
-              "#{var_name.snake_case}!(#{args.join(", ")}).value"
+              "#{var_name.snake_case}!(#{args.join(", ")}).sync.value"
             ]
           ],
           "end",

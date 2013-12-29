@@ -40,7 +40,7 @@ module Alembic
         else
           []
         end + [
-          "#{class_name} = Class.new(#{(st ? st.name.capitalize : 'Resource')})",
+          "#{class_name} = Class.new(#{(st ? st.name.capitalize : name == 'ATOM' ? '' :'Resource')})",
         ]
       end
       

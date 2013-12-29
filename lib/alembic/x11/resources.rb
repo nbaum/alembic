@@ -9,11 +9,7 @@ module Alembic
     
     def self.new (conn, xid)
       return nil if xid == 0
-      if String === xid
-        conn.atoms[xid]
-      else
-        conn.resources[xid] ||= super(conn, xid)
-      end
+      conn.resources[xid] ||= super(conn, xid)
     end
     
     def self.to_xid (conn, obj)
