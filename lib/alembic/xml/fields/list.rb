@@ -6,8 +6,8 @@ module Alembic
       attr_accessor :name, :type, :length, :enum
       
       def post_process
-        if type == "char" || type == "void" || type == "BYTE"
-          Alembic::Xml::String.new(extension, nil, name: name, length: length)
+        if type == "char" || type == "void" || type == "BYTE" || type == "CHAR2B"
+          Alembic::Xml::String.new(extension, nil, name: name, length: length, type: type)
         else
           super
         end

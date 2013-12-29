@@ -16,9 +16,19 @@ require 'alembic/polyfill/xproto'
 
 module Alembic
   
+  class HashWithMethodMissing < Hash
+    def method_missing (key, value = nil)
+      if key[-1] == "="
+        self[key[0..-2].to_sym] = value
+      else
+        self[key]
+      end
+    end
+  end
+  
   class Connection
     
-    attr_reader :events, :errors, :resources, :setup, :opcodes, :atoms
+    attr_reader :events, :errors, :resources, :setup, :opcodes, :atoms, :sync
     
     include ConnectionUtils
     include RequestEventLoop
@@ -114,7 +124,7 @@ module Alembic
     end
     
     def pad (str, plus = 0)
-      str += "\0" * (-(str.length + plus) & 3)
+      str += "\0".encode("BINARY") * (-(str.length + plus) & 3)
     end
     
     def buffer ()

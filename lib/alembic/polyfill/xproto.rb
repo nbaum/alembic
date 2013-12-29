@@ -9,7 +9,7 @@ module Alembic
         def self.[] (conn, xid)
           new(conn, xid)
         end
-        
+            
         def self.new (conn, xid)
           return nil if xid == 0
           conn.atoms[xid] ||= super(conn, xid)
@@ -32,6 +32,10 @@ module Alembic
             
         def initialize (conn, xid)
           @connection, @xid = conn, xid
+        end
+        
+        def to_i
+          xid
         end
         
         def name
@@ -137,9 +141,9 @@ module Alembic
           when 8
             super(mode, window, property, type, format, data.length, data)
           when 16
-            super(mode, window, property, type, format, data.length, data.pack("S*"))
+            super(mode, window, property, type, format, data.length, data.map(&:to_i).pack("S*"))
           when 32
-            super(mode, window, property, type, format, data.length, data.pack("L*"))
+            super(mode, window, property, type, format, data.length, data.map(&:to_i).pack("L*"))
           end
         end
         

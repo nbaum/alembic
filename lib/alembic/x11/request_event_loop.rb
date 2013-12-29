@@ -29,12 +29,7 @@ module Alembic
     end
     
     def sync
-      wait if @block
-      self
-    end
-    
-    def sync
-      wait
+      wait if @block or @conn.sync
       self
     end
     
@@ -45,14 +40,24 @@ module Alembic
       self
     end
     
+    def abandon
+      synchronize do
+        alert if @triggered
+        @triggered = true
+      end
+      @value
+    end
+    
+    def alert (data = @data)
+      STDERR.puts "Unwaited-for #{data.class}"
+      STDERR.puts "  " + stack.join("\n  ")
+      STDERR.puts
+    end
+    
     def resolve (state, data)
       synchronize do
         if @triggered
-          unless state
-            #STDERR.puts "Unwaited-for #{value.class}"
-            #STDERR.puts "  " + stack.join("\n  ")
-            #STDERR.puts
-          end
+          alert(data) unless state
         else
           @state, @data = state, data
           @triggered = true
@@ -74,10 +79,7 @@ module Alembic
         fail "Out-of-order reply"
       else
         succeed @value
-      end
-    end
-    
-    def force
+      end unless @conn.sync
     end
     
   end
@@ -147,7 +149,7 @@ module Alembic
     
     def sweep_tickets (maxseq)
       @tickets.synchronize do
-        @tickets.keys.each do |seq|
+        @tickets.keys.sort.each do |seq|
           break if seq > maxseq
           ticket = @tickets.delete(seq)
           ticket.force
@@ -194,6 +196,7 @@ module Alembic
             end
             if ev
               ev[:synthetic] = synth
+              ev[:event_type] = name
               record_event ev
             end
           end
@@ -202,28 +205,14 @@ module Alembic
     end
     
     def send_request (data, value = nil, &block)
-      sync = true
       data = pad(data, 2)
       data[2, 0] = [(data.length + 2) / 4].pack("S")
       t = Ticket.new(self, value, caller, &block)
       @tickets.synchronize do
-        get_selection_owner!(1) if @sequence_no == 0xFFFF and !block
+        get_selection_owner!(1) if @sequence_no == 0xFFFF and !block and !sync
         @tickets[@sequence_no] = t
         @sequence_no = (@sequence_no + 1) % 0x10000
-      end
-      write(data)
-      t
-    end
-    
-    def send_request (data, value = nil, &block)
-      sync = true
-      data = pad(data, 2)
-      data[2, 0] = [(data.length + 2) / 4].pack("S")
-      t = Ticket.new(self, value, caller, &block || ->_{})
-      @tickets.synchronize do
-        @tickets[@sequence_no] = t
-        @sequence_no = (@sequence_no + 1) % 0x10000
-        unless block
+        unless !sync or block
           @tickets[@sequence_no] = t
           @sequence_no = (@sequence_no + 1) % 0x10000
           data += [23, 2, 1].pack("Cx1SL")

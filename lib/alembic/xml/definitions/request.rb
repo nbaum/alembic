@@ -72,7 +72,7 @@ module Alembic
             *reply ? [
               "#{var_name.snake_case}!(#{args.join(", ")}).sync.result"
             ] : [
-              "#{var_name.snake_case}!(#{args.join(", ")}).sync.value"
+              "#{var_name.snake_case}!(#{args.join(", ")}).sync.abandon"
             ]
           ],
           "end",
@@ -120,7 +120,7 @@ module Alembic
       
       def compile
         [
-          "x = {}",
+          "x = HashWithMethodMissing.new",
           *decoders,
           self.return ? "x[:#{self.return}]" : "x",
         ]

@@ -11,6 +11,10 @@ module Alembic
       
       alias name value_list_name
       
+      def pack_arguments
+        "*#{name}.map(&:to_i)"
+      end
+      
       def lengther
         [
           "#{value_mask_name}, #{value_list_name} = #{value_mask_mask.snake_case.upcase}.value_param(#{hash_param})"

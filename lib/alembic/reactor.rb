@@ -1,4 +1,3 @@
-require 'rack/reloader'
 require 'singleton'
 
 module Alembic
@@ -32,13 +31,6 @@ module Alembic
     def run
       @@running = true
       @connection = Alembic::Connection.new
-      @thread = Thread.new do
-        reloader = Rack::Reloader.new(->env{}, 0)
-        loop do
-          reloader.call({})
-          sleep 1
-        end
-      end
       post_init
       while true
         handle_event

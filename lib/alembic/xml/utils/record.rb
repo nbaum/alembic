@@ -51,25 +51,6 @@ module Alembic
          end.compact
       end
       
-      def struct_params
-        fields.flat_map(&:params).compact
-      end
-      
-      def struct_definition
-        sp = struct_params
-        if sp.empty?
-          [
-            "#{class_name} = Class.new",
-            nil
-          ]
-        else
-          [
-            "#{class_name} = Struct.new(#{struct_params.map{|x|':' + x}.join(", ")})",
-            nil
-          ]
-        end
-      end
-      
       def encoder expr
         "encode_#{var_name.snake_case}(''.encode('BINARY'), *#{expr})"
       end
@@ -167,7 +148,7 @@ module Alembic
         [
           "def decode_#{var_name.snake_case} (s)",
           [
-            "x = #{class_name}.new",
+            "x = HashWithMethodMissing.new",
             *decoders,
             "x",
           ],

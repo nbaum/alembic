@@ -53,27 +53,7 @@ module Alembic
         ]
       end
       
-      def struct_definition
-        [
-          "class #{class_name} < Struct.new(#{struct_params.map{|x|':' + x}.join(", ")})",
-          [
-            "def event_type",
-            [
-              ":#{var_name.snake_case}"
-            ],
-            "end"
-          ],
-          "end",
-          nil
-        ]
-      end
-      
-      def struct_params
-        fields.flat_map(&:params).compact + ["synthetic"]
-      end
-      
       def compile_methods
-        struct_definition +
         encoder_method +
         decoder_method
       end

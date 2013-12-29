@@ -168,7 +168,7 @@ module Alembic
           s << 0
           s << [major_version, minor_version].pack("LL")
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:major_version], x[:minor_version], = s.slice!(0, 25).unpack("x1LLx16")
             x
           end
@@ -183,7 +183,7 @@ module Alembic
           s << 2
           s << [Window.to_xid(self, window), timestamp, config_timestamp, sizeID, rotation, rate].pack("LLLSSSx2")
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:status], x[:new_timestamp], x[:config_timestamp], x[:root], x[:subpixel_order], = s.slice!(0, 25).unpack("CLLLSx10")
             x[:root] = Window[self, x[:root]]
             x
@@ -202,7 +202,7 @@ module Alembic
         end
         
         def randr_select_input (window, enable)
-          randr_select_input!(window, enable).sync.value
+          randr_select_input!(window, enable).sync.abandon
         end
         
         def randr_get_screen_info! (window)
@@ -210,7 +210,7 @@ module Alembic
           s << 5
           s << [Window.to_xid(self, window)].pack("L")
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:rotations], x[:root], x[:timestamp], x[:config_timestamp], x[:nSizes], x[:sizeID], x[:rotation], x[:rate], x[:nInfo], = s.slice!(0, 25).unpack("CLLLSSSSSx2")
             x[:root] = Window[self, x[:root]]
             x[:sizes] = x[:nSizes].times.map{decode_randr_screen_size(s)}
@@ -228,7 +228,7 @@ module Alembic
           s << 6
           s << [Window.to_xid(self, window)].pack("L")
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:min_width], x[:min_height], x[:max_width], x[:max_height], = s.slice!(0, 25).unpack("x1SSSSx16")
             x
           end
@@ -246,7 +246,7 @@ module Alembic
         end
         
         def randr_set_screen_size (window, width, height, mm_width, mm_height)
-          randr_set_screen_size!(window, width, height, mm_width, mm_height).sync.value
+          randr_set_screen_size!(window, width, height, mm_width, mm_height).sync.abandon
         end
         
         def randr_get_screen_resources! (window)
@@ -254,7 +254,7 @@ module Alembic
           s << 8
           s << [Window.to_xid(self, window)].pack("L")
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:timestamp], x[:config_timestamp], x[:num_crtcs], x[:num_outputs], x[:num_modes], x[:names_len], = s.slice!(0, 25).unpack("x1LLSSSSx8")
             x[:crtcs] = s.slice!(0..4*(x[:num_crtcs])).unpack('L*')
             x[:crtcs] = x[:crtcs] ? x[:crtcs].map{|x|Crtc[self, x]} : []
@@ -275,7 +275,7 @@ module Alembic
           s << 9
           s << [Output.to_xid(self, output), config_timestamp].pack("LL")
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:status], x[:timestamp], x[:crtc], x[:mm_width], x[:mm_height], x[:connection], x[:subpixel_order], x[:num_crtcs], x[:num_modes], x[:num_preferred], x[:num_clones], x[:name_len], = s.slice!(0, 29).unpack("CLLLLCCSSSSS")
             x[:crtc] = Crtc[self, x[:crtc]]
             x[:crtcs] = s.slice!(0..4*(x[:num_crtcs])).unpack('L*')
@@ -298,7 +298,7 @@ module Alembic
           s << 10
           s << [Output.to_xid(self, output)].pack("L")
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:num_atoms], *x[:atoms] = s.unpack("x1Sx22L*")
             x[:atoms] = x[:atoms] ? x[:atoms].map{|x|Atom[self, x]} : []
             x[:atoms]
@@ -314,7 +314,7 @@ module Alembic
           s << 11
           s << [Output.to_xid(self, output), Atom.to_xid(self, property)].pack("LL")
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:pending], x[:range], x[:immutable], = s.slice!(0, 25).unpack("x1CCCx21")
             x[:pending] = x[:pending] != 0
             x[:range] = x[:range] != 0
@@ -336,7 +336,7 @@ module Alembic
         end
         
         def randr_configure_output_property (output, property, pending, range, values)
-          randr_configure_output_property!(output, property, pending, range, values).sync.value
+          randr_configure_output_property!(output, property, pending, range, values).sync.abandon
         end
         
         def randr_change_output_property! (output, property, type, format, mode, num_units, data)
@@ -347,7 +347,7 @@ module Alembic
         end
         
         def randr_change_output_property (output, property, type, format, mode, num_units, data)
-          randr_change_output_property!(output, property, type, format, mode, num_units, data).sync.value
+          randr_change_output_property!(output, property, type, format, mode, num_units, data).sync.abandon
         end
         
         def randr_delete_output_property! (output, property)
@@ -358,7 +358,7 @@ module Alembic
         end
         
         def randr_delete_output_property (output, property)
-          randr_delete_output_property!(output, property).sync.value
+          randr_delete_output_property!(output, property).sync.abandon
         end
         
         def randr_get_output_property! (output, property, type, long_offset, long_length, delete, pending)
@@ -366,7 +366,7 @@ module Alembic
           s << 15
           s << [Output.to_xid(self, output), Atom.to_xid(self, property), Atom.to_xid(self, type), long_offset, long_length, delete ? 1 : 0, pending ? 1 : 0].pack("LLLLLCCx2")
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:format], x[:type], x[:bytes_after], x[:num_items], = s.slice!(0, 25).unpack("CLLLx12")
             x[:type] = Atom[self, x[:type]]
             x[:data] = s.slice!(0, (x[:num_items] * (x[:format] / 8)))
@@ -385,7 +385,7 @@ module Alembic
           s << encode_randr_mode_info(''.encode('BINARY'), *mode_info)
           s << [pad(name)].pack("A*")
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:mode], = s.slice!(0, 25).unpack("x1Lx20")
             x[:mode] = Mode[self, x[:mode]]
             x[:mode]
@@ -404,7 +404,7 @@ module Alembic
         end
         
         def randr_destroy_mode (mode)
-          randr_destroy_mode!(mode).sync.value
+          randr_destroy_mode!(mode).sync.abandon
         end
         
         def randr_add_output_mode! (output, mode)
@@ -415,7 +415,7 @@ module Alembic
         end
         
         def randr_add_output_mode (output, mode)
-          randr_add_output_mode!(output, mode).sync.value
+          randr_add_output_mode!(output, mode).sync.abandon
         end
         
         def randr_delete_output_mode! (output, mode)
@@ -426,7 +426,7 @@ module Alembic
         end
         
         def randr_delete_output_mode (output, mode)
-          randr_delete_output_mode!(output, mode).sync.value
+          randr_delete_output_mode!(output, mode).sync.abandon
         end
         
         def randr_get_crtc_info! (crtc, config_timestamp)
@@ -434,7 +434,7 @@ module Alembic
           s << 20
           s << [Crtc.to_xid(self, crtc), config_timestamp].pack("LL")
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:status], x[:timestamp], x[:x], x[:y], x[:width], x[:height], x[:mode], x[:rotation], x[:rotations], x[:num_outputs], x[:num_possible_outputs], = s.slice!(0, 25).unpack("CLssSSLSSSS")
             x[:mode] = Mode[self, x[:mode]]
             x[:outputs] = s.slice!(0..4*(x[:num_outputs])).unpack('L*')
@@ -454,7 +454,7 @@ module Alembic
           s << 21
           s << [Crtc.to_xid(self, crtc), timestamp, config_timestamp, x, y, Mode.to_xid(self, mode), rotation, *outputs].pack("LLLssLSx2L*")
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:status], x[:timestamp], = s.slice!(0, 25).unpack("CLx20")
             x
           end
@@ -469,7 +469,7 @@ module Alembic
           s << 22
           s << [Crtc.to_xid(self, crtc)].pack("L")
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:size], = s.slice!(0, 25).unpack("x1Sx22")
             x[:size]
           end
@@ -484,7 +484,7 @@ module Alembic
           s << 23
           s << [Crtc.to_xid(self, crtc)].pack("L")
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:size], = s.slice!(0, 25).unpack("x1Sx22")
             x[:red] = s.slice!(0..2*(x[:size])).unpack('S*')
             x[:green] = s.slice!(0..2*(x[:size])).unpack('S*')
@@ -511,7 +511,7 @@ module Alembic
         end
         
         def randr_set_crtc_gamma (crtc, red, green, blue)
-          randr_set_crtc_gamma!(crtc, red, green, blue).sync.value
+          randr_set_crtc_gamma!(crtc, red, green, blue).sync.abandon
         end
         
         def randr_get_screen_resources_current! (window)
@@ -519,7 +519,7 @@ module Alembic
           s << 25
           s << [Window.to_xid(self, window)].pack("L")
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:timestamp], x[:config_timestamp], x[:num_crtcs], x[:num_outputs], x[:num_modes], x[:names_len], = s.slice!(0, 25).unpack("x1LLSSSSx8")
             x[:crtcs] = s.slice!(0..4*(x[:num_crtcs])).unpack('L*')
             x[:crtcs] = x[:crtcs] ? x[:crtcs].map{|x|Crtc[self, x]} : []
@@ -538,7 +538,8 @@ module Alembic
         def randr_set_crtc_transform! (crtc, transform, filter_name, filter_params)
           s = opcodes["RANDR"].chr.encode('BINARY')
           s << 26
-          filter_len = filter_name.length
+          filter_name = filter_name.force_encoding('BINARY')
+          filter_len = filter_name.bytesize
           s << [Crtc.to_xid(self, crtc)].pack("L")
           s << encode_render_transform(''.encode('BINARY'), *transform)
           s << [filter_len, pad(filter_name), *filter_params].pack("Sx2A*l*")
@@ -546,7 +547,7 @@ module Alembic
         end
         
         def randr_set_crtc_transform (crtc, transform, filter_name, filter_params)
-          randr_set_crtc_transform!(crtc, transform, filter_name, filter_params).sync.value
+          randr_set_crtc_transform!(crtc, transform, filter_name, filter_params).sync.abandon
         end
         
         def randr_get_crtc_transform! (crtc)
@@ -554,7 +555,7 @@ module Alembic
           s << 27
           s << [Crtc.to_xid(self, crtc)].pack("L")
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             s.slice!(0, 1)
             x[:pending_transform] = decode_render_transform(s)
             x[:has_transforms], = s.slice!(0, 4).unpack("Cx3")
@@ -578,7 +579,7 @@ module Alembic
           s << 28
           s << [Crtc.to_xid(self, crtc)].pack("L")
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:status], x[:timestamp], x[:left], x[:top], x[:width], x[:height], x[:track_left], x[:track_top], x[:track_width], x[:track_height], x[:border_left], x[:border_top], x[:border_right], x[:border_bottom], = s.slice!(0, 29).unpack("CLSSSSSSSSssss")
             x
           end
@@ -593,7 +594,7 @@ module Alembic
           s << 29
           s << [Crtc.to_xid(self, crtc), timestamp, left, top, width, height, track_left, track_top, track_width, track_height, border_left, border_top, border_right, border_bottom].pack("LLSSSSSSSSssss")
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:status], x[:timestamp], = s.slice!(0, 5).unpack("CL")
             x
           end
@@ -611,7 +612,7 @@ module Alembic
         end
         
         def randr_set_output_primary (window, output)
-          randr_set_output_primary!(window, output).sync.value
+          randr_set_output_primary!(window, output).sync.abandon
         end
         
         def randr_get_output_primary! (window)
@@ -619,7 +620,7 @@ module Alembic
           s << 31
           s << [Window.to_xid(self, window)].pack("L")
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:output], = s.slice!(0, 5).unpack("x1L")
             x[:output] = Output[self, x[:output]]
             x[:output]
@@ -635,7 +636,7 @@ module Alembic
           s << 32
           s << [Window.to_xid(self, window)].pack("L")
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:timestamp], x[:num_providers], *x[:providers] = s.unpack("x1LSx18L*")
             x[:providers] = x[:providers] ? x[:providers].map{|x|Provider[self, x]} : []
             x
@@ -651,7 +652,7 @@ module Alembic
           s << 33
           s << [Provider.to_xid(self, provider), config_timestamp].pack("LL")
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:status], x[:timestamp], x[:capabilities], x[:num_crtcs], x[:num_outputs], x[:num_associated_providers], x[:name_len], = s.slice!(0, 25).unpack("CLLSSSSx8")
             x[:crtcs] = s.slice!(0..4*(x[:num_crtcs])).unpack('L*')
             x[:crtcs] = x[:crtcs] ? x[:crtcs].map{|x|Crtc[self, x]} : []
@@ -677,7 +678,7 @@ module Alembic
         end
         
         def randr_set_provider_offload_sink (provider, sink_provider, config_timestamp)
-          randr_set_provider_offload_sink!(provider, sink_provider, config_timestamp).sync.value
+          randr_set_provider_offload_sink!(provider, sink_provider, config_timestamp).sync.abandon
         end
         
         def randr_set_provider_output_source! (provider, source_provider, config_timestamp)
@@ -688,7 +689,7 @@ module Alembic
         end
         
         def randr_set_provider_output_source (provider, source_provider, config_timestamp)
-          randr_set_provider_output_source!(provider, source_provider, config_timestamp).sync.value
+          randr_set_provider_output_source!(provider, source_provider, config_timestamp).sync.abandon
         end
         
         def randr_list_provider_properties! (provider)
@@ -696,7 +697,7 @@ module Alembic
           s << 36
           s << [Provider.to_xid(self, provider)].pack("L")
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:num_atoms], *x[:atoms] = s.unpack("x1Sx22L*")
             x[:atoms] = x[:atoms] ? x[:atoms].map{|x|Atom[self, x]} : []
             x[:atoms]
@@ -712,7 +713,7 @@ module Alembic
           s << 37
           s << [Provider.to_xid(self, provider), Atom.to_xid(self, property)].pack("LL")
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:pending], x[:range], x[:immutable], = s.slice!(0, 25).unpack("x1CCCx21")
             x[:pending] = x[:pending] != 0
             x[:range] = x[:range] != 0
@@ -734,7 +735,7 @@ module Alembic
         end
         
         def randr_configure_provider_property (provider, property, pending, range, values)
-          randr_configure_provider_property!(provider, property, pending, range, values).sync.value
+          randr_configure_provider_property!(provider, property, pending, range, values).sync.abandon
         end
         
         def randr_change_provider_property! (provider, property, type, format, mode, num_items, data)
@@ -745,7 +746,7 @@ module Alembic
         end
         
         def randr_change_provider_property (provider, property, type, format, mode, num_items, data)
-          randr_change_provider_property!(provider, property, type, format, mode, num_items, data).sync.value
+          randr_change_provider_property!(provider, property, type, format, mode, num_items, data).sync.abandon
         end
         
         def randr_delete_provider_property! (provider, property)
@@ -756,7 +757,7 @@ module Alembic
         end
         
         def randr_delete_provider_property (provider, property)
-          randr_delete_provider_property!(provider, property).sync.value
+          randr_delete_provider_property!(provider, property).sync.abandon
         end
         
         def randr_get_provider_property! (provider, property, type, long_offset, long_length, delete, pending)
@@ -764,7 +765,7 @@ module Alembic
           s << 41
           s << [Provider.to_xid(self, provider), Atom.to_xid(self, property), Atom.to_xid(self, type), long_offset, long_length, delete ? 1 : 0, pending ? 1 : 0].pack("LLLLLCCx2")
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:format], x[:type], x[:bytes_after], x[:num_items], = s.slice!(0, 25).unpack("CLLLx12")
             x[:type] = Atom[self, x[:type]]
             x[:data] = s.slice!(0, (x[:num_items] * (x[:format] / 8)))
@@ -776,12 +777,6 @@ module Alembic
           randr_get_provider_property!(provider, property, type, long_offset, long_length, delete, pending).sync.result
         end
         
-        class ScreenChangeNotifyEvent < Struct.new(:rotation, :timestamp, :config_timestamp, :root, :request_window, :sizeID, :subpixel_order, :width, :height, :mwidth, :mheight, :synthetic)
-          def event_type
-            :randr_screen_change_notify_event
-          end
-        end
-        
         def encode_randr_screen_change_notify_event (rotation, timestamp, config_timestamp, root, request_window, sizeID, subpixel_order, width, height, mwidth, mheight)
           s = 0.chr.encode('BINARY')
           s << [rotation, timestamp, config_timestamp, Window.to_xid(self, root), Window.to_xid(self, request_window), sizeID, subpixel_order, width, height, mwidth, mheight].pack("CLLLLSSSSSS")
@@ -791,17 +786,11 @@ module Alembic
         end
         
         def decode_randr_screen_change_notify_event (s)
-          x = ScreenChangeNotifyEvent.new
+          x = HashWithMethodMissing.new
           x[:rotation], x[:timestamp], x[:config_timestamp], x[:root], x[:request_window], x[:sizeID], x[:subpixel_order], x[:width], x[:height], x[:mwidth], x[:mheight], = s.slice!(0, 29).unpack("CLLLLSSSSSS")
           x[:root] = Window[self, x[:root]]
           x[:request_window] = Window[self, x[:request_window]]
           x
-        end
-        
-        class NotifyEvent < Struct.new(:subCode, :u, :synthetic)
-          def event_type
-            :randr_notify_event
-          end
         end
         
         def encode_randr_notify_event (subCode, u)
@@ -814,13 +803,11 @@ module Alembic
         end
         
         def decode_randr_notify_event (s)
-          x = NotifyEvent.new
+          x = HashWithMethodMissing.new
           x[:subCode], = s.slice!(0, 1).unpack("C")
           x[:u] = decode_randr_notify_data(s)
           x
         end
-        
-        ScreenSize = Struct.new(:width, :height, :mwidth, :mheight)
         
         def encode_randr_screen_size (s, width, height, mwidth, mheight)
           s << [width, height, mwidth, mheight].pack("SSSS")
@@ -828,12 +815,10 @@ module Alembic
         end
         
         def decode_randr_screen_size (s)
-          x = ScreenSize.new
+          x = HashWithMethodMissing.new
           x[:width], x[:height], x[:mwidth], x[:mheight], = s.slice!(0, 8).unpack("SSSS")
           x
         end
-        
-        RefreshRates = Struct.new(:nRates, :rates)
         
         def encode_randr_refresh_rates (s, rates)
           nRates = rates.length
@@ -842,13 +827,11 @@ module Alembic
         end
         
         def decode_randr_refresh_rates (s)
-          x = RefreshRates.new
+          x = HashWithMethodMissing.new
           x[:nRates], = s.slice!(0, 2).unpack("S")
           x[:rates] = s.slice!(0..2*(x[:nRates])).unpack('S*')
           x
         end
-        
-        ModeInfo = Struct.new(:id, :width, :height, :dot_clock, :hsync_start, :hsync_end, :htotal, :hskew, :vsync_start, :vsync_end, :vtotal, :name_len, :mode_flags)
         
         def encode_randr_mode_info (s, id, width, height, dot_clock, hsync_start, hsync_end, htotal, hskew, vsync_start, vsync_end, vtotal, name_len, mode_flags)
           s << [id, width, height, dot_clock, hsync_start, hsync_end, htotal, hskew, vsync_start, vsync_end, vtotal, name_len, mode_flags].pack("LSSLSSSSSSSSL")
@@ -856,12 +839,10 @@ module Alembic
         end
         
         def decode_randr_mode_info (s)
-          x = ModeInfo.new
+          x = HashWithMethodMissing.new
           x[:id], x[:width], x[:height], x[:dot_clock], x[:hsync_start], x[:hsync_end], x[:htotal], x[:hskew], x[:vsync_start], x[:vsync_end], x[:vtotal], x[:name_len], x[:mode_flags], = s.slice!(0, 32).unpack("LSSLSSSSSSSSL")
           x
         end
-        
-        CrtcChange = Struct.new(:timestamp, :window, :crtc, :mode, :rotation, :x, :y, :width, :height)
         
         def encode_randr_crtc_change (s, timestamp, window, crtc, mode, rotation, x, y, width, height)
           s << [timestamp, Window.to_xid(self, window), Crtc.to_xid(self, crtc), Mode.to_xid(self, mode), rotation, x, y, width, height].pack("LLLLSx2ssSS")
@@ -869,7 +850,7 @@ module Alembic
         end
         
         def decode_randr_crtc_change (s)
-          x = CrtcChange.new
+          x = HashWithMethodMissing.new
           x[:timestamp], x[:window], x[:crtc], x[:mode], x[:rotation], x[:x], x[:y], x[:width], x[:height], = s.slice!(0, 28).unpack("LLLLSx2ssSS")
           x[:window] = Window[self, x[:window]]
           x[:crtc] = Crtc[self, x[:crtc]]
@@ -877,15 +858,13 @@ module Alembic
           x
         end
         
-        OutputChange = Struct.new(:timestamp, :config_timestamp, :window, :output, :crtc, :mode, :rotation, :connection, :subpixel_order)
-        
         def encode_randr_output_change (s, timestamp, config_timestamp, window, output, crtc, mode, rotation, connection, subpixel_order)
           s << [timestamp, config_timestamp, Window.to_xid(self, window), Output.to_xid(self, output), Crtc.to_xid(self, crtc), Mode.to_xid(self, mode), rotation, connection, subpixel_order].pack("LLLLLLSCC")
           s
         end
         
         def decode_randr_output_change (s)
-          x = OutputChange.new
+          x = HashWithMethodMissing.new
           x[:timestamp], x[:config_timestamp], x[:window], x[:output], x[:crtc], x[:mode], x[:rotation], x[:connection], x[:subpixel_order], = s.slice!(0, 28).unpack("LLLLLLSCC")
           x[:window] = Window[self, x[:window]]
           x[:output] = Output[self, x[:output]]
@@ -894,15 +873,13 @@ module Alembic
           x
         end
         
-        OutputProperty = Struct.new(:window, :output, :atom, :timestamp, :status)
-        
         def encode_randr_output_property (s, window, output, atom, timestamp, status)
           s << [Window.to_xid(self, window), Output.to_xid(self, output), Atom.to_xid(self, atom), timestamp, status].pack("LLLLCx11")
           s
         end
         
         def decode_randr_output_property (s)
-          x = OutputProperty.new
+          x = HashWithMethodMissing.new
           x[:window], x[:output], x[:atom], x[:timestamp], x[:status], = s.slice!(0, 28).unpack("LLLLCx11")
           x[:window] = Window[self, x[:window]]
           x[:output] = Output[self, x[:output]]
@@ -910,22 +887,18 @@ module Alembic
           x
         end
         
-        ProviderChange = Struct.new(:timestamp, :window, :provider)
-        
         def encode_randr_provider_change (s, timestamp, window, provider)
           s << [timestamp, Window.to_xid(self, window), Provider.to_xid(self, provider)].pack("LLLx16")
           s
         end
         
         def decode_randr_provider_change (s)
-          x = ProviderChange.new
+          x = HashWithMethodMissing.new
           x[:timestamp], x[:window], x[:provider], = s.slice!(0, 28).unpack("LLLx16")
           x[:window] = Window[self, x[:window]]
           x[:provider] = Provider[self, x[:provider]]
           x
         end
-        
-        ProviderProperty = Struct.new(:window, :provider, :atom, :timestamp, :state)
         
         def encode_randr_provider_property (s, window, provider, atom, timestamp, state)
           s << [Window.to_xid(self, window), Provider.to_xid(self, provider), Atom.to_xid(self, atom), timestamp, state].pack("LLLLCx11")
@@ -933,7 +906,7 @@ module Alembic
         end
         
         def decode_randr_provider_property (s)
-          x = ProviderProperty.new
+          x = HashWithMethodMissing.new
           x[:window], x[:provider], x[:atom], x[:timestamp], x[:state], = s.slice!(0, 28).unpack("LLLLCx11")
           x[:window] = Window[self, x[:window]]
           x[:provider] = Provider[self, x[:provider]]
@@ -941,15 +914,13 @@ module Alembic
           x
         end
         
-        ResourceChange = Struct.new(:timestamp, :window)
-        
         def encode_randr_resource_change (s, timestamp, window)
           s << [timestamp, Window.to_xid(self, window)].pack("LLx20")
           s
         end
         
         def decode_randr_resource_change (s)
-          x = ResourceChange.new
+          x = HashWithMethodMissing.new
           x[:timestamp], x[:window], = s.slice!(0, 28).unpack("LLx20")
           x[:window] = Window[self, x[:window]]
           x

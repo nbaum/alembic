@@ -29,6 +29,10 @@ module Alembic
       @connection, @xid = conn, xid
     end
     
+    def to_i
+      xid
+    end
+    
     def inspect
       "#<#{self.class.name.split("::")[-1]} 0x%08x>" % [@xid]
     end

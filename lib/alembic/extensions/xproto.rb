@@ -49,7 +49,7 @@ module Alembic
       # set_input_focus (revert_to, focus, time)
       # get_input_focus ()
       # query_keymap ()
-      # open_font (fid, name)
+      # open_font (name)
       # close_font (font)
       # query_font (font)
       # query_text_extents (font, string)
@@ -1026,30 +1026,30 @@ module Alembic
           s = 1.chr.encode('BINARY')
           wid = alloc_window
           value_mask, value_list = CW.value_param(value_hash)
-          s << [depth, Window.to_xid(self, wid), Window.to_xid(self, parent), x, y, width, height, border_width, klass, visual, value_mask, *value_list].pack("CLLssSSSSLLL*")
+          s << [depth, Window.to_xid(self, wid), Window.to_xid(self, parent), x, y, width, height, border_width, klass, visual, value_mask, *value_list.map(&:to_i)].pack("CLLssSSSSLLL*")
           send_request(s, wid)
         end
         
         def create_window (depth, parent, x, y, width, height, border_width, klass, visual, value_hash = {})
-          create_window!(depth, parent, x, y, width, height, border_width, klass, visual, value_hash).sync.value
+          create_window!(depth, parent, x, y, width, height, border_width, klass, visual, value_hash).sync.abandon
         end
         
         def change_window_attributes! (window, value_hash = {})
           s = 2.chr.encode('BINARY')
           value_mask, value_list = CW.value_param(value_hash)
-          s << [Window.to_xid(self, window), value_mask, *value_list].pack("x1LLL*")
+          s << [Window.to_xid(self, window), value_mask, *value_list.map(&:to_i)].pack("x1LLL*")
           send_request(s)
         end
         
         def change_window_attributes (window, value_hash = {})
-          change_window_attributes!(window, value_hash).sync.value
+          change_window_attributes!(window, value_hash).sync.abandon
         end
         
         def get_window_attributes! (window)
           s = 3.chr.encode('BINARY')
           s << [Window.to_xid(self, window)].pack("x1L")
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:backing_store], x[:visual], x[:klass], x[:bit_gravity], x[:win_gravity], x[:backing_planes], x[:backing_pixel], x[:save_under], x[:map_is_installed], x[:map_state], x[:override_redirect], x[:colormap], x[:all_event_masks], x[:your_event_mask], x[:do_not_propagate_mask], = s.slice!(0, 37).unpack("CLSCCLLCCCCLLLSx2")
             x[:save_under] = x[:save_under] != 0
             x[:map_is_installed] = x[:map_is_installed] != 0
@@ -1070,7 +1070,7 @@ module Alembic
         end
         
         def destroy_window (window)
-          destroy_window!(window).sync.value
+          destroy_window!(window).sync.abandon
         end
         
         def destroy_subwindows! (window)
@@ -1080,7 +1080,7 @@ module Alembic
         end
         
         def destroy_subwindows (window)
-          destroy_subwindows!(window).sync.value
+          destroy_subwindows!(window).sync.abandon
         end
         
         def change_save_set! (mode, window)
@@ -1090,7 +1090,7 @@ module Alembic
         end
         
         def change_save_set (mode, window)
-          change_save_set!(mode, window).sync.value
+          change_save_set!(mode, window).sync.abandon
         end
         
         def reparent_window! (window, parent, x, y)
@@ -1100,7 +1100,7 @@ module Alembic
         end
         
         def reparent_window (window, parent, x, y)
-          reparent_window!(window, parent, x, y).sync.value
+          reparent_window!(window, parent, x, y).sync.abandon
         end
         
         def map_window! (window)
@@ -1110,7 +1110,7 @@ module Alembic
         end
         
         def map_window (window)
-          map_window!(window).sync.value
+          map_window!(window).sync.abandon
         end
         
         def map_subwindows! (window)
@@ -1120,7 +1120,7 @@ module Alembic
         end
         
         def map_subwindows (window)
-          map_subwindows!(window).sync.value
+          map_subwindows!(window).sync.abandon
         end
         
         def unmap_window! (window)
@@ -1130,7 +1130,7 @@ module Alembic
         end
         
         def unmap_window (window)
-          unmap_window!(window).sync.value
+          unmap_window!(window).sync.abandon
         end
         
         def unmap_subwindows! (window)
@@ -1140,18 +1140,18 @@ module Alembic
         end
         
         def unmap_subwindows (window)
-          unmap_subwindows!(window).sync.value
+          unmap_subwindows!(window).sync.abandon
         end
         
         def configure_window! (window, value_hash = {})
           s = 12.chr.encode('BINARY')
           value_mask, value_list = CONFIG_WINDOW.value_param(value_hash)
-          s << [Window.to_xid(self, window), value_mask, *value_list].pack("x1LSx2L*")
+          s << [Window.to_xid(self, window), value_mask, *value_list.map(&:to_i)].pack("x1LSx2L*")
           send_request(s)
         end
         
         def configure_window (window, value_hash = {})
-          configure_window!(window, value_hash).sync.value
+          configure_window!(window, value_hash).sync.abandon
         end
         
         def circulate_window! (direction, window)
@@ -1161,14 +1161,14 @@ module Alembic
         end
         
         def circulate_window (direction, window)
-          circulate_window!(direction, window).sync.value
+          circulate_window!(direction, window).sync.abandon
         end
         
         def get_geometry! (drawable)
           s = 14.chr.encode('BINARY')
           s << [Drawable.to_xid(self, drawable)].pack("x1L")
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:depth], x[:root], x[:x], x[:y], x[:width], x[:height], x[:border_width], = s.slice!(0, 17).unpack("CLssSSSx2")
             x[:root] = Window[self, x[:root]]
             x
@@ -1183,7 +1183,7 @@ module Alembic
           s = 15.chr.encode('BINARY')
           s << [Window.to_xid(self, window)].pack("x1L")
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:root], x[:parent], x[:children_len], *x[:children] = s.unpack("x1LLSx14L*")
             x[:root] = Window[self, x[:root]]
             x[:parent] = Window[self, x[:parent]]
@@ -1198,10 +1198,11 @@ module Alembic
         
         def intern_atom! (only_if_exists, name)
           s = 16.chr.encode('BINARY')
-          name_len = name.length
+          name = name.force_encoding('BINARY')
+          name_len = name.bytesize
           s << [only_if_exists ? 1 : 0, name_len, pad(name)].pack("CSx2A*")
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:atom], = s.slice!(0, 5).unpack("x1L")
             x[:atom] = Atom[self, x[:atom]]
             x[:atom]
@@ -1216,7 +1217,7 @@ module Alembic
           s = 17.chr.encode('BINARY')
           s << [Atom.to_xid(self, atom)].pack("x1L")
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:name_len], = s.slice!(0, 25).unpack("x1Sx22")
             x[:name] = s.slice!(0, x[:name_len])
             x[:name]
@@ -1234,7 +1235,7 @@ module Alembic
         end
         
         def change_property (mode, window, property, type, format, data_len, data)
-          change_property!(mode, window, property, type, format, data_len, data).sync.value
+          change_property!(mode, window, property, type, format, data_len, data).sync.abandon
         end
         
         def delete_property! (window, property)
@@ -1244,14 +1245,14 @@ module Alembic
         end
         
         def delete_property (window, property)
-          delete_property!(window, property).sync.value
+          delete_property!(window, property).sync.abandon
         end
         
         def get_property! (delete, window, property, type, long_offset, long_length)
           s = 20.chr.encode('BINARY')
           s << [delete ? 1 : 0, Window.to_xid(self, window), Atom.to_xid(self, property), Atom.to_xid(self, type), long_offset, long_length].pack("CLLLLL")
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:format], x[:type], x[:bytes_after], x[:value_len], = s.slice!(0, 25).unpack("CLLLx12")
             x[:type] = Atom[self, x[:type]]
             x[:value] = s.slice!(0, (x[:value_len] * (x[:format] / 8)))
@@ -1267,7 +1268,7 @@ module Alembic
           s = 21.chr.encode('BINARY')
           s << [Window.to_xid(self, window)].pack("x1L")
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:atoms_len], *x[:atoms] = s.unpack("x1Sx22L*")
             x[:atoms] = x[:atoms] ? x[:atoms].map{|x|Atom[self, x]} : []
             x[:atoms]
@@ -1285,14 +1286,14 @@ module Alembic
         end
         
         def set_selection_owner (owner, selection, time)
-          set_selection_owner!(owner, selection, time).sync.value
+          set_selection_owner!(owner, selection, time).sync.abandon
         end
         
         def get_selection_owner! (selection)
           s = 23.chr.encode('BINARY')
           s << [Atom.to_xid(self, selection)].pack("x1L")
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:owner], = s.slice!(0, 5).unpack("x1L")
             x[:owner] = Window[self, x[:owner]]
             x[:owner]
@@ -1310,7 +1311,7 @@ module Alembic
         end
         
         def convert_selection (requestor, selection, target, property, time)
-          convert_selection!(requestor, selection, target, property, time).sync.value
+          convert_selection!(requestor, selection, target, property, time).sync.abandon
         end
         
         def send_event! (propagate, destination, event_mask, event)
@@ -1320,14 +1321,14 @@ module Alembic
         end
         
         def send_event (propagate, destination, event_mask, event)
-          send_event!(propagate, destination, event_mask, event).sync.value
+          send_event!(propagate, destination, event_mask, event).sync.abandon
         end
         
         def grab_pointer! (owner_events, grab_window, event_mask, pointer_mode, keyboard_mode, confine_to, cursor, time)
           s = 26.chr.encode('BINARY')
           s << [owner_events ? 1 : 0, Window.to_xid(self, grab_window), event_mask, pointer_mode, keyboard_mode, Window.to_xid(self, confine_to), Cursor.to_xid(self, cursor), time].pack("CLSCCLLL")
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:status], = s.slice!(0, 1).unpack("C")
             x[:status]
           end
@@ -1344,7 +1345,7 @@ module Alembic
         end
         
         def ungrab_pointer (time)
-          ungrab_pointer!(time).sync.value
+          ungrab_pointer!(time).sync.abandon
         end
         
         def grab_button! (owner_events, grab_window, event_mask, pointer_mode, keyboard_mode, confine_to, cursor, button, modifiers)
@@ -1354,7 +1355,7 @@ module Alembic
         end
         
         def grab_button (owner_events, grab_window, event_mask, pointer_mode, keyboard_mode, confine_to, cursor, button, modifiers)
-          grab_button!(owner_events, grab_window, event_mask, pointer_mode, keyboard_mode, confine_to, cursor, button, modifiers).sync.value
+          grab_button!(owner_events, grab_window, event_mask, pointer_mode, keyboard_mode, confine_to, cursor, button, modifiers).sync.abandon
         end
         
         def ungrab_button! (button, grab_window, modifiers)
@@ -1364,7 +1365,7 @@ module Alembic
         end
         
         def ungrab_button (button, grab_window, modifiers)
-          ungrab_button!(button, grab_window, modifiers).sync.value
+          ungrab_button!(button, grab_window, modifiers).sync.abandon
         end
         
         def change_active_pointer_grab! (cursor, time, event_mask)
@@ -1374,14 +1375,14 @@ module Alembic
         end
         
         def change_active_pointer_grab (cursor, time, event_mask)
-          change_active_pointer_grab!(cursor, time, event_mask).sync.value
+          change_active_pointer_grab!(cursor, time, event_mask).sync.abandon
         end
         
         def grab_keyboard! (owner_events, grab_window, time, pointer_mode, keyboard_mode)
           s = 31.chr.encode('BINARY')
           s << [owner_events ? 1 : 0, Window.to_xid(self, grab_window), time, pointer_mode, keyboard_mode].pack("CLLCCx2")
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:status], = s.slice!(0, 1).unpack("C")
             x[:status]
           end
@@ -1398,7 +1399,7 @@ module Alembic
         end
         
         def ungrab_keyboard (time)
-          ungrab_keyboard!(time).sync.value
+          ungrab_keyboard!(time).sync.abandon
         end
         
         def grab_key! (owner_events, grab_window, modifiers, key, pointer_mode, keyboard_mode)
@@ -1408,7 +1409,7 @@ module Alembic
         end
         
         def grab_key (owner_events, grab_window, modifiers, key, pointer_mode, keyboard_mode)
-          grab_key!(owner_events, grab_window, modifiers, key, pointer_mode, keyboard_mode).sync.value
+          grab_key!(owner_events, grab_window, modifiers, key, pointer_mode, keyboard_mode).sync.abandon
         end
         
         def ungrab_key! (key, grab_window, modifiers)
@@ -1418,7 +1419,7 @@ module Alembic
         end
         
         def ungrab_key (key, grab_window, modifiers)
-          ungrab_key!(key, grab_window, modifiers).sync.value
+          ungrab_key!(key, grab_window, modifiers).sync.abandon
         end
         
         def allow_events! (mode, time)
@@ -1428,7 +1429,7 @@ module Alembic
         end
         
         def allow_events (mode, time)
-          allow_events!(mode, time).sync.value
+          allow_events!(mode, time).sync.abandon
         end
         
         def grab_server! ()
@@ -1437,7 +1438,7 @@ module Alembic
         end
         
         def grab_server ()
-          grab_server!().sync.value
+          grab_server!().sync.abandon
         end
         
         def ungrab_server! ()
@@ -1446,14 +1447,14 @@ module Alembic
         end
         
         def ungrab_server ()
-          ungrab_server!().sync.value
+          ungrab_server!().sync.abandon
         end
         
         def query_pointer! (window)
           s = 38.chr.encode('BINARY')
           s << [Window.to_xid(self, window)].pack("x1L")
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:same_screen], x[:root], x[:child], x[:root_x], x[:root_y], x[:win_x], x[:win_y], x[:mask], = s.slice!(0, 21).unpack("CLLssssSx2")
             x[:same_screen] = x[:same_screen] != 0
             x[:root] = Window[self, x[:root]]
@@ -1470,7 +1471,7 @@ module Alembic
           s = 39.chr.encode('BINARY')
           s << [Window.to_xid(self, window), start, stop].pack("x1LLL")
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:events_len], = s.slice!(0, 25).unpack("x1Lx20")
             x[:events] = x[:events_len].times.map{decode_timecoord(s)}
             x[:events]
@@ -1485,7 +1486,7 @@ module Alembic
           s = 40.chr.encode('BINARY')
           s << [Window.to_xid(self, src_window), Window.to_xid(self, dst_window), src_x, src_y].pack("x1LLss")
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:same_screen], x[:child], x[:dst_x], x[:dst_y], = s.slice!(0, 9).unpack("CLss")
             x[:same_screen] = x[:same_screen] != 0
             x[:child] = Window[self, x[:child]]
@@ -1504,7 +1505,7 @@ module Alembic
         end
         
         def warp_pointer (src_window, dst_window, src_x, src_y, src_width, src_height, dst_x, dst_y)
-          warp_pointer!(src_window, dst_window, src_x, src_y, src_width, src_height, dst_x, dst_y).sync.value
+          warp_pointer!(src_window, dst_window, src_x, src_y, src_width, src_height, dst_x, dst_y).sync.abandon
         end
         
         def set_input_focus! (revert_to, focus, time)
@@ -1514,13 +1515,13 @@ module Alembic
         end
         
         def set_input_focus (revert_to, focus, time)
-          set_input_focus!(revert_to, focus, time).sync.value
+          set_input_focus!(revert_to, focus, time).sync.abandon
         end
         
         def get_input_focus! ()
           s = 43.chr.encode('BINARY')
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:revert_to], x[:focus], = s.slice!(0, 5).unpack("CL")
             x[:focus] = Window[self, x[:focus]]
             x
@@ -1534,7 +1535,7 @@ module Alembic
         def query_keymap! ()
           s = 44.chr.encode('BINARY')
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             s.slice!(0, 1)
             x[:keys] = s.slice!(0..32).unpack('C*')
             x[:keys]
@@ -1545,15 +1546,17 @@ module Alembic
           query_keymap!().sync.result
         end
         
-        def open_font! (fid, name)
+        def open_font! (name)
           s = 45.chr.encode('BINARY')
-          name_len = name.length
+          fid = alloc_font
+          name = name.force_encoding('BINARY')
+          name_len = name.bytesize
           s << [Font.to_xid(self, fid), name_len, pad(name)].pack("x1LSx2A*")
-          send_request(s)
+          send_request(s, fid)
         end
         
-        def open_font (fid, name)
-          open_font!(fid, name).sync.value
+        def open_font (name)
+          open_font!(name).sync.abandon
         end
         
         def close_font! (font)
@@ -1563,14 +1566,14 @@ module Alembic
         end
         
         def close_font (font)
-          close_font!(font).sync.value
+          close_font!(font).sync.abandon
         end
         
         def query_font! (font)
           s = 47.chr.encode('BINARY')
           s << [Fontable.to_xid(self, font)].pack("x1L")
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             s.slice!(0, 1)
             x[:min_bounds] = decode_charinfo(s)
             s.slice!(0, 4)
@@ -1590,10 +1593,9 @@ module Alembic
         def query_text_extents! (font, string)
           s = 48.chr.encode('BINARY')
           s << raise('this doesn\'t work')
-          s << [Fontable.to_xid(self, font)].pack("L")
-          s << string.map{|x|encode_char2b(''.encode('BINARY'), *x)}.join
+          s << [Fontable.to_xid(self, font), pad(string)].pack("LA*")
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:draw_direction], x[:font_ascent], x[:font_descent], x[:overall_ascent], x[:overall_descent], x[:overall_width], x[:overall_left], x[:overall_right], = s.slice!(0, 21).unpack("Csssslll")
             x
           end
@@ -1605,10 +1607,11 @@ module Alembic
         
         def list_fonts! (max_names, pattern)
           s = 49.chr.encode('BINARY')
-          pattern_len = pattern.length
+          pattern = pattern.force_encoding('BINARY')
+          pattern_len = pattern.bytesize
           s << [max_names, pattern_len, pad(pattern)].pack("x1SSA*")
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:names_len], = s.slice!(0, 25).unpack("x1Sx22")
             x[:names] = x[:names_len].times.map{decode_str(s)}
             x[:names]
@@ -1621,10 +1624,11 @@ module Alembic
         
         def list_fonts_with_info! (max_names, pattern)
           s = 50.chr.encode('BINARY')
-          pattern_len = pattern.length
+          pattern = pattern.force_encoding('BINARY')
+          pattern_len = pattern.bytesize
           s << [max_names, pattern_len, pad(pattern)].pack("x1SSA*")
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:name_len], = s.slice!(0, 1).unpack("C")
             x[:min_bounds] = decode_charinfo(s)
             s.slice!(0, 4)
@@ -1650,13 +1654,13 @@ module Alembic
         end
         
         def set_font_path (font)
-          set_font_path!(font).sync.value
+          set_font_path!(font).sync.abandon
         end
         
         def get_font_path! ()
           s = 52.chr.encode('BINARY')
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:path_len], = s.slice!(0, 25).unpack("x1Sx22")
             x[:path] = x[:path_len].times.map{decode_str(s)}
             x[:path]
@@ -1675,7 +1679,7 @@ module Alembic
         end
         
         def create_pixmap (depth, drawable, width, height)
-          create_pixmap!(depth, drawable, width, height).sync.value
+          create_pixmap!(depth, drawable, width, height).sync.abandon
         end
         
         def free_pixmap! (pixmap)
@@ -1685,30 +1689,30 @@ module Alembic
         end
         
         def free_pixmap (pixmap)
-          free_pixmap!(pixmap).sync.value
+          free_pixmap!(pixmap).sync.abandon
         end
         
         def create_gc! (drawable, value_hash = {})
           s = 55.chr.encode('BINARY')
           cid = alloc_gcontext
           value_mask, value_list = GC.value_param(value_hash)
-          s << [Gcontext.to_xid(self, cid), Drawable.to_xid(self, drawable), value_mask, *value_list].pack("x1LLLL*")
+          s << [Gcontext.to_xid(self, cid), Drawable.to_xid(self, drawable), value_mask, *value_list.map(&:to_i)].pack("x1LLLL*")
           send_request(s, cid)
         end
         
         def create_gc (drawable, value_hash = {})
-          create_gc!(drawable, value_hash).sync.value
+          create_gc!(drawable, value_hash).sync.abandon
         end
         
         def change_gc! (gc, value_hash = {})
           s = 56.chr.encode('BINARY')
           value_mask, value_list = GC.value_param(value_hash)
-          s << [Gcontext.to_xid(self, gc), value_mask, *value_list].pack("x1LLL*")
+          s << [Gcontext.to_xid(self, gc), value_mask, *value_list.map(&:to_i)].pack("x1LLL*")
           send_request(s)
         end
         
         def change_gc (gc, value_hash = {})
-          change_gc!(gc, value_hash).sync.value
+          change_gc!(gc, value_hash).sync.abandon
         end
         
         def copy_gc! (src_gc, dst_gc, value_mask)
@@ -1718,7 +1722,7 @@ module Alembic
         end
         
         def copy_gc (src_gc, dst_gc, value_mask)
-          copy_gc!(src_gc, dst_gc, value_mask).sync.value
+          copy_gc!(src_gc, dst_gc, value_mask).sync.abandon
         end
         
         def set_dashes! (gc, dash_offset, dashes)
@@ -1729,7 +1733,7 @@ module Alembic
         end
         
         def set_dashes (gc, dash_offset, dashes)
-          set_dashes!(gc, dash_offset, dashes).sync.value
+          set_dashes!(gc, dash_offset, dashes).sync.abandon
         end
         
         def set_clip_rectangles! (ordering, gc, clip_x_origin, clip_y_origin, rectangles)
@@ -1740,7 +1744,7 @@ module Alembic
         end
         
         def set_clip_rectangles (ordering, gc, clip_x_origin, clip_y_origin, rectangles)
-          set_clip_rectangles!(ordering, gc, clip_x_origin, clip_y_origin, rectangles).sync.value
+          set_clip_rectangles!(ordering, gc, clip_x_origin, clip_y_origin, rectangles).sync.abandon
         end
         
         def free_gc! (gc)
@@ -1750,7 +1754,7 @@ module Alembic
         end
         
         def free_gc (gc)
-          free_gc!(gc).sync.value
+          free_gc!(gc).sync.abandon
         end
         
         def clear_area! (exposures, window, x, y, width, height)
@@ -1760,7 +1764,7 @@ module Alembic
         end
         
         def clear_area (exposures, window, x, y, width, height)
-          clear_area!(exposures, window, x, y, width, height).sync.value
+          clear_area!(exposures, window, x, y, width, height).sync.abandon
         end
         
         def copy_area! (src_drawable, dst_drawable, gc, src_x, src_y, dst_x, dst_y, width, height)
@@ -1770,7 +1774,7 @@ module Alembic
         end
         
         def copy_area (src_drawable, dst_drawable, gc, src_x, src_y, dst_x, dst_y, width, height)
-          copy_area!(src_drawable, dst_drawable, gc, src_x, src_y, dst_x, dst_y, width, height).sync.value
+          copy_area!(src_drawable, dst_drawable, gc, src_x, src_y, dst_x, dst_y, width, height).sync.abandon
         end
         
         def copy_plane! (src_drawable, dst_drawable, gc, src_x, src_y, dst_x, dst_y, width, height, bit_plane)
@@ -1780,7 +1784,7 @@ module Alembic
         end
         
         def copy_plane (src_drawable, dst_drawable, gc, src_x, src_y, dst_x, dst_y, width, height, bit_plane)
-          copy_plane!(src_drawable, dst_drawable, gc, src_x, src_y, dst_x, dst_y, width, height, bit_plane).sync.value
+          copy_plane!(src_drawable, dst_drawable, gc, src_x, src_y, dst_x, dst_y, width, height, bit_plane).sync.abandon
         end
         
         def poly_point! (coordinate_mode, drawable, gc, points)
@@ -1791,7 +1795,7 @@ module Alembic
         end
         
         def poly_point (coordinate_mode, drawable, gc, points)
-          poly_point!(coordinate_mode, drawable, gc, points).sync.value
+          poly_point!(coordinate_mode, drawable, gc, points).sync.abandon
         end
         
         def poly_line! (coordinate_mode, drawable, gc, points)
@@ -1802,7 +1806,7 @@ module Alembic
         end
         
         def poly_line (coordinate_mode, drawable, gc, points)
-          poly_line!(coordinate_mode, drawable, gc, points).sync.value
+          poly_line!(coordinate_mode, drawable, gc, points).sync.abandon
         end
         
         def poly_segment! (drawable, gc, segments)
@@ -1813,7 +1817,7 @@ module Alembic
         end
         
         def poly_segment (drawable, gc, segments)
-          poly_segment!(drawable, gc, segments).sync.value
+          poly_segment!(drawable, gc, segments).sync.abandon
         end
         
         def poly_rectangle! (drawable, gc, rectangles)
@@ -1824,7 +1828,7 @@ module Alembic
         end
         
         def poly_rectangle (drawable, gc, rectangles)
-          poly_rectangle!(drawable, gc, rectangles).sync.value
+          poly_rectangle!(drawable, gc, rectangles).sync.abandon
         end
         
         def poly_arc! (drawable, gc, arcs)
@@ -1835,7 +1839,7 @@ module Alembic
         end
         
         def poly_arc (drawable, gc, arcs)
-          poly_arc!(drawable, gc, arcs).sync.value
+          poly_arc!(drawable, gc, arcs).sync.abandon
         end
         
         def fill_poly! (drawable, gc, shape, coordinate_mode, points)
@@ -1846,7 +1850,7 @@ module Alembic
         end
         
         def fill_poly (drawable, gc, shape, coordinate_mode, points)
-          fill_poly!(drawable, gc, shape, coordinate_mode, points).sync.value
+          fill_poly!(drawable, gc, shape, coordinate_mode, points).sync.abandon
         end
         
         def poly_fill_rectangle! (drawable, gc, rectangles)
@@ -1857,7 +1861,7 @@ module Alembic
         end
         
         def poly_fill_rectangle (drawable, gc, rectangles)
-          poly_fill_rectangle!(drawable, gc, rectangles).sync.value
+          poly_fill_rectangle!(drawable, gc, rectangles).sync.abandon
         end
         
         def poly_fill_arc! (drawable, gc, arcs)
@@ -1868,7 +1872,7 @@ module Alembic
         end
         
         def poly_fill_arc (drawable, gc, arcs)
-          poly_fill_arc!(drawable, gc, arcs).sync.value
+          poly_fill_arc!(drawable, gc, arcs).sync.abandon
         end
         
         def put_image! (format, drawable, gc, width, height, dst_x, dst_y, left_pad, depth, data)
@@ -1878,14 +1882,14 @@ module Alembic
         end
         
         def put_image (format, drawable, gc, width, height, dst_x, dst_y, left_pad, depth, data)
-          put_image!(format, drawable, gc, width, height, dst_x, dst_y, left_pad, depth, data).sync.value
+          put_image!(format, drawable, gc, width, height, dst_x, dst_y, left_pad, depth, data).sync.abandon
         end
         
         def get_image! (format, drawable, x, y, width, height, plane_mask)
           s = 73.chr.encode('BINARY')
           s << [format, Drawable.to_xid(self, drawable), x, y, width, height, plane_mask].pack("CLssSSL")
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:depth], x[:visual], = s.slice!(0, 25).unpack("CLx20")
             x[:data] = s.slice!(0, (x[:length] * 4))
             x
@@ -1903,7 +1907,7 @@ module Alembic
         end
         
         def poly_text8 (drawable, gc, x, y, items)
-          poly_text8!(drawable, gc, x, y, items).sync.value
+          poly_text8!(drawable, gc, x, y, items).sync.abandon
         end
         
         def poly_text16! (drawable, gc, x, y, items)
@@ -1913,30 +1917,31 @@ module Alembic
         end
         
         def poly_text16 (drawable, gc, x, y, items)
-          poly_text16!(drawable, gc, x, y, items).sync.value
+          poly_text16!(drawable, gc, x, y, items).sync.abandon
         end
         
         def image_text8! (drawable, gc, x, y, string)
           s = 76.chr.encode('BINARY')
-          string_len = string.length
+          string = string.force_encoding('BINARY')
+          string_len = string.bytesize
           s << [string_len, Drawable.to_xid(self, drawable), Gcontext.to_xid(self, gc), x, y, pad(string)].pack("CLLssA*")
           send_request(s)
         end
         
         def image_text8 (drawable, gc, x, y, string)
-          image_text8!(drawable, gc, x, y, string).sync.value
+          image_text8!(drawable, gc, x, y, string).sync.abandon
         end
         
         def image_text16! (drawable, gc, x, y, string)
           s = 77.chr.encode('BINARY')
-          string_len = string.length
-          s << [string_len, Drawable.to_xid(self, drawable), Gcontext.to_xid(self, gc), x, y].pack("CLLss")
-          s << string.map{|x|encode_char2b(''.encode('BINARY'), *x)}.join
+          string = string.encode('UTF-16BE').force_encoding('BINARY')
+          string_len = string.bytesize / 2
+          s << [string_len, Drawable.to_xid(self, drawable), Gcontext.to_xid(self, gc), x, y, pad(string)].pack("CLLssA*")
           send_request(s)
         end
         
         def image_text16 (drawable, gc, x, y, string)
-          image_text16!(drawable, gc, x, y, string).sync.value
+          image_text16!(drawable, gc, x, y, string).sync.abandon
         end
         
         def create_colormap! (alloc, window, visual)
@@ -1947,7 +1952,7 @@ module Alembic
         end
         
         def create_colormap (alloc, window, visual)
-          create_colormap!(alloc, window, visual).sync.value
+          create_colormap!(alloc, window, visual).sync.abandon
         end
         
         def free_colormap! (cmap)
@@ -1957,7 +1962,7 @@ module Alembic
         end
         
         def free_colormap (cmap)
-          free_colormap!(cmap).sync.value
+          free_colormap!(cmap).sync.abandon
         end
         
         def copy_colormap_and_free! (mid, src_cmap)
@@ -1967,7 +1972,7 @@ module Alembic
         end
         
         def copy_colormap_and_free (mid, src_cmap)
-          copy_colormap_and_free!(mid, src_cmap).sync.value
+          copy_colormap_and_free!(mid, src_cmap).sync.abandon
         end
         
         def install_colormap! (cmap)
@@ -1977,7 +1982,7 @@ module Alembic
         end
         
         def install_colormap (cmap)
-          install_colormap!(cmap).sync.value
+          install_colormap!(cmap).sync.abandon
         end
         
         def uninstall_colormap! (cmap)
@@ -1987,14 +1992,14 @@ module Alembic
         end
         
         def uninstall_colormap (cmap)
-          uninstall_colormap!(cmap).sync.value
+          uninstall_colormap!(cmap).sync.abandon
         end
         
         def list_installed_colormaps! (window)
           s = 83.chr.encode('BINARY')
           s << [Window.to_xid(self, window)].pack("x1L")
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:cmaps_len], *x[:cmaps] = s.unpack("x1Sx22L*")
             x[:cmaps] = x[:cmaps] ? x[:cmaps].map{|x|Colormap[self, x]} : []
             x[:cmaps]
@@ -2009,7 +2014,7 @@ module Alembic
           s = 84.chr.encode('BINARY')
           s << [Colormap.to_xid(self, cmap), red, green, blue].pack("x1LSSSx2")
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:red], x[:green], x[:blue], x[:pixel], = s.slice!(0, 13).unpack("x1SSSx2L")
             x
           end
@@ -2021,10 +2026,11 @@ module Alembic
         
         def alloc_named_color! (cmap, name)
           s = 85.chr.encode('BINARY')
-          name_len = name.length
+          name = name.force_encoding('BINARY')
+          name_len = name.bytesize
           s << [Colormap.to_xid(self, cmap), name_len, pad(name)].pack("x1LSx2A*")
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:pixel], x[:exact_red], x[:exact_green], x[:exact_blue], x[:visual_red], x[:visual_green], x[:visual_blue], = s.slice!(0, 17).unpack("x1LSSSSSS")
             x
           end
@@ -2038,7 +2044,7 @@ module Alembic
           s = 86.chr.encode('BINARY')
           s << [contiguous ? 1 : 0, Colormap.to_xid(self, cmap), colors, planes].pack("CLSS")
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:pixels_len], x[:masks_len], = s.slice!(0, 25).unpack("x1SSx20")
             x[:pixels] = s.slice!(0..4*(x[:pixels_len])).unpack('L*')
             *x[:masks] = s.unpack("L*")
@@ -2054,7 +2060,7 @@ module Alembic
           s = 87.chr.encode('BINARY')
           s << [contiguous ? 1 : 0, Colormap.to_xid(self, cmap), colors, reds, greens, blues].pack("CLSSSS")
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:pixels_len], x[:red_mask], x[:green_mask], x[:blue_mask], *x[:pixels] = s.unpack("x1Sx2LLLx8L*")
             x
           end
@@ -2071,7 +2077,7 @@ module Alembic
         end
         
         def free_colors (cmap, plane_mask, pixels)
-          free_colors!(cmap, plane_mask, pixels).sync.value
+          free_colors!(cmap, plane_mask, pixels).sync.abandon
         end
         
         def store_colors! (cmap, items)
@@ -2082,25 +2088,26 @@ module Alembic
         end
         
         def store_colors (cmap, items)
-          store_colors!(cmap, items).sync.value
+          store_colors!(cmap, items).sync.abandon
         end
         
         def store_named_color! (flags, cmap, pixel, name)
           s = 90.chr.encode('BINARY')
-          name_len = name.length
+          name = name.force_encoding('BINARY')
+          name_len = name.bytesize
           s << [flags, Colormap.to_xid(self, cmap), pixel, name_len, pad(name)].pack("CLLSx2A*")
           send_request(s)
         end
         
         def store_named_color (flags, cmap, pixel, name)
-          store_named_color!(flags, cmap, pixel, name).sync.value
+          store_named_color!(flags, cmap, pixel, name).sync.abandon
         end
         
         def query_colors! (cmap, pixels)
           s = 91.chr.encode('BINARY')
           s << [Colormap.to_xid(self, cmap), *pixels].pack("x1LL*")
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:colors_len], = s.slice!(0, 25).unpack("x1Sx22")
             x[:colors] = x[:colors_len].times.map{decode_rgb(s)}
             x[:colors]
@@ -2113,10 +2120,11 @@ module Alembic
         
         def lookup_color! (cmap, name)
           s = 92.chr.encode('BINARY')
-          name_len = name.length
+          name = name.force_encoding('BINARY')
+          name_len = name.bytesize
           s << [Colormap.to_xid(self, cmap), name_len, pad(name)].pack("x1LSx2A*")
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:exact_red], x[:exact_green], x[:exact_blue], x[:visual_red], x[:visual_green], x[:visual_blue], = s.slice!(0, 13).unpack("x1SSSSSS")
             x
           end
@@ -2134,7 +2142,7 @@ module Alembic
         end
         
         def create_cursor (source, mask, fore_red, fore_green, fore_blue, back_red, back_green, back_blue, x, y)
-          create_cursor!(source, mask, fore_red, fore_green, fore_blue, back_red, back_green, back_blue, x, y).sync.value
+          create_cursor!(source, mask, fore_red, fore_green, fore_blue, back_red, back_green, back_blue, x, y).sync.abandon
         end
         
         def create_glyph_cursor! (source_font, mask_font, source_char, mask_char, fore_red, fore_green, fore_blue, back_red, back_green, back_blue)
@@ -2145,7 +2153,7 @@ module Alembic
         end
         
         def create_glyph_cursor (source_font, mask_font, source_char, mask_char, fore_red, fore_green, fore_blue, back_red, back_green, back_blue)
-          create_glyph_cursor!(source_font, mask_font, source_char, mask_char, fore_red, fore_green, fore_blue, back_red, back_green, back_blue).sync.value
+          create_glyph_cursor!(source_font, mask_font, source_char, mask_char, fore_red, fore_green, fore_blue, back_red, back_green, back_blue).sync.abandon
         end
         
         def free_cursor! (cursor)
@@ -2155,7 +2163,7 @@ module Alembic
         end
         
         def free_cursor (cursor)
-          free_cursor!(cursor).sync.value
+          free_cursor!(cursor).sync.abandon
         end
         
         def recolor_cursor! (cursor, fore_red, fore_green, fore_blue, back_red, back_green, back_blue)
@@ -2165,14 +2173,14 @@ module Alembic
         end
         
         def recolor_cursor (cursor, fore_red, fore_green, fore_blue, back_red, back_green, back_blue)
-          recolor_cursor!(cursor, fore_red, fore_green, fore_blue, back_red, back_green, back_blue).sync.value
+          recolor_cursor!(cursor, fore_red, fore_green, fore_blue, back_red, back_green, back_blue).sync.abandon
         end
         
         def query_best_size! (klass, drawable, width, height)
           s = 97.chr.encode('BINARY')
           s << [klass, Drawable.to_xid(self, drawable), width, height].pack("CLSS")
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:width], x[:height], = s.slice!(0, 5).unpack("x1SS")
             x
           end
@@ -2184,10 +2192,11 @@ module Alembic
         
         def query_extension! (name)
           s = 98.chr.encode('BINARY')
-          name_len = name.length
+          name = name.force_encoding('BINARY')
+          name_len = name.bytesize
           s << [name_len, pad(name)].pack("x1Sx2A*")
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:present], x[:major_opcode], x[:first_event], x[:first_error], = s.slice!(0, 5).unpack("x1CCCC")
             x[:present] = x[:present] != 0
             x
@@ -2201,7 +2210,7 @@ module Alembic
         def list_extensions! ()
           s = 99.chr.encode('BINARY')
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:names_len], = s.slice!(0, 25).unpack("Cx24")
             x[:names] = x[:names_len].times.map{decode_str(s)}
             x[:names]
@@ -2219,14 +2228,14 @@ module Alembic
         end
         
         def change_keyboard_mapping (keycode_count, first_keycode, keysyms_per_keycode, keysyms)
-          change_keyboard_mapping!(keycode_count, first_keycode, keysyms_per_keycode, keysyms).sync.value
+          change_keyboard_mapping!(keycode_count, first_keycode, keysyms_per_keycode, keysyms).sync.abandon
         end
         
         def get_keyboard_mapping! (first_keycode, count)
           s = 101.chr.encode('BINARY')
           s << [first_keycode, count].pack("x1CC")
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:keysyms_per_keycode], *x[:keysyms] = s.unpack("Cx24L*")
             x
           end
@@ -2239,18 +2248,18 @@ module Alembic
         def change_keyboard_control! (value_hash = {})
           s = 102.chr.encode('BINARY')
           value_mask, value_list = KB.value_param(value_hash)
-          s << [value_mask, *value_list].pack("x1LL*")
+          s << [value_mask, *value_list.map(&:to_i)].pack("x1LL*")
           send_request(s)
         end
         
         def change_keyboard_control (value_hash = {})
-          change_keyboard_control!(value_hash).sync.value
+          change_keyboard_control!(value_hash).sync.abandon
         end
         
         def get_keyboard_control! ()
           s = 103.chr.encode('BINARY')
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:global_auto_repeat], x[:led_mask], x[:key_click_percent], x[:bell_percent], x[:bell_pitch], x[:bell_duration], = s.slice!(0, 13).unpack("CLCCSSx2")
             x[:auto_repeats] = s.slice!(0..32).unpack('C*')
             x
@@ -2268,7 +2277,7 @@ module Alembic
         end
         
         def bell (percent)
-          bell!(percent).sync.value
+          bell!(percent).sync.abandon
         end
         
         def change_pointer_control! (acceleration_numerator, acceleration_denominator, threshold, do_acceleration, do_threshold)
@@ -2278,13 +2287,13 @@ module Alembic
         end
         
         def change_pointer_control (acceleration_numerator, acceleration_denominator, threshold, do_acceleration, do_threshold)
-          change_pointer_control!(acceleration_numerator, acceleration_denominator, threshold, do_acceleration, do_threshold).sync.value
+          change_pointer_control!(acceleration_numerator, acceleration_denominator, threshold, do_acceleration, do_threshold).sync.abandon
         end
         
         def get_pointer_control! ()
           s = 106.chr.encode('BINARY')
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:acceleration_numerator], x[:acceleration_denominator], x[:threshold], = s.slice!(0, 25).unpack("x1SSSx18")
             x
           end
@@ -2301,13 +2310,13 @@ module Alembic
         end
         
         def set_screen_saver (timeout, interval, prefer_blanking, allow_exposures)
-          set_screen_saver!(timeout, interval, prefer_blanking, allow_exposures).sync.value
+          set_screen_saver!(timeout, interval, prefer_blanking, allow_exposures).sync.abandon
         end
         
         def get_screen_saver! ()
           s = 108.chr.encode('BINARY')
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:timeout], x[:interval], x[:prefer_blanking], x[:allow_exposures], = s.slice!(0, 25).unpack("x1SSCCx18")
             x
           end
@@ -2319,19 +2328,20 @@ module Alembic
         
         def change_hosts! (mode, family, address)
           s = 109.chr.encode('BINARY')
-          address_len = address.length
+          address = address.force_encoding('BINARY')
+          address_len = address.bytesize
           s << [mode, family, address_len, pad(address)].pack("CCx1SA*")
           send_request(s)
         end
         
         def change_hosts (mode, family, address)
-          change_hosts!(mode, family, address).sync.value
+          change_hosts!(mode, family, address).sync.abandon
         end
         
         def list_hosts! ()
           s = 110.chr.encode('BINARY')
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:mode], x[:hosts_len], = s.slice!(0, 25).unpack("CSx22")
             x[:hosts] = x[:hosts_len].times.map{decode_host(s)}
             x
@@ -2349,7 +2359,7 @@ module Alembic
         end
         
         def set_access_control (mode)
-          set_access_control!(mode).sync.value
+          set_access_control!(mode).sync.abandon
         end
         
         def set_close_down_mode! (mode)
@@ -2359,7 +2369,7 @@ module Alembic
         end
         
         def set_close_down_mode (mode)
-          set_close_down_mode!(mode).sync.value
+          set_close_down_mode!(mode).sync.abandon
         end
         
         def kill_client! (resource)
@@ -2369,7 +2379,7 @@ module Alembic
         end
         
         def kill_client (resource)
-          kill_client!(resource).sync.value
+          kill_client!(resource).sync.abandon
         end
         
         def rotate_properties! (window, delta, atoms)
@@ -2380,7 +2390,7 @@ module Alembic
         end
         
         def rotate_properties (window, delta, atoms)
-          rotate_properties!(window, delta, atoms).sync.value
+          rotate_properties!(window, delta, atoms).sync.abandon
         end
         
         def force_screen_saver! (mode)
@@ -2390,7 +2400,7 @@ module Alembic
         end
         
         def force_screen_saver (mode)
-          force_screen_saver!(mode).sync.value
+          force_screen_saver!(mode).sync.abandon
         end
         
         def set_pointer_mapping! (map)
@@ -2398,7 +2408,7 @@ module Alembic
           map_len = map.length
           s << [map_len, *map].pack("CC*")
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:status], = s.slice!(0, 1).unpack("C")
             x[:status]
           end
@@ -2411,7 +2421,7 @@ module Alembic
         def get_pointer_mapping! ()
           s = 117.chr.encode('BINARY')
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:map_len], = s.slice!(0, 25).unpack("Cx24")
             x[:map] = s.slice!(0..x[:map_len]).unpack('C*')
             x[:map]
@@ -2426,7 +2436,7 @@ module Alembic
           s = 118.chr.encode('BINARY')
           s << [keycodes_per_modifier, *keycodes].pack("CC*")
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:status], = s.slice!(0, 1).unpack("C")
             x[:status]
           end
@@ -2439,7 +2449,7 @@ module Alembic
         def get_modifier_mapping! ()
           s = 119.chr.encode('BINARY')
           send_request(s) do |s|
-            x = {}
+            x = HashWithMethodMissing.new
             x[:keycodes_per_modifier], = s.slice!(0, 25).unpack("Cx24")
             x[:keycodes] = s.slice!(0..(x[:keycodes_per_modifier] * 8)).unpack('C*')
             x
@@ -2456,13 +2466,7 @@ module Alembic
         end
         
         def no_operation ()
-          no_operation!().sync.value
-        end
-        
-        class KeyPressEvent < Struct.new(:detail, :time, :root, :event, :child, :root_x, :root_y, :event_x, :event_y, :state, :same_screen, :synthetic)
-          def event_type
-            :key_press_event
-          end
+          no_operation!().sync.abandon
         end
         
         def encode_key_press_event (detail, time, root, event, child, root_x, root_y, event_x, event_y, state, same_screen)
@@ -2474,19 +2478,13 @@ module Alembic
         end
         
         def decode_key_press_event (s)
-          x = KeyPressEvent.new
+          x = HashWithMethodMissing.new
           x[:detail], x[:time], x[:root], x[:event], x[:child], x[:root_x], x[:root_y], x[:event_x], x[:event_y], x[:state], x[:same_screen], = s.slice!(0, 29).unpack("CLLLLssssSCx1")
           x[:root] = Window[self, x[:root]]
           x[:event] = Window[self, x[:event]]
           x[:child] = Window[self, x[:child]]
           x[:same_screen] = x[:same_screen] != 0
           x
-        end
-        
-        class KeyReleaseEvent < Struct.new(:detail, :time, :root, :event, :child, :root_x, :root_y, :event_x, :event_y, :state, :same_screen, :synthetic)
-          def event_type
-            :key_release_event
-          end
         end
         
         def encode_key_release_event (detail, time, root, event, child, root_x, root_y, event_x, event_y, state, same_screen)
@@ -2498,19 +2496,13 @@ module Alembic
         end
         
         def decode_key_release_event (s)
-          x = KeyReleaseEvent.new
+          x = HashWithMethodMissing.new
           x[:detail], x[:time], x[:root], x[:event], x[:child], x[:root_x], x[:root_y], x[:event_x], x[:event_y], x[:state], x[:same_screen], = s.slice!(0, 29).unpack("CLLLLssssSCx1")
           x[:root] = Window[self, x[:root]]
           x[:event] = Window[self, x[:event]]
           x[:child] = Window[self, x[:child]]
           x[:same_screen] = x[:same_screen] != 0
           x
-        end
-        
-        class ButtonPressEvent < Struct.new(:detail, :time, :root, :event, :child, :root_x, :root_y, :event_x, :event_y, :state, :same_screen, :synthetic)
-          def event_type
-            :button_press_event
-          end
         end
         
         def encode_button_press_event (detail, time, root, event, child, root_x, root_y, event_x, event_y, state, same_screen)
@@ -2522,19 +2514,13 @@ module Alembic
         end
         
         def decode_button_press_event (s)
-          x = ButtonPressEvent.new
+          x = HashWithMethodMissing.new
           x[:detail], x[:time], x[:root], x[:event], x[:child], x[:root_x], x[:root_y], x[:event_x], x[:event_y], x[:state], x[:same_screen], = s.slice!(0, 29).unpack("CLLLLssssSCx1")
           x[:root] = Window[self, x[:root]]
           x[:event] = Window[self, x[:event]]
           x[:child] = Window[self, x[:child]]
           x[:same_screen] = x[:same_screen] != 0
           x
-        end
-        
-        class ButtonReleaseEvent < Struct.new(:detail, :time, :root, :event, :child, :root_x, :root_y, :event_x, :event_y, :state, :same_screen, :synthetic)
-          def event_type
-            :button_release_event
-          end
         end
         
         def encode_button_release_event (detail, time, root, event, child, root_x, root_y, event_x, event_y, state, same_screen)
@@ -2546,19 +2532,13 @@ module Alembic
         end
         
         def decode_button_release_event (s)
-          x = ButtonReleaseEvent.new
+          x = HashWithMethodMissing.new
           x[:detail], x[:time], x[:root], x[:event], x[:child], x[:root_x], x[:root_y], x[:event_x], x[:event_y], x[:state], x[:same_screen], = s.slice!(0, 29).unpack("CLLLLssssSCx1")
           x[:root] = Window[self, x[:root]]
           x[:event] = Window[self, x[:event]]
           x[:child] = Window[self, x[:child]]
           x[:same_screen] = x[:same_screen] != 0
           x
-        end
-        
-        class MotionNotifyEvent < Struct.new(:detail, :time, :root, :event, :child, :root_x, :root_y, :event_x, :event_y, :state, :same_screen, :synthetic)
-          def event_type
-            :motion_notify_event
-          end
         end
         
         def encode_motion_notify_event (detail, time, root, event, child, root_x, root_y, event_x, event_y, state, same_screen)
@@ -2570,19 +2550,13 @@ module Alembic
         end
         
         def decode_motion_notify_event (s)
-          x = MotionNotifyEvent.new
+          x = HashWithMethodMissing.new
           x[:detail], x[:time], x[:root], x[:event], x[:child], x[:root_x], x[:root_y], x[:event_x], x[:event_y], x[:state], x[:same_screen], = s.slice!(0, 29).unpack("CLLLLssssSCx1")
           x[:root] = Window[self, x[:root]]
           x[:event] = Window[self, x[:event]]
           x[:child] = Window[self, x[:child]]
           x[:same_screen] = x[:same_screen] != 0
           x
-        end
-        
-        class EnterNotifyEvent < Struct.new(:detail, :time, :root, :event, :child, :root_x, :root_y, :event_x, :event_y, :state, :mode, :same_screen_focus, :synthetic)
-          def event_type
-            :enter_notify_event
-          end
         end
         
         def encode_enter_notify_event (detail, time, root, event, child, root_x, root_y, event_x, event_y, state, mode, same_screen_focus)
@@ -2594,18 +2568,12 @@ module Alembic
         end
         
         def decode_enter_notify_event (s)
-          x = EnterNotifyEvent.new
+          x = HashWithMethodMissing.new
           x[:detail], x[:time], x[:root], x[:event], x[:child], x[:root_x], x[:root_y], x[:event_x], x[:event_y], x[:state], x[:mode], x[:same_screen_focus], = s.slice!(0, 29).unpack("CLLLLssssSCC")
           x[:root] = Window[self, x[:root]]
           x[:event] = Window[self, x[:event]]
           x[:child] = Window[self, x[:child]]
           x
-        end
-        
-        class LeaveNotifyEvent < Struct.new(:detail, :time, :root, :event, :child, :root_x, :root_y, :event_x, :event_y, :state, :mode, :same_screen_focus, :synthetic)
-          def event_type
-            :leave_notify_event
-          end
         end
         
         def encode_leave_notify_event (detail, time, root, event, child, root_x, root_y, event_x, event_y, state, mode, same_screen_focus)
@@ -2617,18 +2585,12 @@ module Alembic
         end
         
         def decode_leave_notify_event (s)
-          x = LeaveNotifyEvent.new
+          x = HashWithMethodMissing.new
           x[:detail], x[:time], x[:root], x[:event], x[:child], x[:root_x], x[:root_y], x[:event_x], x[:event_y], x[:state], x[:mode], x[:same_screen_focus], = s.slice!(0, 29).unpack("CLLLLssssSCC")
           x[:root] = Window[self, x[:root]]
           x[:event] = Window[self, x[:event]]
           x[:child] = Window[self, x[:child]]
           x
-        end
-        
-        class FocusInEvent < Struct.new(:detail, :event, :mode, :synthetic)
-          def event_type
-            :focus_in_event
-          end
         end
         
         def encode_focus_in_event (detail, event, mode)
@@ -2640,16 +2602,10 @@ module Alembic
         end
         
         def decode_focus_in_event (s)
-          x = FocusInEvent.new
+          x = HashWithMethodMissing.new
           x[:detail], x[:event], x[:mode], = s.slice!(0, 9).unpack("CLCx3")
           x[:event] = Window[self, x[:event]]
           x
-        end
-        
-        class FocusOutEvent < Struct.new(:detail, :event, :mode, :synthetic)
-          def event_type
-            :focus_out_event
-          end
         end
         
         def encode_focus_out_event (detail, event, mode)
@@ -2661,16 +2617,10 @@ module Alembic
         end
         
         def decode_focus_out_event (s)
-          x = FocusOutEvent.new
+          x = HashWithMethodMissing.new
           x[:detail], x[:event], x[:mode], = s.slice!(0, 9).unpack("CLCx3")
           x[:event] = Window[self, x[:event]]
           x
-        end
-        
-        class KeymapNotifyEvent < Struct.new(:keys, :synthetic)
-          def event_type
-            :keymap_notify_event
-          end
         end
         
         def encode_keymap_notify_event (keys)
@@ -2682,15 +2632,9 @@ module Alembic
         end
         
         def decode_keymap_notify_event (s)
-          x = KeymapNotifyEvent.new
+          x = HashWithMethodMissing.new
           x[:keys] = s.slice!(0..31).unpack('C*')
           x
-        end
-        
-        class ExposeEvent < Struct.new(:window, :x, :y, :width, :height, :count, :synthetic)
-          def event_type
-            :expose_event
-          end
         end
         
         def encode_expose_event (window, x, y, width, height, count)
@@ -2702,16 +2646,10 @@ module Alembic
         end
         
         def decode_expose_event (s)
-          x = ExposeEvent.new
+          x = HashWithMethodMissing.new
           x[:window], x[:x], x[:y], x[:width], x[:height], x[:count], = s.slice!(0, 17).unpack("x1LSSSSSx2")
           x[:window] = Window[self, x[:window]]
           x
-        end
-        
-        class GraphicsExposureEvent < Struct.new(:drawable, :x, :y, :width, :height, :minor_opcode, :count, :major_opcode, :synthetic)
-          def event_type
-            :graphics_exposure_event
-          end
         end
         
         def encode_graphics_exposure_event (drawable, x, y, width, height, minor_opcode, count, major_opcode)
@@ -2723,16 +2661,10 @@ module Alembic
         end
         
         def decode_graphics_exposure_event (s)
-          x = GraphicsExposureEvent.new
+          x = HashWithMethodMissing.new
           x[:drawable], x[:x], x[:y], x[:width], x[:height], x[:minor_opcode], x[:count], x[:major_opcode], = s.slice!(0, 21).unpack("x1LSSSSSSCx3")
           x[:drawable] = Drawable[self, x[:drawable]]
           x
-        end
-        
-        class NoExposureEvent < Struct.new(:drawable, :minor_opcode, :major_opcode, :synthetic)
-          def event_type
-            :no_exposure_event
-          end
         end
         
         def encode_no_exposure_event (drawable, minor_opcode, major_opcode)
@@ -2744,16 +2676,10 @@ module Alembic
         end
         
         def decode_no_exposure_event (s)
-          x = NoExposureEvent.new
+          x = HashWithMethodMissing.new
           x[:drawable], x[:minor_opcode], x[:major_opcode], = s.slice!(0, 9).unpack("x1LSCx1")
           x[:drawable] = Drawable[self, x[:drawable]]
           x
-        end
-        
-        class VisibilityNotifyEvent < Struct.new(:window, :state, :synthetic)
-          def event_type
-            :visibility_notify_event
-          end
         end
         
         def encode_visibility_notify_event (window, state)
@@ -2765,16 +2691,10 @@ module Alembic
         end
         
         def decode_visibility_notify_event (s)
-          x = VisibilityNotifyEvent.new
+          x = HashWithMethodMissing.new
           x[:window], x[:state], = s.slice!(0, 9).unpack("x1LCx3")
           x[:window] = Window[self, x[:window]]
           x
-        end
-        
-        class CreateNotifyEvent < Struct.new(:parent, :window, :x, :y, :width, :height, :border_width, :override_redirect, :synthetic)
-          def event_type
-            :create_notify_event
-          end
         end
         
         def encode_create_notify_event (parent, window, x, y, width, height, border_width, override_redirect)
@@ -2786,18 +2706,12 @@ module Alembic
         end
         
         def decode_create_notify_event (s)
-          x = CreateNotifyEvent.new
+          x = HashWithMethodMissing.new
           x[:parent], x[:window], x[:x], x[:y], x[:width], x[:height], x[:border_width], x[:override_redirect], = s.slice!(0, 21).unpack("x1LLssSSSCx1")
           x[:parent] = Window[self, x[:parent]]
           x[:window] = Window[self, x[:window]]
           x[:override_redirect] = x[:override_redirect] != 0
           x
-        end
-        
-        class DestroyNotifyEvent < Struct.new(:event, :window, :synthetic)
-          def event_type
-            :destroy_notify_event
-          end
         end
         
         def encode_destroy_notify_event (event, window)
@@ -2809,17 +2723,11 @@ module Alembic
         end
         
         def decode_destroy_notify_event (s)
-          x = DestroyNotifyEvent.new
+          x = HashWithMethodMissing.new
           x[:event], x[:window], = s.slice!(0, 9).unpack("x1LL")
           x[:event] = Window[self, x[:event]]
           x[:window] = Window[self, x[:window]]
           x
-        end
-        
-        class UnmapNotifyEvent < Struct.new(:event, :window, :from_configure, :synthetic)
-          def event_type
-            :unmap_notify_event
-          end
         end
         
         def encode_unmap_notify_event (event, window, from_configure)
@@ -2831,18 +2739,12 @@ module Alembic
         end
         
         def decode_unmap_notify_event (s)
-          x = UnmapNotifyEvent.new
+          x = HashWithMethodMissing.new
           x[:event], x[:window], x[:from_configure], = s.slice!(0, 13).unpack("x1LLCx3")
           x[:event] = Window[self, x[:event]]
           x[:window] = Window[self, x[:window]]
           x[:from_configure] = x[:from_configure] != 0
           x
-        end
-        
-        class MapNotifyEvent < Struct.new(:event, :window, :override_redirect, :synthetic)
-          def event_type
-            :map_notify_event
-          end
         end
         
         def encode_map_notify_event (event, window, override_redirect)
@@ -2854,18 +2756,12 @@ module Alembic
         end
         
         def decode_map_notify_event (s)
-          x = MapNotifyEvent.new
+          x = HashWithMethodMissing.new
           x[:event], x[:window], x[:override_redirect], = s.slice!(0, 13).unpack("x1LLCx3")
           x[:event] = Window[self, x[:event]]
           x[:window] = Window[self, x[:window]]
           x[:override_redirect] = x[:override_redirect] != 0
           x
-        end
-        
-        class MapRequestEvent < Struct.new(:parent, :window, :synthetic)
-          def event_type
-            :map_request_event
-          end
         end
         
         def encode_map_request_event (parent, window)
@@ -2877,17 +2773,11 @@ module Alembic
         end
         
         def decode_map_request_event (s)
-          x = MapRequestEvent.new
+          x = HashWithMethodMissing.new
           x[:parent], x[:window], = s.slice!(0, 9).unpack("x1LL")
           x[:parent] = Window[self, x[:parent]]
           x[:window] = Window[self, x[:window]]
           x
-        end
-        
-        class ReparentNotifyEvent < Struct.new(:event, :window, :parent, :x, :y, :override_redirect, :synthetic)
-          def event_type
-            :reparent_notify_event
-          end
         end
         
         def encode_reparent_notify_event (event, window, parent, x, y, override_redirect)
@@ -2899,19 +2789,13 @@ module Alembic
         end
         
         def decode_reparent_notify_event (s)
-          x = ReparentNotifyEvent.new
+          x = HashWithMethodMissing.new
           x[:event], x[:window], x[:parent], x[:x], x[:y], x[:override_redirect], = s.slice!(0, 21).unpack("x1LLLssCx3")
           x[:event] = Window[self, x[:event]]
           x[:window] = Window[self, x[:window]]
           x[:parent] = Window[self, x[:parent]]
           x[:override_redirect] = x[:override_redirect] != 0
           x
-        end
-        
-        class ConfigureNotifyEvent < Struct.new(:event, :window, :above_sibling, :x, :y, :width, :height, :border_width, :override_redirect, :synthetic)
-          def event_type
-            :configure_notify_event
-          end
         end
         
         def encode_configure_notify_event (event, window, above_sibling, x, y, width, height, border_width, override_redirect)
@@ -2923,19 +2807,13 @@ module Alembic
         end
         
         def decode_configure_notify_event (s)
-          x = ConfigureNotifyEvent.new
+          x = HashWithMethodMissing.new
           x[:event], x[:window], x[:above_sibling], x[:x], x[:y], x[:width], x[:height], x[:border_width], x[:override_redirect], = s.slice!(0, 25).unpack("x1LLLssSSSCx1")
           x[:event] = Window[self, x[:event]]
           x[:window] = Window[self, x[:window]]
           x[:above_sibling] = Window[self, x[:above_sibling]]
           x[:override_redirect] = x[:override_redirect] != 0
           x
-        end
-        
-        class ConfigureRequestEvent < Struct.new(:stack_mode, :parent, :window, :sibling, :x, :y, :width, :height, :border_width, :value_mask, :synthetic)
-          def event_type
-            :configure_request_event
-          end
         end
         
         def encode_configure_request_event (stack_mode, parent, window, sibling, x, y, width, height, border_width, value_mask)
@@ -2947,18 +2825,12 @@ module Alembic
         end
         
         def decode_configure_request_event (s)
-          x = ConfigureRequestEvent.new
+          x = HashWithMethodMissing.new
           x[:stack_mode], x[:parent], x[:window], x[:sibling], x[:x], x[:y], x[:width], x[:height], x[:border_width], x[:value_mask], = s.slice!(0, 25).unpack("CLLLssSSSS")
           x[:parent] = Window[self, x[:parent]]
           x[:window] = Window[self, x[:window]]
           x[:sibling] = Window[self, x[:sibling]]
           x
-        end
-        
-        class GravityNotifyEvent < Struct.new(:event, :window, :x, :y, :synthetic)
-          def event_type
-            :gravity_notify_event
-          end
         end
         
         def encode_gravity_notify_event (event, window, x, y)
@@ -2970,17 +2842,11 @@ module Alembic
         end
         
         def decode_gravity_notify_event (s)
-          x = GravityNotifyEvent.new
+          x = HashWithMethodMissing.new
           x[:event], x[:window], x[:x], x[:y], = s.slice!(0, 13).unpack("x1LLss")
           x[:event] = Window[self, x[:event]]
           x[:window] = Window[self, x[:window]]
           x
-        end
-        
-        class ResizeRequestEvent < Struct.new(:window, :width, :height, :synthetic)
-          def event_type
-            :resize_request_event
-          end
         end
         
         def encode_resize_request_event (window, width, height)
@@ -2992,16 +2858,10 @@ module Alembic
         end
         
         def decode_resize_request_event (s)
-          x = ResizeRequestEvent.new
+          x = HashWithMethodMissing.new
           x[:window], x[:width], x[:height], = s.slice!(0, 9).unpack("x1LSS")
           x[:window] = Window[self, x[:window]]
           x
-        end
-        
-        class CirculateNotifyEvent < Struct.new(:event, :window, :place, :synthetic)
-          def event_type
-            :circulate_notify_event
-          end
         end
         
         def encode_circulate_notify_event (event, window, place)
@@ -3013,17 +2873,11 @@ module Alembic
         end
         
         def decode_circulate_notify_event (s)
-          x = CirculateNotifyEvent.new
+          x = HashWithMethodMissing.new
           x[:event], x[:window], x[:place], = s.slice!(0, 17).unpack("x1LLx4Cx3")
           x[:event] = Window[self, x[:event]]
           x[:window] = Window[self, x[:window]]
           x
-        end
-        
-        class CirculateRequestEvent < Struct.new(:event, :window, :place, :synthetic)
-          def event_type
-            :circulate_request_event
-          end
         end
         
         def encode_circulate_request_event (event, window, place)
@@ -3035,17 +2889,11 @@ module Alembic
         end
         
         def decode_circulate_request_event (s)
-          x = CirculateRequestEvent.new
+          x = HashWithMethodMissing.new
           x[:event], x[:window], x[:place], = s.slice!(0, 17).unpack("x1LLx4Cx3")
           x[:event] = Window[self, x[:event]]
           x[:window] = Window[self, x[:window]]
           x
-        end
-        
-        class PropertyNotifyEvent < Struct.new(:window, :atom, :time, :state, :synthetic)
-          def event_type
-            :property_notify_event
-          end
         end
         
         def encode_property_notify_event (window, atom, time, state)
@@ -3057,17 +2905,11 @@ module Alembic
         end
         
         def decode_property_notify_event (s)
-          x = PropertyNotifyEvent.new
+          x = HashWithMethodMissing.new
           x[:window], x[:atom], x[:time], x[:state], = s.slice!(0, 17).unpack("x1LLLCx3")
           x[:window] = Window[self, x[:window]]
           x[:atom] = Atom[self, x[:atom]]
           x
-        end
-        
-        class SelectionClearEvent < Struct.new(:time, :owner, :selection, :synthetic)
-          def event_type
-            :selection_clear_event
-          end
         end
         
         def encode_selection_clear_event (time, owner, selection)
@@ -3079,17 +2921,11 @@ module Alembic
         end
         
         def decode_selection_clear_event (s)
-          x = SelectionClearEvent.new
+          x = HashWithMethodMissing.new
           x[:time], x[:owner], x[:selection], = s.slice!(0, 13).unpack("x1LLL")
           x[:owner] = Window[self, x[:owner]]
           x[:selection] = Atom[self, x[:selection]]
           x
-        end
-        
-        class SelectionRequestEvent < Struct.new(:time, :owner, :requestor, :selection, :target, :property, :synthetic)
-          def event_type
-            :selection_request_event
-          end
         end
         
         def encode_selection_request_event (time, owner, requestor, selection, target, property)
@@ -3101,7 +2937,7 @@ module Alembic
         end
         
         def decode_selection_request_event (s)
-          x = SelectionRequestEvent.new
+          x = HashWithMethodMissing.new
           x[:time], x[:owner], x[:requestor], x[:selection], x[:target], x[:property], = s.slice!(0, 25).unpack("x1LLLLLL")
           x[:owner] = Window[self, x[:owner]]
           x[:requestor] = Window[self, x[:requestor]]
@@ -3109,12 +2945,6 @@ module Alembic
           x[:target] = Atom[self, x[:target]]
           x[:property] = Atom[self, x[:property]]
           x
-        end
-        
-        class SelectionNotifyEvent < Struct.new(:time, :requestor, :selection, :target, :property, :synthetic)
-          def event_type
-            :selection_notify_event
-          end
         end
         
         def encode_selection_notify_event (time, requestor, selection, target, property)
@@ -3126,19 +2956,13 @@ module Alembic
         end
         
         def decode_selection_notify_event (s)
-          x = SelectionNotifyEvent.new
+          x = HashWithMethodMissing.new
           x[:time], x[:requestor], x[:selection], x[:target], x[:property], = s.slice!(0, 21).unpack("x1LLLLL")
           x[:requestor] = Window[self, x[:requestor]]
           x[:selection] = Atom[self, x[:selection]]
           x[:target] = Atom[self, x[:target]]
           x[:property] = Atom[self, x[:property]]
           x
-        end
-        
-        class ColormapNotifyEvent < Struct.new(:window, :colormap, :new, :state, :synthetic)
-          def event_type
-            :colormap_notify_event
-          end
         end
         
         def encode_colormap_notify_event (window, colormap, new, state)
@@ -3150,18 +2974,12 @@ module Alembic
         end
         
         def decode_colormap_notify_event (s)
-          x = ColormapNotifyEvent.new
+          x = HashWithMethodMissing.new
           x[:window], x[:colormap], x[:new], x[:state], = s.slice!(0, 13).unpack("x1LLCCx2")
           x[:window] = Window[self, x[:window]]
           x[:colormap] = Colormap[self, x[:colormap]]
           x[:new] = x[:new] != 0
           x
-        end
-        
-        class ClientMessageEvent < Struct.new(:format, :window, :type, :data, :synthetic)
-          def event_type
-            :client_message_event
-          end
         end
         
         def encode_client_message_event (format, window, type, data)
@@ -3174,18 +2992,12 @@ module Alembic
         end
         
         def decode_client_message_event (s)
-          x = ClientMessageEvent.new
+          x = HashWithMethodMissing.new
           x[:format], x[:window], x[:type], = s.slice!(0, 9).unpack("CLL")
           x[:window] = Window[self, x[:window]]
           x[:type] = Atom[self, x[:type]]
           x[:data] = decode_client_message_data(s)
           x
-        end
-        
-        class MappingNotifyEvent < Struct.new(:request, :first_keycode, :count, :synthetic)
-          def event_type
-            :mapping_notify_event
-          end
         end
         
         def encode_mapping_notify_event (request, first_keycode, count)
@@ -3197,15 +3009,9 @@ module Alembic
         end
         
         def decode_mapping_notify_event (s)
-          x = MappingNotifyEvent.new
+          x = HashWithMethodMissing.new
           x[:request], x[:first_keycode], x[:count], = s.slice!(0, 5).unpack("x1CCCx1")
           x
-        end
-        
-        class GeGenericEvent < Struct.new(:synthetic)
-          def event_type
-            :ge_generic_event
-          end
         end
         
         def encode_ge_generic_event ()
@@ -3216,12 +3022,10 @@ module Alembic
         end
         
         def decode_ge_generic_event (s)
-          x = GeGenericEvent.new
+          x = HashWithMethodMissing.new
           s.slice!(0, 22)
           x
         end
-        
-        Char2b = Struct.new(:byte1, :byte2)
         
         def encode_char2b (s, byte1, byte2)
           s << [byte1, byte2].pack("CC")
@@ -3229,12 +3033,10 @@ module Alembic
         end
         
         def decode_char2b (s)
-          x = Char2b.new
+          x = HashWithMethodMissing.new
           x[:byte1], x[:byte2], = s.slice!(0, 2).unpack("CC")
           x
         end
-        
-        Point = Struct.new(:x, :y)
         
         def encode_point (s, x, y)
           s << [x, y].pack("ss")
@@ -3242,12 +3044,10 @@ module Alembic
         end
         
         def decode_point (s)
-          x = Point.new
+          x = HashWithMethodMissing.new
           x[:x], x[:y], = s.slice!(0, 4).unpack("ss")
           x
         end
-        
-        Rectangle = Struct.new(:x, :y, :width, :height)
         
         def encode_rectangle (s, x, y, width, height)
           s << [x, y, width, height].pack("ssSS")
@@ -3255,12 +3055,10 @@ module Alembic
         end
         
         def decode_rectangle (s)
-          x = Rectangle.new
+          x = HashWithMethodMissing.new
           x[:x], x[:y], x[:width], x[:height], = s.slice!(0, 8).unpack("ssSS")
           x
         end
-        
-        Arc = Struct.new(:x, :y, :width, :height, :angle1, :angle2)
         
         def encode_arc (s, x, y, width, height, angle1, angle2)
           s << [x, y, width, height, angle1, angle2].pack("ssSSss")
@@ -3268,12 +3066,10 @@ module Alembic
         end
         
         def decode_arc (s)
-          x = Arc.new
+          x = HashWithMethodMissing.new
           x[:x], x[:y], x[:width], x[:height], x[:angle1], x[:angle2], = s.slice!(0, 12).unpack("ssSSss")
           x
         end
-        
-        Format = Struct.new(:depth, :bits_per_pixel, :scanline_pad)
         
         def encode_format (s, depth, bits_per_pixel, scanline_pad)
           s << [depth, bits_per_pixel, scanline_pad].pack("CCCx5")
@@ -3281,12 +3077,10 @@ module Alembic
         end
         
         def decode_format (s)
-          x = Format.new
+          x = HashWithMethodMissing.new
           x[:depth], x[:bits_per_pixel], x[:scanline_pad], = s.slice!(0, 8).unpack("CCCx5")
           x
         end
-        
-        Visualtype = Struct.new(:visual_id, :klass, :bits_per_rgb_value, :colormap_entries, :red_mask, :green_mask, :blue_mask)
         
         def encode_visualtype (s, visual_id, klass, bits_per_rgb_value, colormap_entries, red_mask, green_mask, blue_mask)
           s << [visual_id, klass, bits_per_rgb_value, colormap_entries, red_mask, green_mask, blue_mask].pack("LCCSLLLx4")
@@ -3294,12 +3088,10 @@ module Alembic
         end
         
         def decode_visualtype (s)
-          x = Visualtype.new
+          x = HashWithMethodMissing.new
           x[:visual_id], x[:klass], x[:bits_per_rgb_value], x[:colormap_entries], x[:red_mask], x[:green_mask], x[:blue_mask], = s.slice!(0, 24).unpack("LCCSLLLx4")
           x
         end
-        
-        Depth = Struct.new(:depth, :visuals_len, :visuals)
         
         def encode_depth (s, depth, visuals)
           visuals_len = visuals.length
@@ -3309,13 +3101,11 @@ module Alembic
         end
         
         def decode_depth (s)
-          x = Depth.new
+          x = HashWithMethodMissing.new
           x[:depth], x[:visuals_len], = s.slice!(0, 8).unpack("Cx1Sx4")
           x[:visuals] = x[:visuals_len].times.map{decode_visualtype(s)}
           x
         end
-        
-        Screen = Struct.new(:root, :default_colormap, :white_pixel, :black_pixel, :current_input_masks, :width_in_pixels, :height_in_pixels, :width_in_millimeters, :height_in_millimeters, :min_installed_maps, :max_installed_maps, :root_visual, :backing_stores, :save_unders, :root_depth, :allowed_depths_len, :allowed_depths)
         
         def encode_screen (s, root, default_colormap, white_pixel, black_pixel, current_input_masks, width_in_pixels, height_in_pixels, width_in_millimeters, height_in_millimeters, min_installed_maps, max_installed_maps, root_visual, backing_stores, save_unders, root_depth, allowed_depths)
           allowed_depths_len = allowed_depths.length
@@ -3325,7 +3115,7 @@ module Alembic
         end
         
         def decode_screen (s)
-          x = Screen.new
+          x = HashWithMethodMissing.new
           x[:root], x[:default_colormap], x[:white_pixel], x[:black_pixel], x[:current_input_masks], x[:width_in_pixels], x[:height_in_pixels], x[:width_in_millimeters], x[:height_in_millimeters], x[:min_installed_maps], x[:max_installed_maps], x[:root_visual], x[:backing_stores], x[:save_unders], x[:root_depth], x[:allowed_depths_len], = s.slice!(0, 40).unpack("LLLLLSSSSSSLCCCC")
           x[:root] = Window[self, x[:root]]
           x[:default_colormap] = Colormap[self, x[:default_colormap]]
@@ -3334,39 +3124,36 @@ module Alembic
           x
         end
         
-        SetupRequest = Struct.new(:byte_order, :protocol_major_version, :protocol_minor_version, :authorization_protocol_name_len, :authorization_protocol_data_len, :authorization_protocol_name, :authorization_protocol_data)
-        
         def encode_setup_request (s, byte_order, protocol_major_version, protocol_minor_version, authorization_protocol_name, authorization_protocol_data)
-          authorization_protocol_name_len = authorization_protocol_name.length
-          authorization_protocol_data_len = authorization_protocol_data.length
+          authorization_protocol_name = authorization_protocol_name.force_encoding('BINARY')
+          authorization_protocol_name_len = authorization_protocol_name.bytesize
+          authorization_protocol_data = authorization_protocol_data.force_encoding('BINARY')
+          authorization_protocol_data_len = authorization_protocol_data.bytesize
           s << [byte_order, protocol_major_version, protocol_minor_version, authorization_protocol_name_len, authorization_protocol_data_len, pad(authorization_protocol_name), pad(authorization_protocol_data)].pack("Cx1SSSSx2A*A*")
           s
         end
         
         def decode_setup_request (s)
-          x = SetupRequest.new
+          x = HashWithMethodMissing.new
           x[:byte_order], x[:protocol_major_version], x[:protocol_minor_version], x[:authorization_protocol_name_len], x[:authorization_protocol_data_len], = s.slice!(0, 12).unpack("Cx1SSSSx2")
           x[:authorization_protocol_name] = s.slice!(0, x[:authorization_protocol_name_len])
           x[:authorization_protocol_data] = s.slice!(0, x[:authorization_protocol_data_len])
           x
         end
         
-        SetupFailed = Struct.new(:status, :reason_len, :protocol_major_version, :protocol_minor_version, :length, :reason)
-        
         def encode_setup_failed (s, status, protocol_major_version, protocol_minor_version, length, reason)
-          reason_len = reason.length
+          reason = reason.force_encoding('BINARY')
+          reason_len = reason.bytesize
           s << [status, reason_len, protocol_major_version, protocol_minor_version, length, pad(reason)].pack("CCSSSA*")
           s
         end
         
         def decode_setup_failed (s)
-          x = SetupFailed.new
+          x = HashWithMethodMissing.new
           x[:status], x[:reason_len], x[:protocol_major_version], x[:protocol_minor_version], x[:length], = s.slice!(0, 8).unpack("CCSSS")
           x[:reason] = s.slice!(0, x[:reason_len])
           x
         end
-        
-        SetupAuthenticate = Struct.new(:status, :length, :reason)
         
         def encode_setup_authenticate (s, status, length, reason)
           s << [status, length, pad(reason)].pack("Cx5SA*")
@@ -3374,16 +3161,15 @@ module Alembic
         end
         
         def decode_setup_authenticate (s)
-          x = SetupAuthenticate.new
+          x = HashWithMethodMissing.new
           x[:status], x[:length], = s.slice!(0, 8).unpack("Cx5S")
           x[:reason] = s.slice!(0, (x[:length] * 4))
           x
         end
         
-        Setup = Struct.new(:status, :protocol_major_version, :protocol_minor_version, :length, :release_number, :resource_id_base, :resource_id_mask, :motion_buffer_size, :vendor_len, :maximum_request_length, :roots_len, :pixmap_formats_len, :image_byte_order, :bitmap_format_bit_order, :bitmap_format_scanline_unit, :bitmap_format_scanline_pad, :min_keycode, :max_keycode, :vendor, :pixmap_formats, :roots)
-        
         def encode_setup (s, status, protocol_major_version, protocol_minor_version, length, release_number, resource_id_base, resource_id_mask, motion_buffer_size, maximum_request_length, image_byte_order, bitmap_format_bit_order, bitmap_format_scanline_unit, bitmap_format_scanline_pad, min_keycode, max_keycode, vendor, pixmap_formats, roots)
-          vendor_len = vendor.length
+          vendor = vendor.force_encoding('BINARY')
+          vendor_len = vendor.bytesize
           pixmap_formats_len = pixmap_formats.length
           roots_len = roots.length
           s << [status, protocol_major_version, protocol_minor_version, length, release_number, resource_id_base, resource_id_mask, motion_buffer_size, vendor_len, maximum_request_length, roots_len, pixmap_formats_len, image_byte_order, bitmap_format_bit_order, bitmap_format_scanline_unit, bitmap_format_scanline_pad, min_keycode, max_keycode, pad(vendor)].pack("Cx1SSSLLLLSSCCCCCCCCx4A*")
@@ -3393,7 +3179,7 @@ module Alembic
         end
         
         def decode_setup (s)
-          x = Setup.new
+          x = HashWithMethodMissing.new
           x[:status], x[:protocol_major_version], x[:protocol_minor_version], x[:length], x[:release_number], x[:resource_id_base], x[:resource_id_mask], x[:motion_buffer_size], x[:vendor_len], x[:maximum_request_length], x[:roots_len], x[:pixmap_formats_len], x[:image_byte_order], x[:bitmap_format_bit_order], x[:bitmap_format_scanline_unit], x[:bitmap_format_scanline_pad], x[:min_keycode], x[:max_keycode], = s.slice!(0, 40).unpack("Cx1SSSLLLLSSCCCCCCCCx4")
           x[:vendor] = s.slice!(0, x[:vendor_len])
           x[:pixmap_formats] = x[:pixmap_formats_len].times.map{decode_format(s)}
@@ -3401,20 +3187,16 @@ module Alembic
           x
         end
         
-        Timecoord = Struct.new(:time, :x, :y)
-        
         def encode_timecoord (s, time, x, y)
           s << [time, x, y].pack("Lss")
           s
         end
         
         def decode_timecoord (s)
-          x = Timecoord.new
+          x = HashWithMethodMissing.new
           x[:time], x[:x], x[:y], = s.slice!(0, 8).unpack("Lss")
           x
         end
-        
-        Fontprop = Struct.new(:name, :value)
         
         def encode_fontprop (s, name, value)
           s << [Atom.to_xid(self, name), value].pack("LL")
@@ -3422,13 +3204,11 @@ module Alembic
         end
         
         def decode_fontprop (s)
-          x = Fontprop.new
+          x = HashWithMethodMissing.new
           x[:name], x[:value], = s.slice!(0, 8).unpack("LL")
           x[:name] = Atom[self, x[:name]]
           x
         end
-        
-        Charinfo = Struct.new(:left_side_bearing, :right_side_bearing, :character_width, :ascent, :descent, :attributes)
         
         def encode_charinfo (s, left_side_bearing, right_side_bearing, character_width, ascent, descent, attributes)
           s << [left_side_bearing, right_side_bearing, character_width, ascent, descent, attributes].pack("sssssS")
@@ -3436,27 +3216,24 @@ module Alembic
         end
         
         def decode_charinfo (s)
-          x = Charinfo.new
+          x = HashWithMethodMissing.new
           x[:left_side_bearing], x[:right_side_bearing], x[:character_width], x[:ascent], x[:descent], x[:attributes], = s.slice!(0, 12).unpack("sssssS")
           x
         end
         
-        Str = Struct.new(:name_len, :name)
-        
         def encode_str (s, name)
-          name_len = name.length
+          name = name.force_encoding('BINARY')
+          name_len = name.bytesize
           s << [name_len, pad(name)].pack("CA*")
           s
         end
         
         def decode_str (s)
-          x = Str.new
+          x = HashWithMethodMissing.new
           x[:name_len], = s.slice!(0, 1).unpack("C")
           x[:name] = s.slice!(0, x[:name_len])
           x
         end
-        
-        Segment = Struct.new(:x1, :y1, :x2, :y2)
         
         def encode_segment (s, x1, y1, x2, y2)
           s << [x1, y1, x2, y2].pack("ssss")
@@ -3464,12 +3241,10 @@ module Alembic
         end
         
         def decode_segment (s)
-          x = Segment.new
+          x = HashWithMethodMissing.new
           x[:x1], x[:y1], x[:x2], x[:y2], = s.slice!(0, 8).unpack("ssss")
           x
         end
-        
-        Coloritem = Struct.new(:pixel, :red, :green, :blue, :flags)
         
         def encode_coloritem (s, pixel, red, green, blue, flags)
           s << [pixel, red, green, blue, flags].pack("LSSSCx1")
@@ -3477,12 +3252,10 @@ module Alembic
         end
         
         def decode_coloritem (s)
-          x = Coloritem.new
+          x = HashWithMethodMissing.new
           x[:pixel], x[:red], x[:green], x[:blue], x[:flags], = s.slice!(0, 12).unpack("LSSSCx1")
           x
         end
-        
-        Rgb = Struct.new(:red, :green, :blue)
         
         def encode_rgb (s, red, green, blue)
           s << [red, green, blue].pack("SSSx2")
@@ -3490,21 +3263,20 @@ module Alembic
         end
         
         def decode_rgb (s)
-          x = Rgb.new
+          x = HashWithMethodMissing.new
           x[:red], x[:green], x[:blue], = s.slice!(0, 8).unpack("SSSx2")
           x
         end
         
-        Host = Struct.new(:family, :address_len, :address)
-        
         def encode_host (s, family, address)
-          address_len = address.length
+          address = address.force_encoding('BINARY')
+          address_len = address.bytesize
           s << [family, address_len, pad(address)].pack("Cx1SA*")
           s
         end
         
         def decode_host (s)
-          x = Host.new
+          x = HashWithMethodMissing.new
           x[:family], x[:address_len], = s.slice!(0, 4).unpack("Cx1S")
           x[:address] = s.slice!(0, x[:address_len])
           x
@@ -3735,8 +3507,14 @@ module Alembic
       end
       
       class Xproto::Gcontext
-        def copy_gc (dst_gc, value_mask)
-          connection.copy_gc(self, dst_gc, value_mask)
+        def change_gc (value_hash = {})
+          connection.change_gc(self, value_hash)
+        end
+      end
+      
+      class Xproto::Gcontext
+        def copy_gc (src_gc, value_mask)
+          connection.copy_gc(src_gc, self, value_mask)
         end
       end
       
