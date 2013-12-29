@@ -21,6 +21,10 @@ module Alembic
         [name]
       end
       
+      def args
+        params
+      end
+      
       def encoder
         [
           name,

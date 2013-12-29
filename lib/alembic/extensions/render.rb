@@ -8,8 +8,8 @@ module Alembic
       # render_query_version (client_major_version, client_minor_version)
       # render_query_pict_formats ()
       # render_query_pict_index_values (format)
-      # render_create_picture (pid, drawable, format, value_mask, *value_list)
-      # render_change_picture (picture, value_mask, *value_list)
+      # render_create_picture (pid, drawable, format, value_hash = {})
+      # render_change_picture (picture, value_hash = {})
       # render_set_picture_clip_rectangles (picture, clip_x_origin, clip_y_origin, rectangles)
       # render_free_picture (picture)
       # render_composite (op, src, mask, dst, src_x, src_y, mask_x, mask_y, dst_x, dst_y, width, height)
@@ -194,7 +194,7 @@ module Alembic
         end
         
         def render_query_version (client_major_version, client_minor_version)
-          render_query_version!(client_major_version, client_minor_version).wait
+          render_query_version!(client_major_version, client_minor_version).wait.value
         end
         
         def render_query_pict_formats! ()
@@ -211,7 +211,7 @@ module Alembic
         end
         
         def render_query_pict_formats ()
-          render_query_pict_formats!().wait
+          render_query_pict_formats!().wait.value
         end
         
         def render_query_pict_index_values! (format)
@@ -227,29 +227,31 @@ module Alembic
         end
         
         def render_query_pict_index_values (format)
-          render_query_pict_index_values!(format).wait
+          render_query_pict_index_values!(format).wait.value
         end
         
-        def render_create_picture! (pid, drawable, format, value_mask, *value_list)
+        def render_create_picture! (pid, drawable, format, value_hash = {})
           s = opcodes["RENDER"].chr.encode('BINARY')
           s << 4
+          value_mask, value_list = CP.value_param(value_hash)
           s << [Picture.to_xid(self, pid), Drawable.to_xid(self, drawable), Pictformat.to_xid(self, format), value_mask, *value_list].pack("LLLLL*")
           send_request(s)
         end
         
-        def render_create_picture (pid, drawable, format, value_mask, *value_list)
-          render_create_picture!(pid, drawable, format, value_mask, *value_list)
+        def render_create_picture (pid, drawable, format, value_hash = {})
+          render_create_picture!(pid, drawable, format, value_hash).value
         end
         
-        def render_change_picture! (picture, value_mask, *value_list)
+        def render_change_picture! (picture, value_hash = {})
           s = opcodes["RENDER"].chr.encode('BINARY')
           s << 5
+          value_mask, value_list = CP.value_param(value_hash)
           s << [Picture.to_xid(self, picture), value_mask, *value_list].pack("LLL*")
           send_request(s)
         end
         
-        def render_change_picture (picture, value_mask, *value_list)
-          render_change_picture!(picture, value_mask, *value_list)
+        def render_change_picture (picture, value_hash = {})
+          render_change_picture!(picture, value_hash).value
         end
         
         def render_set_picture_clip_rectangles! (picture, clip_x_origin, clip_y_origin, rectangles)
@@ -261,7 +263,7 @@ module Alembic
         end
         
         def render_set_picture_clip_rectangles (picture, clip_x_origin, clip_y_origin, rectangles)
-          render_set_picture_clip_rectangles!(picture, clip_x_origin, clip_y_origin, rectangles)
+          render_set_picture_clip_rectangles!(picture, clip_x_origin, clip_y_origin, rectangles).value
         end
         
         def render_free_picture! (picture)
@@ -272,7 +274,7 @@ module Alembic
         end
         
         def render_free_picture (picture)
-          render_free_picture!(picture)
+          render_free_picture!(picture).value
         end
         
         def render_composite! (op, src, mask, dst, src_x, src_y, mask_x, mask_y, dst_x, dst_y, width, height)
@@ -283,7 +285,7 @@ module Alembic
         end
         
         def render_composite (op, src, mask, dst, src_x, src_y, mask_x, mask_y, dst_x, dst_y, width, height)
-          render_composite!(op, src, mask, dst, src_x, src_y, mask_x, mask_y, dst_x, dst_y, width, height)
+          render_composite!(op, src, mask, dst, src_x, src_y, mask_x, mask_y, dst_x, dst_y, width, height).value
         end
         
         def render_trapezoids! (op, src, dst, mask_format, src_x, src_y, traps)
@@ -295,7 +297,7 @@ module Alembic
         end
         
         def render_trapezoids (op, src, dst, mask_format, src_x, src_y, traps)
-          render_trapezoids!(op, src, dst, mask_format, src_x, src_y, traps)
+          render_trapezoids!(op, src, dst, mask_format, src_x, src_y, traps).value
         end
         
         def render_triangles! (op, src, dst, mask_format, src_x, src_y, triangles)
@@ -307,7 +309,7 @@ module Alembic
         end
         
         def render_triangles (op, src, dst, mask_format, src_x, src_y, triangles)
-          render_triangles!(op, src, dst, mask_format, src_x, src_y, triangles)
+          render_triangles!(op, src, dst, mask_format, src_x, src_y, triangles).value
         end
         
         def render_tri_strip! (op, src, dst, mask_format, src_x, src_y, points)
@@ -319,7 +321,7 @@ module Alembic
         end
         
         def render_tri_strip (op, src, dst, mask_format, src_x, src_y, points)
-          render_tri_strip!(op, src, dst, mask_format, src_x, src_y, points)
+          render_tri_strip!(op, src, dst, mask_format, src_x, src_y, points).value
         end
         
         def render_tri_fan! (op, src, dst, mask_format, src_x, src_y, points)
@@ -331,7 +333,7 @@ module Alembic
         end
         
         def render_tri_fan (op, src, dst, mask_format, src_x, src_y, points)
-          render_tri_fan!(op, src, dst, mask_format, src_x, src_y, points)
+          render_tri_fan!(op, src, dst, mask_format, src_x, src_y, points).value
         end
         
         def render_create_glyph_set! (gsid, format)
@@ -342,7 +344,7 @@ module Alembic
         end
         
         def render_create_glyph_set (gsid, format)
-          render_create_glyph_set!(gsid, format)
+          render_create_glyph_set!(gsid, format).value
         end
         
         def render_reference_glyph_set! (gsid, existing)
@@ -353,7 +355,7 @@ module Alembic
         end
         
         def render_reference_glyph_set (gsid, existing)
-          render_reference_glyph_set!(gsid, existing)
+          render_reference_glyph_set!(gsid, existing).value
         end
         
         def render_free_glyph_set! (glyphset)
@@ -364,7 +366,7 @@ module Alembic
         end
         
         def render_free_glyph_set (glyphset)
-          render_free_glyph_set!(glyphset)
+          render_free_glyph_set!(glyphset).value
         end
         
         def render_add_glyphs! (glyphset, glyphids, glyphs, data)
@@ -380,7 +382,7 @@ module Alembic
         end
         
         def render_add_glyphs (glyphset, glyphids, glyphs, data)
-          render_add_glyphs!(glyphset, glyphids, glyphs, data)
+          render_add_glyphs!(glyphset, glyphids, glyphs, data).value
         end
         
         def render_free_glyphs! (glyphset, glyphs)
@@ -391,7 +393,7 @@ module Alembic
         end
         
         def render_free_glyphs (glyphset, glyphs)
-          render_free_glyphs!(glyphset, glyphs)
+          render_free_glyphs!(glyphset, glyphs).value
         end
         
         def render_composite_glyphs8! (op, src, dst, mask_format, glyphset, src_x, src_y, glyphcmds)
@@ -402,7 +404,7 @@ module Alembic
         end
         
         def render_composite_glyphs8 (op, src, dst, mask_format, glyphset, src_x, src_y, glyphcmds)
-          render_composite_glyphs8!(op, src, dst, mask_format, glyphset, src_x, src_y, glyphcmds)
+          render_composite_glyphs8!(op, src, dst, mask_format, glyphset, src_x, src_y, glyphcmds).value
         end
         
         def render_composite_glyphs16! (op, src, dst, mask_format, glyphset, src_x, src_y, glyphcmds)
@@ -413,7 +415,7 @@ module Alembic
         end
         
         def render_composite_glyphs16 (op, src, dst, mask_format, glyphset, src_x, src_y, glyphcmds)
-          render_composite_glyphs16!(op, src, dst, mask_format, glyphset, src_x, src_y, glyphcmds)
+          render_composite_glyphs16!(op, src, dst, mask_format, glyphset, src_x, src_y, glyphcmds).value
         end
         
         def render_composite_glyphs32! (op, src, dst, mask_format, glyphset, src_x, src_y, glyphcmds)
@@ -424,7 +426,7 @@ module Alembic
         end
         
         def render_composite_glyphs32 (op, src, dst, mask_format, glyphset, src_x, src_y, glyphcmds)
-          render_composite_glyphs32!(op, src, dst, mask_format, glyphset, src_x, src_y, glyphcmds)
+          render_composite_glyphs32!(op, src, dst, mask_format, glyphset, src_x, src_y, glyphcmds).value
         end
         
         def render_fill_rectangles! (op, dst, color, rects)
@@ -437,7 +439,7 @@ module Alembic
         end
         
         def render_fill_rectangles (op, dst, color, rects)
-          render_fill_rectangles!(op, dst, color, rects)
+          render_fill_rectangles!(op, dst, color, rects).value
         end
         
         def render_create_cursor! (cid, source, x, y)
@@ -448,7 +450,7 @@ module Alembic
         end
         
         def render_create_cursor (cid, source, x, y)
-          render_create_cursor!(cid, source, x, y)
+          render_create_cursor!(cid, source, x, y).value
         end
         
         def render_set_picture_transform! (picture, transform)
@@ -460,7 +462,7 @@ module Alembic
         end
         
         def render_set_picture_transform (picture, transform)
-          render_set_picture_transform!(picture, transform)
+          render_set_picture_transform!(picture, transform).value
         end
         
         def render_query_filters! (drawable)
@@ -477,7 +479,7 @@ module Alembic
         end
         
         def render_query_filters (drawable)
-          render_query_filters!(drawable).wait
+          render_query_filters!(drawable).wait.value
         end
         
         def render_set_picture_filter! (picture, filter, values)
@@ -489,7 +491,7 @@ module Alembic
         end
         
         def render_set_picture_filter (picture, filter, values)
-          render_set_picture_filter!(picture, filter, values)
+          render_set_picture_filter!(picture, filter, values).value
         end
         
         def render_create_anim_cursor! (cid, cursors)
@@ -501,7 +503,7 @@ module Alembic
         end
         
         def render_create_anim_cursor (cid, cursors)
-          render_create_anim_cursor!(cid, cursors)
+          render_create_anim_cursor!(cid, cursors).value
         end
         
         def render_add_traps! (picture, x_off, y_off, traps)
@@ -513,7 +515,7 @@ module Alembic
         end
         
         def render_add_traps (picture, x_off, y_off, traps)
-          render_add_traps!(picture, x_off, y_off, traps)
+          render_add_traps!(picture, x_off, y_off, traps).value
         end
         
         def render_create_solid_fill! (picture, color)
@@ -525,7 +527,7 @@ module Alembic
         end
         
         def render_create_solid_fill (picture, color)
-          render_create_solid_fill!(picture, color)
+          render_create_solid_fill!(picture, color).value
         end
         
         def render_create_linear_gradient! (picture, p1, p2, stops, colors)
@@ -543,7 +545,7 @@ module Alembic
         end
         
         def render_create_linear_gradient (picture, p1, p2, stops, colors)
-          render_create_linear_gradient!(picture, p1, p2, stops, colors)
+          render_create_linear_gradient!(picture, p1, p2, stops, colors).value
         end
         
         def render_create_radial_gradient! (picture, inner, outer, inner_radius, outer_radius, stops, colors)
@@ -561,7 +563,7 @@ module Alembic
         end
         
         def render_create_radial_gradient (picture, inner, outer, inner_radius, outer_radius, stops, colors)
-          render_create_radial_gradient!(picture, inner, outer, inner_radius, outer_radius, stops, colors)
+          render_create_radial_gradient!(picture, inner, outer, inner_radius, outer_radius, stops, colors).value
         end
         
         def render_create_conical_gradient! (picture, center, angle, stops, colors)
@@ -578,8 +580,10 @@ module Alembic
         end
         
         def render_create_conical_gradient (picture, center, angle, stops, colors)
-          render_create_conical_gradient!(picture, center, angle, stops, colors)
+          render_create_conical_gradient!(picture, center, angle, stops, colors).value
         end
+        
+        Directformat = Struct.new(:red_shift, :red_mask, :green_shift, :green_mask, :blue_shift, :blue_mask, :alpha_shift, :alpha_mask)
         
         def encode_render_directformat (s, red_shift, red_mask, green_shift, green_mask, blue_shift, blue_mask, alpha_shift, alpha_mask)
           s << [red_shift, red_mask, green_shift, green_mask, blue_shift, blue_mask, alpha_shift, alpha_mask].pack("SSSSSSSS")
@@ -587,10 +591,12 @@ module Alembic
         end
         
         def decode_render_directformat (s)
-          x = {}
+          x = Directformat.new
           x[:red_shift], x[:red_mask], x[:green_shift], x[:green_mask], x[:blue_shift], x[:blue_mask], x[:alpha_shift], x[:alpha_mask], = s.slice!(0, 16).unpack("SSSSSSSS")
           x
         end
+        
+        Pictforminfo = Struct.new(:id, :type, :depth, :direct, :colormap)
         
         def encode_render_pictforminfo (s, id, type, depth, direct, colormap)
           s << [Pictformat.to_xid(self, id), type, depth].pack("LCCx2")
@@ -600,7 +606,7 @@ module Alembic
         end
         
         def decode_render_pictforminfo (s)
-          x = {}
+          x = Pictforminfo.new
           x[:id], x[:type], x[:depth], = s.slice!(0, 8).unpack("LCCx2")
           x[:id] = Pictformat[self, x[:id]]
           x[:direct] = decode_render_directformat(s)
@@ -609,17 +615,21 @@ module Alembic
           x
         end
         
+        Pictvisual = Struct.new(:visual, :format)
+        
         def encode_render_pictvisual (s, visual, format)
           s << [visual, Pictformat.to_xid(self, format)].pack("LL")
           s
         end
         
         def decode_render_pictvisual (s)
-          x = {}
+          x = Pictvisual.new
           x[:visual], x[:format], = s.slice!(0, 8).unpack("LL")
           x[:format] = Pictformat[self, x[:format]]
           x
         end
+        
+        Pictdepth = Struct.new(:depth, :num_visuals, :visuals)
         
         def encode_render_pictdepth (s, depth, visuals)
           num_visuals = visuals.length
@@ -629,11 +639,13 @@ module Alembic
         end
         
         def decode_render_pictdepth (s)
-          x = {}
+          x = Pictdepth.new
           x[:depth], x[:num_visuals], = s.slice!(0, 8).unpack("Cx1Sx4")
           x[:visuals] = x[:num_visuals].times.map{decode_render_pictvisual(s)}
           x
         end
+        
+        Pictscreen = Struct.new(:num_depths, :fallback, :depths)
         
         def encode_render_pictscreen (s, fallback, depths)
           num_depths = depths.length
@@ -643,12 +655,14 @@ module Alembic
         end
         
         def decode_render_pictscreen (s)
-          x = {}
+          x = Pictscreen.new
           x[:num_depths], x[:fallback], = s.slice!(0, 8).unpack("LL")
           x[:fallback] = Pictformat[self, x[:fallback]]
           x[:depths] = x[:num_depths].times.map{decode_render_pictdepth(s)}
           x
         end
+        
+        Indexvalue = Struct.new(:pixel, :red, :green, :blue, :alpha)
         
         def encode_render_indexvalue (s, pixel, red, green, blue, alpha)
           s << [pixel, red, green, blue, alpha].pack("LSSSS")
@@ -656,10 +670,12 @@ module Alembic
         end
         
         def decode_render_indexvalue (s)
-          x = {}
+          x = Indexvalue.new
           x[:pixel], x[:red], x[:green], x[:blue], x[:alpha], = s.slice!(0, 12).unpack("LSSSS")
           x
         end
+        
+        Color = Struct.new(:red, :green, :blue, :alpha)
         
         def encode_render_color (s, red, green, blue, alpha)
           s << [red, green, blue, alpha].pack("SSSS")
@@ -667,10 +683,12 @@ module Alembic
         end
         
         def decode_render_color (s)
-          x = {}
+          x = Color.new
           x[:red], x[:green], x[:blue], x[:alpha], = s.slice!(0, 8).unpack("SSSS")
           x
         end
+        
+        Pointfix = Struct.new(:x, :y)
         
         def encode_render_pointfix (s, x, y)
           s << [x, y].pack("ll")
@@ -678,10 +696,12 @@ module Alembic
         end
         
         def decode_render_pointfix (s)
-          x = {}
+          x = Pointfix.new
           x[:x], x[:y], = s.slice!(0, 8).unpack("ll")
           x
         end
+        
+        Linefix = Struct.new(:p1, :p2)
         
         def encode_render_linefix (s, p1, p2)
           s << encode_render_pointfix(''.encode('BINARY'), *p1)
@@ -690,11 +710,13 @@ module Alembic
         end
         
         def decode_render_linefix (s)
-          x = {}
+          x = Linefix.new
           x[:p1] = decode_render_pointfix(s)
           x[:p2] = decode_render_pointfix(s)
           x
         end
+        
+        Triangle = Struct.new(:p1, :p2, :p3)
         
         def encode_render_triangle (s, p1, p2, p3)
           s << encode_render_pointfix(''.encode('BINARY'), *p1)
@@ -704,12 +726,14 @@ module Alembic
         end
         
         def decode_render_triangle (s)
-          x = {}
+          x = Triangle.new
           x[:p1] = decode_render_pointfix(s)
           x[:p2] = decode_render_pointfix(s)
           x[:p3] = decode_render_pointfix(s)
           x
         end
+        
+        Trapezoid = Struct.new(:top, :bottom, :left, :right)
         
         def encode_render_trapezoid (s, top, bottom, left, right)
           s << [top, bottom].pack("ll")
@@ -719,12 +743,14 @@ module Alembic
         end
         
         def decode_render_trapezoid (s)
-          x = {}
+          x = Trapezoid.new
           x[:top], x[:bottom], = s.slice!(0, 8).unpack("ll")
           x[:left] = decode_render_linefix(s)
           x[:right] = decode_render_linefix(s)
           x
         end
+        
+        Glyphinfo = Struct.new(:width, :height, :x, :y, :x_off, :y_off)
         
         def encode_render_glyphinfo (s, width, height, x, y, x_off, y_off)
           s << [width, height, x, y, x_off, y_off].pack("SSssss")
@@ -732,10 +758,12 @@ module Alembic
         end
         
         def decode_render_glyphinfo (s)
-          x = {}
+          x = Glyphinfo.new
           x[:width], x[:height], x[:x], x[:y], x[:x_off], x[:y_off], = s.slice!(0, 12).unpack("SSssss")
           x
         end
+        
+        Transform = Struct.new(:matrix11, :matrix12, :matrix13, :matrix21, :matrix22, :matrix23, :matrix31, :matrix32, :matrix33)
         
         def encode_render_transform (s, matrix11, matrix12, matrix13, matrix21, matrix22, matrix23, matrix31, matrix32, matrix33)
           s << [matrix11, matrix12, matrix13, matrix21, matrix22, matrix23, matrix31, matrix32, matrix33].pack("lllllllll")
@@ -743,10 +771,12 @@ module Alembic
         end
         
         def decode_render_transform (s)
-          x = {}
+          x = Transform.new
           x[:matrix11], x[:matrix12], x[:matrix13], x[:matrix21], x[:matrix22], x[:matrix23], x[:matrix31], x[:matrix32], x[:matrix33], = s.slice!(0, 36).unpack("lllllllll")
           x
         end
+        
+        Animcursorelt = Struct.new(:cursor, :delay)
         
         def encode_render_animcursorelt (s, cursor, delay)
           s << [Cursor.to_xid(self, cursor), delay].pack("LL")
@@ -754,11 +784,13 @@ module Alembic
         end
         
         def decode_render_animcursorelt (s)
-          x = {}
+          x = Animcursorelt.new
           x[:cursor], x[:delay], = s.slice!(0, 8).unpack("LL")
           x[:cursor] = Cursor[self, x[:cursor]]
           x
         end
+        
+        Spanfix = Struct.new(:l, :r, :y)
         
         def encode_render_spanfix (s, l, r, y)
           s << [l, r, y].pack("lll")
@@ -766,10 +798,12 @@ module Alembic
         end
         
         def decode_render_spanfix (s)
-          x = {}
+          x = Spanfix.new
           x[:l], x[:r], x[:y], = s.slice!(0, 12).unpack("lll")
           x
         end
+        
+        Trap = Struct.new(:top, :bot)
         
         def encode_render_trap (s, top, bot)
           s << encode_render_spanfix(''.encode('BINARY'), *top)
@@ -778,7 +812,7 @@ module Alembic
         end
         
         def decode_render_trap (s)
-          x = {}
+          x = Trap.new
           x[:top] = decode_render_spanfix(s)
           x[:bot] = decode_render_spanfix(s)
           x

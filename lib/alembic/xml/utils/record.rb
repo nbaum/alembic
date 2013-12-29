@@ -18,7 +18,7 @@ module Alembic
       def post_process
         params = self.params
         self.fields = fields.flat_map do |field|
-          if field.is_a?(ValueParam) && !params.member?(field.value_mask_name)
+          if field.is_a?(ValueParam) && !all_params.member?(field.value_mask_name)
             [Scalar.new(extension, nil, type: field.value_mask_type, name: field.value_mask_name), field]
           else
             [field]
@@ -35,10 +35,39 @@ module Alembic
         end
       end
       
+      def all_params
+        fields.flat_map(&:params).compact
+      end
+      
       def params
         fields.flat_map(&:params).reject do |field|
            hidden_params.member?(field)
          end.compact
+      end
+      
+      def args
+        fields.flat_map(&:args).reject do |field|
+           hidden_params.member?(field)
+         end.compact
+      end
+      
+      def struct_params
+        fields.flat_map(&:params).compact
+      end
+      
+      def struct_definition
+        sp = struct_params
+        if sp.empty?
+          [
+            "#{class_name} = Class.new",
+            nil
+          ]
+        else
+          [
+            "#{class_name} = Struct.new(#{struct_params.map{|x|':' + x}.join(", ")})",
+            nil
+          ]
+        end
       end
       
       def encoder expr
@@ -138,7 +167,7 @@ module Alembic
         [
           "def decode_#{var_name.snake_case} (s)",
           [
-            "x = {}",
+            "x = #{class_name}.new",
             *decoders,
             "x",
           ],

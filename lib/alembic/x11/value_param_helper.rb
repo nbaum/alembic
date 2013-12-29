@@ -1,7 +1,7 @@
 
 module Alembic
   module ValueParamHelper
-    def param (hash)
+    def value_param (hash)
       mask = 0
       values = []
       each do |name, mask0|
@@ -12,7 +12,7 @@ module Alembic
           values << value
         end
       end
-      [mask, *values]
+      [mask, values]
     end
   end
 end

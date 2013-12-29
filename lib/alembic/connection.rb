@@ -25,7 +25,6 @@ module Alembic
     
     def initialize (display = ENV["DISPLAY"])
       @display = display
-      @auth = X11::Authorizer.new[@display] || ["", ""]
       @events = {}
       @errors = {}
       @resources = {}
@@ -33,6 +32,7 @@ module Alembic
       @atoms = {}
       @xid = 0
       parse_display
+      @auth = X11::Authorizer.new[@display] || ["", ""]
       connect
       load_extension nil, nil, 0, 0
       perform_setup
@@ -93,15 +93,16 @@ module Alembic
     
     def parse_display ()
       case @display
-      when /^:(\d+)$/
+      when /^:(\d+)(\.\d+)?$/
         @host = nil
         @port = $1.to_i
-      when /^([^:]+):(\d+)$/
+      when /^([^:]+):(\d+)(\.\d+)?$/
         @host = $1
         @port = 6000 + $2.to_i
       else
         raise "Problem with DISPLAY string `#{display}'"
       end
+      @display = "#{@host}:#{@port}"
     end
     
     def connect ()
@@ -130,15 +131,14 @@ module Alembic
     
     def perform_setup
       write(encode_setup_request(buffer, 0x426c, 11, 0, *@auth))
-      #write(encode_setup_request(buffer, 0x426c, 11, 0, "MIT-MAGIC-COOKIE-1", ""))
       header = read(8)
       state, len = header.unpack('Cx5S')
       data = header + read(len * 4)
       case state
       when 0
-        raise SetupError, decode_setup_failed(data).reason
+        raise SetupError, decode_setup_failed(data)[:reason]
       when 2
-        raise SetupError, decode_setup_authenticate(data).reason
+        raise SetupError, decode_setup_authenticate(data)[:reason]
       when 1
         @setup = decode_setup(data)
       else

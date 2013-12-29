@@ -5,8 +5,8 @@ module Alembic
       
       extension_xname nil
       
-      # create_window (depth, wid, parent, x, y, width, height, border_width, klass, visual, value_mask, *value_list)
-      # change_window_attributes (window, value_mask, *value_list)
+      # create_window (depth, parent, x, y, width, height, border_width, klass, visual, value_hash = {})
+      # change_window_attributes (window, value_hash = {})
       # get_window_attributes (window)
       # destroy_window (window)
       # destroy_subwindows (window)
@@ -16,7 +16,7 @@ module Alembic
       # map_subwindows (window)
       # unmap_window (window)
       # unmap_subwindows (window)
-      # configure_window (window, value_mask, *value_list)
+      # configure_window (window, value_hash = {})
       # circulate_window (direction, window)
       # get_geometry (drawable)
       # query_tree (window)
@@ -57,10 +57,10 @@ module Alembic
       # list_fonts_with_info (max_names, pattern)
       # set_font_path (font)
       # get_font_path ()
-      # create_pixmap (depth, pid, drawable, width, height)
+      # create_pixmap (depth, drawable, width, height)
       # free_pixmap (pixmap)
-      # create_gc (cid, drawable, value_mask, *value_list)
-      # change_gc (gc, value_mask, *value_list)
+      # create_gc (drawable, value_hash = {})
+      # change_gc (gc, value_hash = {})
       # copy_gc (src_gc, dst_gc, value_mask)
       # set_dashes (gc, dash_offset, dashes)
       # set_clip_rectangles (ordering, gc, clip_x_origin, clip_y_origin, rectangles)
@@ -82,7 +82,7 @@ module Alembic
       # poly_text16 (drawable, gc, x, y, items)
       # image_text8 (drawable, gc, x, y, string)
       # image_text16 (drawable, gc, x, y, string)
-      # create_colormap (alloc, mid, window, visual)
+      # create_colormap (alloc, window, visual)
       # free_colormap (cmap)
       # copy_colormap_and_free (mid, src_cmap)
       # install_colormap (cmap)
@@ -97,8 +97,8 @@ module Alembic
       # store_named_color (flags, cmap, pixel, name)
       # query_colors (cmap, pixels)
       # lookup_color (cmap, name)
-      # create_cursor (cid, source, mask, fore_red, fore_green, fore_blue, back_red, back_green, back_blue, x, y)
-      # create_glyph_cursor (cid, source_font, mask_font, source_char, mask_char, fore_red, fore_green, fore_blue, back_red, back_green, back_blue)
+      # create_cursor (source, mask, fore_red, fore_green, fore_blue, back_red, back_green, back_blue, x, y)
+      # create_glyph_cursor (source_font, mask_font, source_char, mask_char, fore_red, fore_green, fore_blue, back_red, back_green, back_blue)
       # free_cursor (cursor)
       # recolor_cursor (cursor, fore_red, fore_green, fore_blue, back_red, back_green, back_blue)
       # query_best_size (klass, drawable, width, height)
@@ -106,7 +106,7 @@ module Alembic
       # list_extensions ()
       # change_keyboard_mapping (keycode_count, first_keycode, keysyms_per_keycode, keysyms)
       # get_keyboard_mapping (first_keycode, count)
-      # change_keyboard_control (value_mask, *value_list)
+      # change_keyboard_control (value_hash = {})
       # get_keyboard_control ()
       # bell (percent)
       # change_pointer_control (acceleration_numerator, acceleration_denominator, threshold, do_acceleration, do_threshold)
@@ -159,7 +159,7 @@ module Alembic
       # colormap_notify_event (window, colormap, new, state)
       # client_message_event (format, window, type, data)
       # mapping_notify_event (request, first_keycode, count)
-      # ge_event ()
+      # ge_generic_event ()
       
       VISUAL_CLASS = {:static_gray=>0, :gray_scale=>1, :static_color=>2, :pseudo_color=>3, :true_color=>4, :direct_color=>5}
       VISUAL_CLASS_I = {0=>:static_gray, 1=>:gray_scale, 2=>:static_color, 3=>:pseudo_color, 4=>:true_color, 5=>:direct_color}
@@ -990,7 +990,7 @@ module Alembic
       define_event 32, :colormap_notify_event, false
       define_event 33, :client_message_event, false
       define_event 34, :mapping_notify_event, false
-      define_event 35, :ge_event, false
+      define_event 35, :ge_generic_event, false
       
       define_error 1, RequestError = Class.new(X11Error)
       define_error 2, ValueError = Class.new(X11Error)
@@ -1022,24 +1022,27 @@ module Alembic
       
       module Methods
         
-        def create_window! (depth, wid, parent, x, y, width, height, border_width, klass, visual, value_mask, *value_list)
+        def create_window! (depth, parent, x, y, width, height, border_width, klass, visual, value_hash = {})
           s = 1.chr.encode('BINARY')
+          wid = alloc_window
+          value_mask, value_list = CW.value_param(value_hash)
           s << [depth, Window.to_xid(self, wid), Window.to_xid(self, parent), x, y, width, height, border_width, klass, visual, value_mask, *value_list].pack("CLLssSSSSLLL*")
-          send_request(s)
+          send_request(s, wid)
         end
         
-        def create_window (depth, wid, parent, x, y, width, height, border_width, klass, visual, value_mask, *value_list)
-          create_window!(depth, wid, parent, x, y, width, height, border_width, klass, visual, value_mask, *value_list)
+        def create_window (depth, parent, x, y, width, height, border_width, klass, visual, value_hash = {})
+          create_window!(depth, parent, x, y, width, height, border_width, klass, visual, value_hash).value
         end
         
-        def change_window_attributes! (window, value_mask, *value_list)
+        def change_window_attributes! (window, value_hash = {})
           s = 2.chr.encode('BINARY')
+          value_mask, value_list = CW.value_param(value_hash)
           s << [Window.to_xid(self, window), value_mask, *value_list].pack("x1LLL*")
           send_request(s)
         end
         
-        def change_window_attributes (window, value_mask, *value_list)
-          change_window_attributes!(window, value_mask, *value_list)
+        def change_window_attributes (window, value_hash = {})
+          change_window_attributes!(window, value_hash).value
         end
         
         def get_window_attributes! (window)
@@ -1057,7 +1060,7 @@ module Alembic
         end
         
         def get_window_attributes (window)
-          get_window_attributes!(window).wait
+          get_window_attributes!(window).wait.value
         end
         
         def destroy_window! (window)
@@ -1067,7 +1070,7 @@ module Alembic
         end
         
         def destroy_window (window)
-          destroy_window!(window)
+          destroy_window!(window).value
         end
         
         def destroy_subwindows! (window)
@@ -1077,7 +1080,7 @@ module Alembic
         end
         
         def destroy_subwindows (window)
-          destroy_subwindows!(window)
+          destroy_subwindows!(window).value
         end
         
         def change_save_set! (mode, window)
@@ -1087,7 +1090,7 @@ module Alembic
         end
         
         def change_save_set (mode, window)
-          change_save_set!(mode, window)
+          change_save_set!(mode, window).value
         end
         
         def reparent_window! (window, parent, x, y)
@@ -1097,7 +1100,7 @@ module Alembic
         end
         
         def reparent_window (window, parent, x, y)
-          reparent_window!(window, parent, x, y)
+          reparent_window!(window, parent, x, y).value
         end
         
         def map_window! (window)
@@ -1107,7 +1110,7 @@ module Alembic
         end
         
         def map_window (window)
-          map_window!(window)
+          map_window!(window).value
         end
         
         def map_subwindows! (window)
@@ -1117,7 +1120,7 @@ module Alembic
         end
         
         def map_subwindows (window)
-          map_subwindows!(window)
+          map_subwindows!(window).value
         end
         
         def unmap_window! (window)
@@ -1127,7 +1130,7 @@ module Alembic
         end
         
         def unmap_window (window)
-          unmap_window!(window)
+          unmap_window!(window).value
         end
         
         def unmap_subwindows! (window)
@@ -1137,17 +1140,18 @@ module Alembic
         end
         
         def unmap_subwindows (window)
-          unmap_subwindows!(window)
+          unmap_subwindows!(window).value
         end
         
-        def configure_window! (window, value_mask, *value_list)
+        def configure_window! (window, value_hash = {})
           s = 12.chr.encode('BINARY')
+          value_mask, value_list = CONFIG_WINDOW.value_param(value_hash)
           s << [Window.to_xid(self, window), value_mask, *value_list].pack("x1LSx2L*")
           send_request(s)
         end
         
-        def configure_window (window, value_mask, *value_list)
-          configure_window!(window, value_mask, *value_list)
+        def configure_window (window, value_hash = {})
+          configure_window!(window, value_hash).value
         end
         
         def circulate_window! (direction, window)
@@ -1157,7 +1161,7 @@ module Alembic
         end
         
         def circulate_window (direction, window)
-          circulate_window!(direction, window)
+          circulate_window!(direction, window).value
         end
         
         def get_geometry! (drawable)
@@ -1172,7 +1176,7 @@ module Alembic
         end
         
         def get_geometry (drawable)
-          get_geometry!(drawable).wait
+          get_geometry!(drawable).wait.value
         end
         
         def query_tree! (window)
@@ -1189,7 +1193,7 @@ module Alembic
         end
         
         def query_tree (window)
-          query_tree!(window).wait
+          query_tree!(window).wait.value
         end
         
         def intern_atom! (only_if_exists, name)
@@ -1205,7 +1209,7 @@ module Alembic
         end
         
         def intern_atom (only_if_exists, name)
-          intern_atom!(only_if_exists, name).wait
+          intern_atom!(only_if_exists, name).wait.value
         end
         
         def get_atom_name! (atom)
@@ -1220,7 +1224,7 @@ module Alembic
         end
         
         def get_atom_name (atom)
-          get_atom_name!(atom).wait
+          get_atom_name!(atom).wait.value
         end
         
         def change_property! (mode, window, property, type, format, data_len, data)
@@ -1230,7 +1234,7 @@ module Alembic
         end
         
         def change_property (mode, window, property, type, format, data_len, data)
-          change_property!(mode, window, property, type, format, data_len, data)
+          change_property!(mode, window, property, type, format, data_len, data).value
         end
         
         def delete_property! (window, property)
@@ -1240,7 +1244,7 @@ module Alembic
         end
         
         def delete_property (window, property)
-          delete_property!(window, property)
+          delete_property!(window, property).value
         end
         
         def get_property! (delete, window, property, type, long_offset, long_length)
@@ -1256,7 +1260,7 @@ module Alembic
         end
         
         def get_property (delete, window, property, type, long_offset, long_length)
-          get_property!(delete, window, property, type, long_offset, long_length).wait
+          get_property!(delete, window, property, type, long_offset, long_length).wait.value
         end
         
         def list_properties! (window)
@@ -1271,7 +1275,7 @@ module Alembic
         end
         
         def list_properties (window)
-          list_properties!(window).wait
+          list_properties!(window).wait.value
         end
         
         def set_selection_owner! (owner, selection, time)
@@ -1281,7 +1285,7 @@ module Alembic
         end
         
         def set_selection_owner (owner, selection, time)
-          set_selection_owner!(owner, selection, time)
+          set_selection_owner!(owner, selection, time).value
         end
         
         def get_selection_owner! (selection)
@@ -1296,7 +1300,7 @@ module Alembic
         end
         
         def get_selection_owner (selection)
-          get_selection_owner!(selection).wait
+          get_selection_owner!(selection).wait.value
         end
         
         def convert_selection! (requestor, selection, target, property, time)
@@ -1306,7 +1310,7 @@ module Alembic
         end
         
         def convert_selection (requestor, selection, target, property, time)
-          convert_selection!(requestor, selection, target, property, time)
+          convert_selection!(requestor, selection, target, property, time).value
         end
         
         def send_event! (propagate, destination, event_mask, event)
@@ -1316,7 +1320,7 @@ module Alembic
         end
         
         def send_event (propagate, destination, event_mask, event)
-          send_event!(propagate, destination, event_mask, event)
+          send_event!(propagate, destination, event_mask, event).value
         end
         
         def grab_pointer! (owner_events, grab_window, event_mask, pointer_mode, keyboard_mode, confine_to, cursor, time)
@@ -1330,7 +1334,7 @@ module Alembic
         end
         
         def grab_pointer (owner_events, grab_window, event_mask, pointer_mode, keyboard_mode, confine_to, cursor, time)
-          grab_pointer!(owner_events, grab_window, event_mask, pointer_mode, keyboard_mode, confine_to, cursor, time).wait
+          grab_pointer!(owner_events, grab_window, event_mask, pointer_mode, keyboard_mode, confine_to, cursor, time).wait.value
         end
         
         def ungrab_pointer! (time)
@@ -1340,7 +1344,7 @@ module Alembic
         end
         
         def ungrab_pointer (time)
-          ungrab_pointer!(time)
+          ungrab_pointer!(time).value
         end
         
         def grab_button! (owner_events, grab_window, event_mask, pointer_mode, keyboard_mode, confine_to, cursor, button, modifiers)
@@ -1350,7 +1354,7 @@ module Alembic
         end
         
         def grab_button (owner_events, grab_window, event_mask, pointer_mode, keyboard_mode, confine_to, cursor, button, modifiers)
-          grab_button!(owner_events, grab_window, event_mask, pointer_mode, keyboard_mode, confine_to, cursor, button, modifiers)
+          grab_button!(owner_events, grab_window, event_mask, pointer_mode, keyboard_mode, confine_to, cursor, button, modifiers).value
         end
         
         def ungrab_button! (button, grab_window, modifiers)
@@ -1360,7 +1364,7 @@ module Alembic
         end
         
         def ungrab_button (button, grab_window, modifiers)
-          ungrab_button!(button, grab_window, modifiers)
+          ungrab_button!(button, grab_window, modifiers).value
         end
         
         def change_active_pointer_grab! (cursor, time, event_mask)
@@ -1370,7 +1374,7 @@ module Alembic
         end
         
         def change_active_pointer_grab (cursor, time, event_mask)
-          change_active_pointer_grab!(cursor, time, event_mask)
+          change_active_pointer_grab!(cursor, time, event_mask).value
         end
         
         def grab_keyboard! (owner_events, grab_window, time, pointer_mode, keyboard_mode)
@@ -1384,7 +1388,7 @@ module Alembic
         end
         
         def grab_keyboard (owner_events, grab_window, time, pointer_mode, keyboard_mode)
-          grab_keyboard!(owner_events, grab_window, time, pointer_mode, keyboard_mode).wait
+          grab_keyboard!(owner_events, grab_window, time, pointer_mode, keyboard_mode).wait.value
         end
         
         def ungrab_keyboard! (time)
@@ -1394,7 +1398,7 @@ module Alembic
         end
         
         def ungrab_keyboard (time)
-          ungrab_keyboard!(time)
+          ungrab_keyboard!(time).value
         end
         
         def grab_key! (owner_events, grab_window, modifiers, key, pointer_mode, keyboard_mode)
@@ -1404,7 +1408,7 @@ module Alembic
         end
         
         def grab_key (owner_events, grab_window, modifiers, key, pointer_mode, keyboard_mode)
-          grab_key!(owner_events, grab_window, modifiers, key, pointer_mode, keyboard_mode)
+          grab_key!(owner_events, grab_window, modifiers, key, pointer_mode, keyboard_mode).value
         end
         
         def ungrab_key! (key, grab_window, modifiers)
@@ -1414,7 +1418,7 @@ module Alembic
         end
         
         def ungrab_key (key, grab_window, modifiers)
-          ungrab_key!(key, grab_window, modifiers)
+          ungrab_key!(key, grab_window, modifiers).value
         end
         
         def allow_events! (mode, time)
@@ -1424,7 +1428,7 @@ module Alembic
         end
         
         def allow_events (mode, time)
-          allow_events!(mode, time)
+          allow_events!(mode, time).value
         end
         
         def grab_server! ()
@@ -1433,7 +1437,7 @@ module Alembic
         end
         
         def grab_server ()
-          grab_server!()
+          grab_server!().value
         end
         
         def ungrab_server! ()
@@ -1442,7 +1446,7 @@ module Alembic
         end
         
         def ungrab_server ()
-          ungrab_server!()
+          ungrab_server!().value
         end
         
         def query_pointer! (window)
@@ -1459,7 +1463,7 @@ module Alembic
         end
         
         def query_pointer (window)
-          query_pointer!(window).wait
+          query_pointer!(window).wait.value
         end
         
         def get_motion_events! (window, start, stop)
@@ -1474,7 +1478,7 @@ module Alembic
         end
         
         def get_motion_events (window, start, stop)
-          get_motion_events!(window, start, stop).wait
+          get_motion_events!(window, start, stop).wait.value
         end
         
         def translate_coordinates! (src_window, dst_window, src_x, src_y)
@@ -1490,7 +1494,7 @@ module Alembic
         end
         
         def translate_coordinates (src_window, dst_window, src_x, src_y)
-          translate_coordinates!(src_window, dst_window, src_x, src_y).wait
+          translate_coordinates!(src_window, dst_window, src_x, src_y).wait.value
         end
         
         def warp_pointer! (src_window, dst_window, src_x, src_y, src_width, src_height, dst_x, dst_y)
@@ -1500,7 +1504,7 @@ module Alembic
         end
         
         def warp_pointer (src_window, dst_window, src_x, src_y, src_width, src_height, dst_x, dst_y)
-          warp_pointer!(src_window, dst_window, src_x, src_y, src_width, src_height, dst_x, dst_y)
+          warp_pointer!(src_window, dst_window, src_x, src_y, src_width, src_height, dst_x, dst_y).value
         end
         
         def set_input_focus! (revert_to, focus, time)
@@ -1510,7 +1514,7 @@ module Alembic
         end
         
         def set_input_focus (revert_to, focus, time)
-          set_input_focus!(revert_to, focus, time)
+          set_input_focus!(revert_to, focus, time).value
         end
         
         def get_input_focus! ()
@@ -1524,7 +1528,7 @@ module Alembic
         end
         
         def get_input_focus ()
-          get_input_focus!().wait
+          get_input_focus!().wait.value
         end
         
         def query_keymap! ()
@@ -1538,7 +1542,7 @@ module Alembic
         end
         
         def query_keymap ()
-          query_keymap!().wait
+          query_keymap!().wait.value
         end
         
         def open_font! (fid, name)
@@ -1549,7 +1553,7 @@ module Alembic
         end
         
         def open_font (fid, name)
-          open_font!(fid, name)
+          open_font!(fid, name).value
         end
         
         def close_font! (font)
@@ -1559,7 +1563,7 @@ module Alembic
         end
         
         def close_font (font)
-          close_font!(font)
+          close_font!(font).value
         end
         
         def query_font! (font)
@@ -1580,7 +1584,7 @@ module Alembic
         end
         
         def query_font (font)
-          query_font!(font).wait
+          query_font!(font).wait.value
         end
         
         def query_text_extents! (font, string)
@@ -1596,7 +1600,7 @@ module Alembic
         end
         
         def query_text_extents (font, string)
-          query_text_extents!(font, string).wait
+          query_text_extents!(font, string).wait.value
         end
         
         def list_fonts! (max_names, pattern)
@@ -1612,7 +1616,7 @@ module Alembic
         end
         
         def list_fonts (max_names, pattern)
-          list_fonts!(max_names, pattern).wait
+          list_fonts!(max_names, pattern).wait.value
         end
         
         def list_fonts_with_info! (max_names, pattern)
@@ -1634,7 +1638,7 @@ module Alembic
         end
         
         def list_fonts_with_info (max_names, pattern)
-          list_fonts_with_info!(max_names, pattern).wait
+          list_fonts_with_info!(max_names, pattern).wait.value
         end
         
         def set_font_path! (font)
@@ -1646,7 +1650,7 @@ module Alembic
         end
         
         def set_font_path (font)
-          set_font_path!(font)
+          set_font_path!(font).value
         end
         
         def get_font_path! ()
@@ -1660,17 +1664,18 @@ module Alembic
         end
         
         def get_font_path ()
-          get_font_path!().wait
+          get_font_path!().wait.value
         end
         
-        def create_pixmap! (depth, pid, drawable, width, height)
+        def create_pixmap! (depth, drawable, width, height)
           s = 53.chr.encode('BINARY')
+          pid = alloc_pixmap
           s << [depth, Pixmap.to_xid(self, pid), Drawable.to_xid(self, drawable), width, height].pack("CLLSS")
-          send_request(s)
+          send_request(s, pid)
         end
         
-        def create_pixmap (depth, pid, drawable, width, height)
-          create_pixmap!(depth, pid, drawable, width, height)
+        def create_pixmap (depth, drawable, width, height)
+          create_pixmap!(depth, drawable, width, height).value
         end
         
         def free_pixmap! (pixmap)
@@ -1680,27 +1685,30 @@ module Alembic
         end
         
         def free_pixmap (pixmap)
-          free_pixmap!(pixmap)
+          free_pixmap!(pixmap).value
         end
         
-        def create_gc! (cid, drawable, value_mask, *value_list)
+        def create_gc! (drawable, value_hash = {})
           s = 55.chr.encode('BINARY')
+          cid = alloc_gcontext
+          value_mask, value_list = GC.value_param(value_hash)
           s << [Gcontext.to_xid(self, cid), Drawable.to_xid(self, drawable), value_mask, *value_list].pack("x1LLLL*")
-          send_request(s)
+          send_request(s, cid)
         end
         
-        def create_gc (cid, drawable, value_mask, *value_list)
-          create_gc!(cid, drawable, value_mask, *value_list)
+        def create_gc (drawable, value_hash = {})
+          create_gc!(drawable, value_hash).value
         end
         
-        def change_gc! (gc, value_mask, *value_list)
+        def change_gc! (gc, value_hash = {})
           s = 56.chr.encode('BINARY')
+          value_mask, value_list = GC.value_param(value_hash)
           s << [Gcontext.to_xid(self, gc), value_mask, *value_list].pack("x1LLL*")
           send_request(s)
         end
         
-        def change_gc (gc, value_mask, *value_list)
-          change_gc!(gc, value_mask, *value_list)
+        def change_gc (gc, value_hash = {})
+          change_gc!(gc, value_hash).value
         end
         
         def copy_gc! (src_gc, dst_gc, value_mask)
@@ -1710,7 +1718,7 @@ module Alembic
         end
         
         def copy_gc (src_gc, dst_gc, value_mask)
-          copy_gc!(src_gc, dst_gc, value_mask)
+          copy_gc!(src_gc, dst_gc, value_mask).value
         end
         
         def set_dashes! (gc, dash_offset, dashes)
@@ -1721,7 +1729,7 @@ module Alembic
         end
         
         def set_dashes (gc, dash_offset, dashes)
-          set_dashes!(gc, dash_offset, dashes)
+          set_dashes!(gc, dash_offset, dashes).value
         end
         
         def set_clip_rectangles! (ordering, gc, clip_x_origin, clip_y_origin, rectangles)
@@ -1732,7 +1740,7 @@ module Alembic
         end
         
         def set_clip_rectangles (ordering, gc, clip_x_origin, clip_y_origin, rectangles)
-          set_clip_rectangles!(ordering, gc, clip_x_origin, clip_y_origin, rectangles)
+          set_clip_rectangles!(ordering, gc, clip_x_origin, clip_y_origin, rectangles).value
         end
         
         def free_gc! (gc)
@@ -1742,7 +1750,7 @@ module Alembic
         end
         
         def free_gc (gc)
-          free_gc!(gc)
+          free_gc!(gc).value
         end
         
         def clear_area! (exposures, window, x, y, width, height)
@@ -1752,7 +1760,7 @@ module Alembic
         end
         
         def clear_area (exposures, window, x, y, width, height)
-          clear_area!(exposures, window, x, y, width, height)
+          clear_area!(exposures, window, x, y, width, height).value
         end
         
         def copy_area! (src_drawable, dst_drawable, gc, src_x, src_y, dst_x, dst_y, width, height)
@@ -1762,7 +1770,7 @@ module Alembic
         end
         
         def copy_area (src_drawable, dst_drawable, gc, src_x, src_y, dst_x, dst_y, width, height)
-          copy_area!(src_drawable, dst_drawable, gc, src_x, src_y, dst_x, dst_y, width, height)
+          copy_area!(src_drawable, dst_drawable, gc, src_x, src_y, dst_x, dst_y, width, height).value
         end
         
         def copy_plane! (src_drawable, dst_drawable, gc, src_x, src_y, dst_x, dst_y, width, height, bit_plane)
@@ -1772,7 +1780,7 @@ module Alembic
         end
         
         def copy_plane (src_drawable, dst_drawable, gc, src_x, src_y, dst_x, dst_y, width, height, bit_plane)
-          copy_plane!(src_drawable, dst_drawable, gc, src_x, src_y, dst_x, dst_y, width, height, bit_plane)
+          copy_plane!(src_drawable, dst_drawable, gc, src_x, src_y, dst_x, dst_y, width, height, bit_plane).value
         end
         
         def poly_point! (coordinate_mode, drawable, gc, points)
@@ -1783,7 +1791,7 @@ module Alembic
         end
         
         def poly_point (coordinate_mode, drawable, gc, points)
-          poly_point!(coordinate_mode, drawable, gc, points)
+          poly_point!(coordinate_mode, drawable, gc, points).value
         end
         
         def poly_line! (coordinate_mode, drawable, gc, points)
@@ -1794,7 +1802,7 @@ module Alembic
         end
         
         def poly_line (coordinate_mode, drawable, gc, points)
-          poly_line!(coordinate_mode, drawable, gc, points)
+          poly_line!(coordinate_mode, drawable, gc, points).value
         end
         
         def poly_segment! (drawable, gc, segments)
@@ -1805,7 +1813,7 @@ module Alembic
         end
         
         def poly_segment (drawable, gc, segments)
-          poly_segment!(drawable, gc, segments)
+          poly_segment!(drawable, gc, segments).value
         end
         
         def poly_rectangle! (drawable, gc, rectangles)
@@ -1816,7 +1824,7 @@ module Alembic
         end
         
         def poly_rectangle (drawable, gc, rectangles)
-          poly_rectangle!(drawable, gc, rectangles)
+          poly_rectangle!(drawable, gc, rectangles).value
         end
         
         def poly_arc! (drawable, gc, arcs)
@@ -1827,7 +1835,7 @@ module Alembic
         end
         
         def poly_arc (drawable, gc, arcs)
-          poly_arc!(drawable, gc, arcs)
+          poly_arc!(drawable, gc, arcs).value
         end
         
         def fill_poly! (drawable, gc, shape, coordinate_mode, points)
@@ -1838,7 +1846,7 @@ module Alembic
         end
         
         def fill_poly (drawable, gc, shape, coordinate_mode, points)
-          fill_poly!(drawable, gc, shape, coordinate_mode, points)
+          fill_poly!(drawable, gc, shape, coordinate_mode, points).value
         end
         
         def poly_fill_rectangle! (drawable, gc, rectangles)
@@ -1849,7 +1857,7 @@ module Alembic
         end
         
         def poly_fill_rectangle (drawable, gc, rectangles)
-          poly_fill_rectangle!(drawable, gc, rectangles)
+          poly_fill_rectangle!(drawable, gc, rectangles).value
         end
         
         def poly_fill_arc! (drawable, gc, arcs)
@@ -1860,7 +1868,7 @@ module Alembic
         end
         
         def poly_fill_arc (drawable, gc, arcs)
-          poly_fill_arc!(drawable, gc, arcs)
+          poly_fill_arc!(drawable, gc, arcs).value
         end
         
         def put_image! (format, drawable, gc, width, height, dst_x, dst_y, left_pad, depth, data)
@@ -1870,7 +1878,7 @@ module Alembic
         end
         
         def put_image (format, drawable, gc, width, height, dst_x, dst_y, left_pad, depth, data)
-          put_image!(format, drawable, gc, width, height, dst_x, dst_y, left_pad, depth, data)
+          put_image!(format, drawable, gc, width, height, dst_x, dst_y, left_pad, depth, data).value
         end
         
         def get_image! (format, drawable, x, y, width, height, plane_mask)
@@ -1885,7 +1893,7 @@ module Alembic
         end
         
         def get_image (format, drawable, x, y, width, height, plane_mask)
-          get_image!(format, drawable, x, y, width, height, plane_mask).wait
+          get_image!(format, drawable, x, y, width, height, plane_mask).wait.value
         end
         
         def poly_text8! (drawable, gc, x, y, items)
@@ -1895,7 +1903,7 @@ module Alembic
         end
         
         def poly_text8 (drawable, gc, x, y, items)
-          poly_text8!(drawable, gc, x, y, items)
+          poly_text8!(drawable, gc, x, y, items).value
         end
         
         def poly_text16! (drawable, gc, x, y, items)
@@ -1905,7 +1913,7 @@ module Alembic
         end
         
         def poly_text16 (drawable, gc, x, y, items)
-          poly_text16!(drawable, gc, x, y, items)
+          poly_text16!(drawable, gc, x, y, items).value
         end
         
         def image_text8! (drawable, gc, x, y, string)
@@ -1916,7 +1924,7 @@ module Alembic
         end
         
         def image_text8 (drawable, gc, x, y, string)
-          image_text8!(drawable, gc, x, y, string)
+          image_text8!(drawable, gc, x, y, string).value
         end
         
         def image_text16! (drawable, gc, x, y, string)
@@ -1928,17 +1936,18 @@ module Alembic
         end
         
         def image_text16 (drawable, gc, x, y, string)
-          image_text16!(drawable, gc, x, y, string)
+          image_text16!(drawable, gc, x, y, string).value
         end
         
-        def create_colormap! (alloc, mid, window, visual)
+        def create_colormap! (alloc, window, visual)
           s = 78.chr.encode('BINARY')
+          mid = alloc_colormap
           s << [alloc, Colormap.to_xid(self, mid), Window.to_xid(self, window), visual].pack("CLLL")
-          send_request(s)
+          send_request(s, mid)
         end
         
-        def create_colormap (alloc, mid, window, visual)
-          create_colormap!(alloc, mid, window, visual)
+        def create_colormap (alloc, window, visual)
+          create_colormap!(alloc, window, visual).value
         end
         
         def free_colormap! (cmap)
@@ -1948,7 +1957,7 @@ module Alembic
         end
         
         def free_colormap (cmap)
-          free_colormap!(cmap)
+          free_colormap!(cmap).value
         end
         
         def copy_colormap_and_free! (mid, src_cmap)
@@ -1958,7 +1967,7 @@ module Alembic
         end
         
         def copy_colormap_and_free (mid, src_cmap)
-          copy_colormap_and_free!(mid, src_cmap)
+          copy_colormap_and_free!(mid, src_cmap).value
         end
         
         def install_colormap! (cmap)
@@ -1968,7 +1977,7 @@ module Alembic
         end
         
         def install_colormap (cmap)
-          install_colormap!(cmap)
+          install_colormap!(cmap).value
         end
         
         def uninstall_colormap! (cmap)
@@ -1978,7 +1987,7 @@ module Alembic
         end
         
         def uninstall_colormap (cmap)
-          uninstall_colormap!(cmap)
+          uninstall_colormap!(cmap).value
         end
         
         def list_installed_colormaps! (window)
@@ -1993,7 +2002,7 @@ module Alembic
         end
         
         def list_installed_colormaps (window)
-          list_installed_colormaps!(window).wait
+          list_installed_colormaps!(window).wait.value
         end
         
         def alloc_color! (cmap, red, green, blue)
@@ -2007,7 +2016,7 @@ module Alembic
         end
         
         def alloc_color (cmap, red, green, blue)
-          alloc_color!(cmap, red, green, blue).wait
+          alloc_color!(cmap, red, green, blue).wait.value
         end
         
         def alloc_named_color! (cmap, name)
@@ -2022,7 +2031,7 @@ module Alembic
         end
         
         def alloc_named_color (cmap, name)
-          alloc_named_color!(cmap, name).wait
+          alloc_named_color!(cmap, name).wait.value
         end
         
         def alloc_color_cells! (contiguous, cmap, colors, planes)
@@ -2038,7 +2047,7 @@ module Alembic
         end
         
         def alloc_color_cells (contiguous, cmap, colors, planes)
-          alloc_color_cells!(contiguous, cmap, colors, planes).wait
+          alloc_color_cells!(contiguous, cmap, colors, planes).wait.value
         end
         
         def alloc_color_planes! (contiguous, cmap, colors, reds, greens, blues)
@@ -2052,7 +2061,7 @@ module Alembic
         end
         
         def alloc_color_planes (contiguous, cmap, colors, reds, greens, blues)
-          alloc_color_planes!(contiguous, cmap, colors, reds, greens, blues).wait
+          alloc_color_planes!(contiguous, cmap, colors, reds, greens, blues).wait.value
         end
         
         def free_colors! (cmap, plane_mask, pixels)
@@ -2062,7 +2071,7 @@ module Alembic
         end
         
         def free_colors (cmap, plane_mask, pixels)
-          free_colors!(cmap, plane_mask, pixels)
+          free_colors!(cmap, plane_mask, pixels).value
         end
         
         def store_colors! (cmap, items)
@@ -2073,7 +2082,7 @@ module Alembic
         end
         
         def store_colors (cmap, items)
-          store_colors!(cmap, items)
+          store_colors!(cmap, items).value
         end
         
         def store_named_color! (flags, cmap, pixel, name)
@@ -2084,7 +2093,7 @@ module Alembic
         end
         
         def store_named_color (flags, cmap, pixel, name)
-          store_named_color!(flags, cmap, pixel, name)
+          store_named_color!(flags, cmap, pixel, name).value
         end
         
         def query_colors! (cmap, pixels)
@@ -2099,7 +2108,7 @@ module Alembic
         end
         
         def query_colors (cmap, pixels)
-          query_colors!(cmap, pixels).wait
+          query_colors!(cmap, pixels).wait.value
         end
         
         def lookup_color! (cmap, name)
@@ -2114,27 +2123,29 @@ module Alembic
         end
         
         def lookup_color (cmap, name)
-          lookup_color!(cmap, name).wait
+          lookup_color!(cmap, name).wait.value
         end
         
-        def create_cursor! (cid, source, mask, fore_red, fore_green, fore_blue, back_red, back_green, back_blue, x, y)
+        def create_cursor! (source, mask, fore_red, fore_green, fore_blue, back_red, back_green, back_blue, x, y)
           s = 93.chr.encode('BINARY')
+          cid = alloc_cursor
           s << [Cursor.to_xid(self, cid), Pixmap.to_xid(self, source), Pixmap.to_xid(self, mask), fore_red, fore_green, fore_blue, back_red, back_green, back_blue, x, y].pack("x1LLLSSSSSSSS")
-          send_request(s)
+          send_request(s, cid)
         end
         
-        def create_cursor (cid, source, mask, fore_red, fore_green, fore_blue, back_red, back_green, back_blue, x, y)
-          create_cursor!(cid, source, mask, fore_red, fore_green, fore_blue, back_red, back_green, back_blue, x, y)
+        def create_cursor (source, mask, fore_red, fore_green, fore_blue, back_red, back_green, back_blue, x, y)
+          create_cursor!(source, mask, fore_red, fore_green, fore_blue, back_red, back_green, back_blue, x, y).value
         end
         
-        def create_glyph_cursor! (cid, source_font, mask_font, source_char, mask_char, fore_red, fore_green, fore_blue, back_red, back_green, back_blue)
+        def create_glyph_cursor! (source_font, mask_font, source_char, mask_char, fore_red, fore_green, fore_blue, back_red, back_green, back_blue)
           s = 94.chr.encode('BINARY')
+          cid = alloc_cursor
           s << [Cursor.to_xid(self, cid), Font.to_xid(self, source_font), Font.to_xid(self, mask_font), source_char, mask_char, fore_red, fore_green, fore_blue, back_red, back_green, back_blue].pack("x1LLLSSSSSSSS")
-          send_request(s)
+          send_request(s, cid)
         end
         
-        def create_glyph_cursor (cid, source_font, mask_font, source_char, mask_char, fore_red, fore_green, fore_blue, back_red, back_green, back_blue)
-          create_glyph_cursor!(cid, source_font, mask_font, source_char, mask_char, fore_red, fore_green, fore_blue, back_red, back_green, back_blue)
+        def create_glyph_cursor (source_font, mask_font, source_char, mask_char, fore_red, fore_green, fore_blue, back_red, back_green, back_blue)
+          create_glyph_cursor!(source_font, mask_font, source_char, mask_char, fore_red, fore_green, fore_blue, back_red, back_green, back_blue).value
         end
         
         def free_cursor! (cursor)
@@ -2144,7 +2155,7 @@ module Alembic
         end
         
         def free_cursor (cursor)
-          free_cursor!(cursor)
+          free_cursor!(cursor).value
         end
         
         def recolor_cursor! (cursor, fore_red, fore_green, fore_blue, back_red, back_green, back_blue)
@@ -2154,7 +2165,7 @@ module Alembic
         end
         
         def recolor_cursor (cursor, fore_red, fore_green, fore_blue, back_red, back_green, back_blue)
-          recolor_cursor!(cursor, fore_red, fore_green, fore_blue, back_red, back_green, back_blue)
+          recolor_cursor!(cursor, fore_red, fore_green, fore_blue, back_red, back_green, back_blue).value
         end
         
         def query_best_size! (klass, drawable, width, height)
@@ -2168,7 +2179,7 @@ module Alembic
         end
         
         def query_best_size (klass, drawable, width, height)
-          query_best_size!(klass, drawable, width, height).wait
+          query_best_size!(klass, drawable, width, height).wait.value
         end
         
         def query_extension! (name)
@@ -2184,7 +2195,7 @@ module Alembic
         end
         
         def query_extension (name)
-          query_extension!(name).wait
+          query_extension!(name).wait.value
         end
         
         def list_extensions! ()
@@ -2198,7 +2209,7 @@ module Alembic
         end
         
         def list_extensions ()
-          list_extensions!().wait
+          list_extensions!().wait.value
         end
         
         def change_keyboard_mapping! (keycode_count, first_keycode, keysyms_per_keycode, keysyms)
@@ -2208,7 +2219,7 @@ module Alembic
         end
         
         def change_keyboard_mapping (keycode_count, first_keycode, keysyms_per_keycode, keysyms)
-          change_keyboard_mapping!(keycode_count, first_keycode, keysyms_per_keycode, keysyms)
+          change_keyboard_mapping!(keycode_count, first_keycode, keysyms_per_keycode, keysyms).value
         end
         
         def get_keyboard_mapping! (first_keycode, count)
@@ -2222,17 +2233,18 @@ module Alembic
         end
         
         def get_keyboard_mapping (first_keycode, count)
-          get_keyboard_mapping!(first_keycode, count).wait
+          get_keyboard_mapping!(first_keycode, count).wait.value
         end
         
-        def change_keyboard_control! (value_mask, *value_list)
+        def change_keyboard_control! (value_hash = {})
           s = 102.chr.encode('BINARY')
+          value_mask, value_list = KB.value_param(value_hash)
           s << [value_mask, *value_list].pack("x1LL*")
           send_request(s)
         end
         
-        def change_keyboard_control (value_mask, *value_list)
-          change_keyboard_control!(value_mask, *value_list)
+        def change_keyboard_control (value_hash = {})
+          change_keyboard_control!(value_hash).value
         end
         
         def get_keyboard_control! ()
@@ -2246,7 +2258,7 @@ module Alembic
         end
         
         def get_keyboard_control ()
-          get_keyboard_control!().wait
+          get_keyboard_control!().wait.value
         end
         
         def bell! (percent)
@@ -2256,7 +2268,7 @@ module Alembic
         end
         
         def bell (percent)
-          bell!(percent)
+          bell!(percent).value
         end
         
         def change_pointer_control! (acceleration_numerator, acceleration_denominator, threshold, do_acceleration, do_threshold)
@@ -2266,7 +2278,7 @@ module Alembic
         end
         
         def change_pointer_control (acceleration_numerator, acceleration_denominator, threshold, do_acceleration, do_threshold)
-          change_pointer_control!(acceleration_numerator, acceleration_denominator, threshold, do_acceleration, do_threshold)
+          change_pointer_control!(acceleration_numerator, acceleration_denominator, threshold, do_acceleration, do_threshold).value
         end
         
         def get_pointer_control! ()
@@ -2279,7 +2291,7 @@ module Alembic
         end
         
         def get_pointer_control ()
-          get_pointer_control!().wait
+          get_pointer_control!().wait.value
         end
         
         def set_screen_saver! (timeout, interval, prefer_blanking, allow_exposures)
@@ -2289,7 +2301,7 @@ module Alembic
         end
         
         def set_screen_saver (timeout, interval, prefer_blanking, allow_exposures)
-          set_screen_saver!(timeout, interval, prefer_blanking, allow_exposures)
+          set_screen_saver!(timeout, interval, prefer_blanking, allow_exposures).value
         end
         
         def get_screen_saver! ()
@@ -2302,7 +2314,7 @@ module Alembic
         end
         
         def get_screen_saver ()
-          get_screen_saver!().wait
+          get_screen_saver!().wait.value
         end
         
         def change_hosts! (mode, family, address)
@@ -2313,7 +2325,7 @@ module Alembic
         end
         
         def change_hosts (mode, family, address)
-          change_hosts!(mode, family, address)
+          change_hosts!(mode, family, address).value
         end
         
         def list_hosts! ()
@@ -2327,7 +2339,7 @@ module Alembic
         end
         
         def list_hosts ()
-          list_hosts!().wait
+          list_hosts!().wait.value
         end
         
         def set_access_control! (mode)
@@ -2337,7 +2349,7 @@ module Alembic
         end
         
         def set_access_control (mode)
-          set_access_control!(mode)
+          set_access_control!(mode).value
         end
         
         def set_close_down_mode! (mode)
@@ -2347,7 +2359,7 @@ module Alembic
         end
         
         def set_close_down_mode (mode)
-          set_close_down_mode!(mode)
+          set_close_down_mode!(mode).value
         end
         
         def kill_client! (resource)
@@ -2357,7 +2369,7 @@ module Alembic
         end
         
         def kill_client (resource)
-          kill_client!(resource)
+          kill_client!(resource).value
         end
         
         def rotate_properties! (window, delta, atoms)
@@ -2368,7 +2380,7 @@ module Alembic
         end
         
         def rotate_properties (window, delta, atoms)
-          rotate_properties!(window, delta, atoms)
+          rotate_properties!(window, delta, atoms).value
         end
         
         def force_screen_saver! (mode)
@@ -2378,7 +2390,7 @@ module Alembic
         end
         
         def force_screen_saver (mode)
-          force_screen_saver!(mode)
+          force_screen_saver!(mode).value
         end
         
         def set_pointer_mapping! (map)
@@ -2393,7 +2405,7 @@ module Alembic
         end
         
         def set_pointer_mapping (map)
-          set_pointer_mapping!(map).wait
+          set_pointer_mapping!(map).wait.value
         end
         
         def get_pointer_mapping! ()
@@ -2407,7 +2419,7 @@ module Alembic
         end
         
         def get_pointer_mapping ()
-          get_pointer_mapping!().wait
+          get_pointer_mapping!().wait.value
         end
         
         def set_modifier_mapping! (keycodes_per_modifier, keycodes)
@@ -2421,7 +2433,7 @@ module Alembic
         end
         
         def set_modifier_mapping (keycodes_per_modifier, keycodes)
-          set_modifier_mapping!(keycodes_per_modifier, keycodes).wait
+          set_modifier_mapping!(keycodes_per_modifier, keycodes).wait.value
         end
         
         def get_modifier_mapping! ()
@@ -2435,7 +2447,7 @@ module Alembic
         end
         
         def get_modifier_mapping ()
-          get_modifier_mapping!().wait
+          get_modifier_mapping!().wait.value
         end
         
         def no_operation! ()
@@ -2444,7 +2456,13 @@ module Alembic
         end
         
         def no_operation ()
-          no_operation!()
+          no_operation!().value
+        end
+        
+        class KeyPressEvent < Struct.new(:detail, :time, :root, :event, :child, :root_x, :root_y, :event_x, :event_y, :state, :same_screen, :synthetic)
+          def event_type
+            :key_press_event
+          end
         end
         
         def encode_key_press_event (detail, time, root, event, child, root_x, root_y, event_x, event_y, state, same_screen)
@@ -2456,13 +2474,19 @@ module Alembic
         end
         
         def decode_key_press_event (s)
-          x = {}
+          x = KeyPressEvent.new
           x[:detail], x[:time], x[:root], x[:event], x[:child], x[:root_x], x[:root_y], x[:event_x], x[:event_y], x[:state], x[:same_screen], = s.slice!(0, 29).unpack("CLLLLssssSCx1")
           x[:root] = Window[self, x[:root]]
           x[:event] = Window[self, x[:event]]
           x[:child] = Window[self, x[:child]]
           x[:same_screen] = x[:same_screen] != 0
           x
+        end
+        
+        class KeyReleaseEvent < Struct.new(:detail, :time, :root, :event, :child, :root_x, :root_y, :event_x, :event_y, :state, :same_screen, :synthetic)
+          def event_type
+            :key_release_event
+          end
         end
         
         def encode_key_release_event (detail, time, root, event, child, root_x, root_y, event_x, event_y, state, same_screen)
@@ -2474,13 +2498,19 @@ module Alembic
         end
         
         def decode_key_release_event (s)
-          x = {}
+          x = KeyReleaseEvent.new
           x[:detail], x[:time], x[:root], x[:event], x[:child], x[:root_x], x[:root_y], x[:event_x], x[:event_y], x[:state], x[:same_screen], = s.slice!(0, 29).unpack("CLLLLssssSCx1")
           x[:root] = Window[self, x[:root]]
           x[:event] = Window[self, x[:event]]
           x[:child] = Window[self, x[:child]]
           x[:same_screen] = x[:same_screen] != 0
           x
+        end
+        
+        class ButtonPressEvent < Struct.new(:detail, :time, :root, :event, :child, :root_x, :root_y, :event_x, :event_y, :state, :same_screen, :synthetic)
+          def event_type
+            :button_press_event
+          end
         end
         
         def encode_button_press_event (detail, time, root, event, child, root_x, root_y, event_x, event_y, state, same_screen)
@@ -2492,13 +2522,19 @@ module Alembic
         end
         
         def decode_button_press_event (s)
-          x = {}
+          x = ButtonPressEvent.new
           x[:detail], x[:time], x[:root], x[:event], x[:child], x[:root_x], x[:root_y], x[:event_x], x[:event_y], x[:state], x[:same_screen], = s.slice!(0, 29).unpack("CLLLLssssSCx1")
           x[:root] = Window[self, x[:root]]
           x[:event] = Window[self, x[:event]]
           x[:child] = Window[self, x[:child]]
           x[:same_screen] = x[:same_screen] != 0
           x
+        end
+        
+        class ButtonReleaseEvent < Struct.new(:detail, :time, :root, :event, :child, :root_x, :root_y, :event_x, :event_y, :state, :same_screen, :synthetic)
+          def event_type
+            :button_release_event
+          end
         end
         
         def encode_button_release_event (detail, time, root, event, child, root_x, root_y, event_x, event_y, state, same_screen)
@@ -2510,13 +2546,19 @@ module Alembic
         end
         
         def decode_button_release_event (s)
-          x = {}
+          x = ButtonReleaseEvent.new
           x[:detail], x[:time], x[:root], x[:event], x[:child], x[:root_x], x[:root_y], x[:event_x], x[:event_y], x[:state], x[:same_screen], = s.slice!(0, 29).unpack("CLLLLssssSCx1")
           x[:root] = Window[self, x[:root]]
           x[:event] = Window[self, x[:event]]
           x[:child] = Window[self, x[:child]]
           x[:same_screen] = x[:same_screen] != 0
           x
+        end
+        
+        class MotionNotifyEvent < Struct.new(:detail, :time, :root, :event, :child, :root_x, :root_y, :event_x, :event_y, :state, :same_screen, :synthetic)
+          def event_type
+            :motion_notify_event
+          end
         end
         
         def encode_motion_notify_event (detail, time, root, event, child, root_x, root_y, event_x, event_y, state, same_screen)
@@ -2528,13 +2570,19 @@ module Alembic
         end
         
         def decode_motion_notify_event (s)
-          x = {}
+          x = MotionNotifyEvent.new
           x[:detail], x[:time], x[:root], x[:event], x[:child], x[:root_x], x[:root_y], x[:event_x], x[:event_y], x[:state], x[:same_screen], = s.slice!(0, 29).unpack("CLLLLssssSCx1")
           x[:root] = Window[self, x[:root]]
           x[:event] = Window[self, x[:event]]
           x[:child] = Window[self, x[:child]]
           x[:same_screen] = x[:same_screen] != 0
           x
+        end
+        
+        class EnterNotifyEvent < Struct.new(:detail, :time, :root, :event, :child, :root_x, :root_y, :event_x, :event_y, :state, :mode, :same_screen_focus, :synthetic)
+          def event_type
+            :enter_notify_event
+          end
         end
         
         def encode_enter_notify_event (detail, time, root, event, child, root_x, root_y, event_x, event_y, state, mode, same_screen_focus)
@@ -2546,12 +2594,18 @@ module Alembic
         end
         
         def decode_enter_notify_event (s)
-          x = {}
+          x = EnterNotifyEvent.new
           x[:detail], x[:time], x[:root], x[:event], x[:child], x[:root_x], x[:root_y], x[:event_x], x[:event_y], x[:state], x[:mode], x[:same_screen_focus], = s.slice!(0, 29).unpack("CLLLLssssSCC")
           x[:root] = Window[self, x[:root]]
           x[:event] = Window[self, x[:event]]
           x[:child] = Window[self, x[:child]]
           x
+        end
+        
+        class LeaveNotifyEvent < Struct.new(:detail, :time, :root, :event, :child, :root_x, :root_y, :event_x, :event_y, :state, :mode, :same_screen_focus, :synthetic)
+          def event_type
+            :leave_notify_event
+          end
         end
         
         def encode_leave_notify_event (detail, time, root, event, child, root_x, root_y, event_x, event_y, state, mode, same_screen_focus)
@@ -2563,12 +2617,18 @@ module Alembic
         end
         
         def decode_leave_notify_event (s)
-          x = {}
+          x = LeaveNotifyEvent.new
           x[:detail], x[:time], x[:root], x[:event], x[:child], x[:root_x], x[:root_y], x[:event_x], x[:event_y], x[:state], x[:mode], x[:same_screen_focus], = s.slice!(0, 29).unpack("CLLLLssssSCC")
           x[:root] = Window[self, x[:root]]
           x[:event] = Window[self, x[:event]]
           x[:child] = Window[self, x[:child]]
           x
+        end
+        
+        class FocusInEvent < Struct.new(:detail, :event, :mode, :synthetic)
+          def event_type
+            :focus_in_event
+          end
         end
         
         def encode_focus_in_event (detail, event, mode)
@@ -2580,10 +2640,16 @@ module Alembic
         end
         
         def decode_focus_in_event (s)
-          x = {}
+          x = FocusInEvent.new
           x[:detail], x[:event], x[:mode], = s.slice!(0, 9).unpack("CLCx3")
           x[:event] = Window[self, x[:event]]
           x
+        end
+        
+        class FocusOutEvent < Struct.new(:detail, :event, :mode, :synthetic)
+          def event_type
+            :focus_out_event
+          end
         end
         
         def encode_focus_out_event (detail, event, mode)
@@ -2595,10 +2661,16 @@ module Alembic
         end
         
         def decode_focus_out_event (s)
-          x = {}
+          x = FocusOutEvent.new
           x[:detail], x[:event], x[:mode], = s.slice!(0, 9).unpack("CLCx3")
           x[:event] = Window[self, x[:event]]
           x
+        end
+        
+        class KeymapNotifyEvent < Struct.new(:keys, :synthetic)
+          def event_type
+            :keymap_notify_event
+          end
         end
         
         def encode_keymap_notify_event (keys)
@@ -2610,9 +2682,15 @@ module Alembic
         end
         
         def decode_keymap_notify_event (s)
-          x = {}
+          x = KeymapNotifyEvent.new
           x[:keys] = s.slice!(0..31).unpack('C*')
           x
+        end
+        
+        class ExposeEvent < Struct.new(:window, :x, :y, :width, :height, :count, :synthetic)
+          def event_type
+            :expose_event
+          end
         end
         
         def encode_expose_event (window, x, y, width, height, count)
@@ -2624,10 +2702,16 @@ module Alembic
         end
         
         def decode_expose_event (s)
-          x = {}
+          x = ExposeEvent.new
           x[:window], x[:x], x[:y], x[:width], x[:height], x[:count], = s.slice!(0, 17).unpack("x1LSSSSSx2")
           x[:window] = Window[self, x[:window]]
           x
+        end
+        
+        class GraphicsExposureEvent < Struct.new(:drawable, :x, :y, :width, :height, :minor_opcode, :count, :major_opcode, :synthetic)
+          def event_type
+            :graphics_exposure_event
+          end
         end
         
         def encode_graphics_exposure_event (drawable, x, y, width, height, minor_opcode, count, major_opcode)
@@ -2639,10 +2723,16 @@ module Alembic
         end
         
         def decode_graphics_exposure_event (s)
-          x = {}
+          x = GraphicsExposureEvent.new
           x[:drawable], x[:x], x[:y], x[:width], x[:height], x[:minor_opcode], x[:count], x[:major_opcode], = s.slice!(0, 21).unpack("x1LSSSSSSCx3")
           x[:drawable] = Drawable[self, x[:drawable]]
           x
+        end
+        
+        class NoExposureEvent < Struct.new(:drawable, :minor_opcode, :major_opcode, :synthetic)
+          def event_type
+            :no_exposure_event
+          end
         end
         
         def encode_no_exposure_event (drawable, minor_opcode, major_opcode)
@@ -2654,10 +2744,16 @@ module Alembic
         end
         
         def decode_no_exposure_event (s)
-          x = {}
+          x = NoExposureEvent.new
           x[:drawable], x[:minor_opcode], x[:major_opcode], = s.slice!(0, 9).unpack("x1LSCx1")
           x[:drawable] = Drawable[self, x[:drawable]]
           x
+        end
+        
+        class VisibilityNotifyEvent < Struct.new(:window, :state, :synthetic)
+          def event_type
+            :visibility_notify_event
+          end
         end
         
         def encode_visibility_notify_event (window, state)
@@ -2669,10 +2765,16 @@ module Alembic
         end
         
         def decode_visibility_notify_event (s)
-          x = {}
+          x = VisibilityNotifyEvent.new
           x[:window], x[:state], = s.slice!(0, 9).unpack("x1LCx3")
           x[:window] = Window[self, x[:window]]
           x
+        end
+        
+        class CreateNotifyEvent < Struct.new(:parent, :window, :x, :y, :width, :height, :border_width, :override_redirect, :synthetic)
+          def event_type
+            :create_notify_event
+          end
         end
         
         def encode_create_notify_event (parent, window, x, y, width, height, border_width, override_redirect)
@@ -2684,12 +2786,18 @@ module Alembic
         end
         
         def decode_create_notify_event (s)
-          x = {}
+          x = CreateNotifyEvent.new
           x[:parent], x[:window], x[:x], x[:y], x[:width], x[:height], x[:border_width], x[:override_redirect], = s.slice!(0, 21).unpack("x1LLssSSSCx1")
           x[:parent] = Window[self, x[:parent]]
           x[:window] = Window[self, x[:window]]
           x[:override_redirect] = x[:override_redirect] != 0
           x
+        end
+        
+        class DestroyNotifyEvent < Struct.new(:event, :window, :synthetic)
+          def event_type
+            :destroy_notify_event
+          end
         end
         
         def encode_destroy_notify_event (event, window)
@@ -2701,11 +2809,17 @@ module Alembic
         end
         
         def decode_destroy_notify_event (s)
-          x = {}
+          x = DestroyNotifyEvent.new
           x[:event], x[:window], = s.slice!(0, 9).unpack("x1LL")
           x[:event] = Window[self, x[:event]]
           x[:window] = Window[self, x[:window]]
           x
+        end
+        
+        class UnmapNotifyEvent < Struct.new(:event, :window, :from_configure, :synthetic)
+          def event_type
+            :unmap_notify_event
+          end
         end
         
         def encode_unmap_notify_event (event, window, from_configure)
@@ -2717,12 +2831,18 @@ module Alembic
         end
         
         def decode_unmap_notify_event (s)
-          x = {}
+          x = UnmapNotifyEvent.new
           x[:event], x[:window], x[:from_configure], = s.slice!(0, 13).unpack("x1LLCx3")
           x[:event] = Window[self, x[:event]]
           x[:window] = Window[self, x[:window]]
           x[:from_configure] = x[:from_configure] != 0
           x
+        end
+        
+        class MapNotifyEvent < Struct.new(:event, :window, :override_redirect, :synthetic)
+          def event_type
+            :map_notify_event
+          end
         end
         
         def encode_map_notify_event (event, window, override_redirect)
@@ -2734,12 +2854,18 @@ module Alembic
         end
         
         def decode_map_notify_event (s)
-          x = {}
+          x = MapNotifyEvent.new
           x[:event], x[:window], x[:override_redirect], = s.slice!(0, 13).unpack("x1LLCx3")
           x[:event] = Window[self, x[:event]]
           x[:window] = Window[self, x[:window]]
           x[:override_redirect] = x[:override_redirect] != 0
           x
+        end
+        
+        class MapRequestEvent < Struct.new(:parent, :window, :synthetic)
+          def event_type
+            :map_request_event
+          end
         end
         
         def encode_map_request_event (parent, window)
@@ -2751,11 +2877,17 @@ module Alembic
         end
         
         def decode_map_request_event (s)
-          x = {}
+          x = MapRequestEvent.new
           x[:parent], x[:window], = s.slice!(0, 9).unpack("x1LL")
           x[:parent] = Window[self, x[:parent]]
           x[:window] = Window[self, x[:window]]
           x
+        end
+        
+        class ReparentNotifyEvent < Struct.new(:event, :window, :parent, :x, :y, :override_redirect, :synthetic)
+          def event_type
+            :reparent_notify_event
+          end
         end
         
         def encode_reparent_notify_event (event, window, parent, x, y, override_redirect)
@@ -2767,13 +2899,19 @@ module Alembic
         end
         
         def decode_reparent_notify_event (s)
-          x = {}
+          x = ReparentNotifyEvent.new
           x[:event], x[:window], x[:parent], x[:x], x[:y], x[:override_redirect], = s.slice!(0, 21).unpack("x1LLLssCx3")
           x[:event] = Window[self, x[:event]]
           x[:window] = Window[self, x[:window]]
           x[:parent] = Window[self, x[:parent]]
           x[:override_redirect] = x[:override_redirect] != 0
           x
+        end
+        
+        class ConfigureNotifyEvent < Struct.new(:event, :window, :above_sibling, :x, :y, :width, :height, :border_width, :override_redirect, :synthetic)
+          def event_type
+            :configure_notify_event
+          end
         end
         
         def encode_configure_notify_event (event, window, above_sibling, x, y, width, height, border_width, override_redirect)
@@ -2785,13 +2923,19 @@ module Alembic
         end
         
         def decode_configure_notify_event (s)
-          x = {}
+          x = ConfigureNotifyEvent.new
           x[:event], x[:window], x[:above_sibling], x[:x], x[:y], x[:width], x[:height], x[:border_width], x[:override_redirect], = s.slice!(0, 25).unpack("x1LLLssSSSCx1")
           x[:event] = Window[self, x[:event]]
           x[:window] = Window[self, x[:window]]
           x[:above_sibling] = Window[self, x[:above_sibling]]
           x[:override_redirect] = x[:override_redirect] != 0
           x
+        end
+        
+        class ConfigureRequestEvent < Struct.new(:stack_mode, :parent, :window, :sibling, :x, :y, :width, :height, :border_width, :value_mask, :synthetic)
+          def event_type
+            :configure_request_event
+          end
         end
         
         def encode_configure_request_event (stack_mode, parent, window, sibling, x, y, width, height, border_width, value_mask)
@@ -2803,12 +2947,18 @@ module Alembic
         end
         
         def decode_configure_request_event (s)
-          x = {}
+          x = ConfigureRequestEvent.new
           x[:stack_mode], x[:parent], x[:window], x[:sibling], x[:x], x[:y], x[:width], x[:height], x[:border_width], x[:value_mask], = s.slice!(0, 25).unpack("CLLLssSSSS")
           x[:parent] = Window[self, x[:parent]]
           x[:window] = Window[self, x[:window]]
           x[:sibling] = Window[self, x[:sibling]]
           x
+        end
+        
+        class GravityNotifyEvent < Struct.new(:event, :window, :x, :y, :synthetic)
+          def event_type
+            :gravity_notify_event
+          end
         end
         
         def encode_gravity_notify_event (event, window, x, y)
@@ -2820,11 +2970,17 @@ module Alembic
         end
         
         def decode_gravity_notify_event (s)
-          x = {}
+          x = GravityNotifyEvent.new
           x[:event], x[:window], x[:x], x[:y], = s.slice!(0, 13).unpack("x1LLss")
           x[:event] = Window[self, x[:event]]
           x[:window] = Window[self, x[:window]]
           x
+        end
+        
+        class ResizeRequestEvent < Struct.new(:window, :width, :height, :synthetic)
+          def event_type
+            :resize_request_event
+          end
         end
         
         def encode_resize_request_event (window, width, height)
@@ -2836,10 +2992,16 @@ module Alembic
         end
         
         def decode_resize_request_event (s)
-          x = {}
+          x = ResizeRequestEvent.new
           x[:window], x[:width], x[:height], = s.slice!(0, 9).unpack("x1LSS")
           x[:window] = Window[self, x[:window]]
           x
+        end
+        
+        class CirculateNotifyEvent < Struct.new(:event, :window, :place, :synthetic)
+          def event_type
+            :circulate_notify_event
+          end
         end
         
         def encode_circulate_notify_event (event, window, place)
@@ -2851,11 +3013,17 @@ module Alembic
         end
         
         def decode_circulate_notify_event (s)
-          x = {}
+          x = CirculateNotifyEvent.new
           x[:event], x[:window], x[:place], = s.slice!(0, 17).unpack("x1LLx4Cx3")
           x[:event] = Window[self, x[:event]]
           x[:window] = Window[self, x[:window]]
           x
+        end
+        
+        class CirculateRequestEvent < Struct.new(:event, :window, :place, :synthetic)
+          def event_type
+            :circulate_request_event
+          end
         end
         
         def encode_circulate_request_event (event, window, place)
@@ -2867,11 +3035,17 @@ module Alembic
         end
         
         def decode_circulate_request_event (s)
-          x = {}
+          x = CirculateRequestEvent.new
           x[:event], x[:window], x[:place], = s.slice!(0, 17).unpack("x1LLx4Cx3")
           x[:event] = Window[self, x[:event]]
           x[:window] = Window[self, x[:window]]
           x
+        end
+        
+        class PropertyNotifyEvent < Struct.new(:window, :atom, :time, :state, :synthetic)
+          def event_type
+            :property_notify_event
+          end
         end
         
         def encode_property_notify_event (window, atom, time, state)
@@ -2883,11 +3057,17 @@ module Alembic
         end
         
         def decode_property_notify_event (s)
-          x = {}
+          x = PropertyNotifyEvent.new
           x[:window], x[:atom], x[:time], x[:state], = s.slice!(0, 17).unpack("x1LLLCx3")
           x[:window] = Window[self, x[:window]]
           x[:atom] = Atom[self, x[:atom]]
           x
+        end
+        
+        class SelectionClearEvent < Struct.new(:time, :owner, :selection, :synthetic)
+          def event_type
+            :selection_clear_event
+          end
         end
         
         def encode_selection_clear_event (time, owner, selection)
@@ -2899,11 +3079,17 @@ module Alembic
         end
         
         def decode_selection_clear_event (s)
-          x = {}
+          x = SelectionClearEvent.new
           x[:time], x[:owner], x[:selection], = s.slice!(0, 13).unpack("x1LLL")
           x[:owner] = Window[self, x[:owner]]
           x[:selection] = Atom[self, x[:selection]]
           x
+        end
+        
+        class SelectionRequestEvent < Struct.new(:time, :owner, :requestor, :selection, :target, :property, :synthetic)
+          def event_type
+            :selection_request_event
+          end
         end
         
         def encode_selection_request_event (time, owner, requestor, selection, target, property)
@@ -2915,7 +3101,7 @@ module Alembic
         end
         
         def decode_selection_request_event (s)
-          x = {}
+          x = SelectionRequestEvent.new
           x[:time], x[:owner], x[:requestor], x[:selection], x[:target], x[:property], = s.slice!(0, 25).unpack("x1LLLLLL")
           x[:owner] = Window[self, x[:owner]]
           x[:requestor] = Window[self, x[:requestor]]
@@ -2923,6 +3109,12 @@ module Alembic
           x[:target] = Atom[self, x[:target]]
           x[:property] = Atom[self, x[:property]]
           x
+        end
+        
+        class SelectionNotifyEvent < Struct.new(:time, :requestor, :selection, :target, :property, :synthetic)
+          def event_type
+            :selection_notify_event
+          end
         end
         
         def encode_selection_notify_event (time, requestor, selection, target, property)
@@ -2934,13 +3126,19 @@ module Alembic
         end
         
         def decode_selection_notify_event (s)
-          x = {}
+          x = SelectionNotifyEvent.new
           x[:time], x[:requestor], x[:selection], x[:target], x[:property], = s.slice!(0, 21).unpack("x1LLLLL")
           x[:requestor] = Window[self, x[:requestor]]
           x[:selection] = Atom[self, x[:selection]]
           x[:target] = Atom[self, x[:target]]
           x[:property] = Atom[self, x[:property]]
           x
+        end
+        
+        class ColormapNotifyEvent < Struct.new(:window, :colormap, :new, :state, :synthetic)
+          def event_type
+            :colormap_notify_event
+          end
         end
         
         def encode_colormap_notify_event (window, colormap, new, state)
@@ -2952,12 +3150,18 @@ module Alembic
         end
         
         def decode_colormap_notify_event (s)
-          x = {}
+          x = ColormapNotifyEvent.new
           x[:window], x[:colormap], x[:new], x[:state], = s.slice!(0, 13).unpack("x1LLCCx2")
           x[:window] = Window[self, x[:window]]
           x[:colormap] = Colormap[self, x[:colormap]]
           x[:new] = x[:new] != 0
           x
+        end
+        
+        class ClientMessageEvent < Struct.new(:format, :window, :type, :data, :synthetic)
+          def event_type
+            :client_message_event
+          end
         end
         
         def encode_client_message_event (format, window, type, data)
@@ -2970,12 +3174,18 @@ module Alembic
         end
         
         def decode_client_message_event (s)
-          x = {}
+          x = ClientMessageEvent.new
           x[:format], x[:window], x[:type], = s.slice!(0, 9).unpack("CLL")
           x[:window] = Window[self, x[:window]]
           x[:type] = Atom[self, x[:type]]
           x[:data] = decode_client_message_data(s)
           x
+        end
+        
+        class MappingNotifyEvent < Struct.new(:request, :first_keycode, :count, :synthetic)
+          def event_type
+            :mapping_notify_event
+          end
         end
         
         def encode_mapping_notify_event (request, first_keycode, count)
@@ -2987,23 +3197,31 @@ module Alembic
         end
         
         def decode_mapping_notify_event (s)
-          x = {}
+          x = MappingNotifyEvent.new
           x[:request], x[:first_keycode], x[:count], = s.slice!(0, 5).unpack("x1CCCx1")
           x
         end
         
-        def encode_ge_event ()
+        class GeGenericEvent < Struct.new(:synthetic)
+          def event_type
+            :ge_generic_event
+          end
+        end
+        
+        def encode_ge_generic_event ()
           s = 35.chr.encode('BINARY')
           s = s.ljust(30, "\0")
           s[2, 0] = "\0\0"
           s
         end
         
-        def decode_ge_event (s)
-          x = {}
+        def decode_ge_generic_event (s)
+          x = GeGenericEvent.new
           s.slice!(0, 22)
           x
         end
+        
+        Char2b = Struct.new(:byte1, :byte2)
         
         def encode_char2b (s, byte1, byte2)
           s << [byte1, byte2].pack("CC")
@@ -3011,10 +3229,12 @@ module Alembic
         end
         
         def decode_char2b (s)
-          x = {}
+          x = Char2b.new
           x[:byte1], x[:byte2], = s.slice!(0, 2).unpack("CC")
           x
         end
+        
+        Point = Struct.new(:x, :y)
         
         def encode_point (s, x, y)
           s << [x, y].pack("ss")
@@ -3022,10 +3242,12 @@ module Alembic
         end
         
         def decode_point (s)
-          x = {}
+          x = Point.new
           x[:x], x[:y], = s.slice!(0, 4).unpack("ss")
           x
         end
+        
+        Rectangle = Struct.new(:x, :y, :width, :height)
         
         def encode_rectangle (s, x, y, width, height)
           s << [x, y, width, height].pack("ssSS")
@@ -3033,10 +3255,12 @@ module Alembic
         end
         
         def decode_rectangle (s)
-          x = {}
+          x = Rectangle.new
           x[:x], x[:y], x[:width], x[:height], = s.slice!(0, 8).unpack("ssSS")
           x
         end
+        
+        Arc = Struct.new(:x, :y, :width, :height, :angle1, :angle2)
         
         def encode_arc (s, x, y, width, height, angle1, angle2)
           s << [x, y, width, height, angle1, angle2].pack("ssSSss")
@@ -3044,10 +3268,12 @@ module Alembic
         end
         
         def decode_arc (s)
-          x = {}
+          x = Arc.new
           x[:x], x[:y], x[:width], x[:height], x[:angle1], x[:angle2], = s.slice!(0, 12).unpack("ssSSss")
           x
         end
+        
+        Format = Struct.new(:depth, :bits_per_pixel, :scanline_pad)
         
         def encode_format (s, depth, bits_per_pixel, scanline_pad)
           s << [depth, bits_per_pixel, scanline_pad].pack("CCCx5")
@@ -3055,10 +3281,12 @@ module Alembic
         end
         
         def decode_format (s)
-          x = {}
+          x = Format.new
           x[:depth], x[:bits_per_pixel], x[:scanline_pad], = s.slice!(0, 8).unpack("CCCx5")
           x
         end
+        
+        Visualtype = Struct.new(:visual_id, :klass, :bits_per_rgb_value, :colormap_entries, :red_mask, :green_mask, :blue_mask)
         
         def encode_visualtype (s, visual_id, klass, bits_per_rgb_value, colormap_entries, red_mask, green_mask, blue_mask)
           s << [visual_id, klass, bits_per_rgb_value, colormap_entries, red_mask, green_mask, blue_mask].pack("LCCSLLLx4")
@@ -3066,10 +3294,12 @@ module Alembic
         end
         
         def decode_visualtype (s)
-          x = {}
+          x = Visualtype.new
           x[:visual_id], x[:klass], x[:bits_per_rgb_value], x[:colormap_entries], x[:red_mask], x[:green_mask], x[:blue_mask], = s.slice!(0, 24).unpack("LCCSLLLx4")
           x
         end
+        
+        Depth = Struct.new(:depth, :visuals_len, :visuals)
         
         def encode_depth (s, depth, visuals)
           visuals_len = visuals.length
@@ -3079,11 +3309,13 @@ module Alembic
         end
         
         def decode_depth (s)
-          x = {}
+          x = Depth.new
           x[:depth], x[:visuals_len], = s.slice!(0, 8).unpack("Cx1Sx4")
           x[:visuals] = x[:visuals_len].times.map{decode_visualtype(s)}
           x
         end
+        
+        Screen = Struct.new(:root, :default_colormap, :white_pixel, :black_pixel, :current_input_masks, :width_in_pixels, :height_in_pixels, :width_in_millimeters, :height_in_millimeters, :min_installed_maps, :max_installed_maps, :root_visual, :backing_stores, :save_unders, :root_depth, :allowed_depths_len, :allowed_depths)
         
         def encode_screen (s, root, default_colormap, white_pixel, black_pixel, current_input_masks, width_in_pixels, height_in_pixels, width_in_millimeters, height_in_millimeters, min_installed_maps, max_installed_maps, root_visual, backing_stores, save_unders, root_depth, allowed_depths)
           allowed_depths_len = allowed_depths.length
@@ -3093,7 +3325,7 @@ module Alembic
         end
         
         def decode_screen (s)
-          x = {}
+          x = Screen.new
           x[:root], x[:default_colormap], x[:white_pixel], x[:black_pixel], x[:current_input_masks], x[:width_in_pixels], x[:height_in_pixels], x[:width_in_millimeters], x[:height_in_millimeters], x[:min_installed_maps], x[:max_installed_maps], x[:root_visual], x[:backing_stores], x[:save_unders], x[:root_depth], x[:allowed_depths_len], = s.slice!(0, 40).unpack("LLLLLSSSSSSLCCCC")
           x[:root] = Window[self, x[:root]]
           x[:default_colormap] = Colormap[self, x[:default_colormap]]
@@ -3101,6 +3333,8 @@ module Alembic
           x[:allowed_depths] = x[:allowed_depths_len].times.map{decode_depth(s)}
           x
         end
+        
+        SetupRequest = Struct.new(:byte_order, :protocol_major_version, :protocol_minor_version, :authorization_protocol_name_len, :authorization_protocol_data_len, :authorization_protocol_name, :authorization_protocol_data)
         
         def encode_setup_request (s, byte_order, protocol_major_version, protocol_minor_version, authorization_protocol_name, authorization_protocol_data)
           authorization_protocol_name_len = authorization_protocol_name.length
@@ -3110,12 +3344,14 @@ module Alembic
         end
         
         def decode_setup_request (s)
-          x = {}
+          x = SetupRequest.new
           x[:byte_order], x[:protocol_major_version], x[:protocol_minor_version], x[:authorization_protocol_name_len], x[:authorization_protocol_data_len], = s.slice!(0, 12).unpack("Cx1SSSSx2")
           x[:authorization_protocol_name] = s.slice!(0, x[:authorization_protocol_name_len])
           x[:authorization_protocol_data] = s.slice!(0, x[:authorization_protocol_data_len])
           x
         end
+        
+        SetupFailed = Struct.new(:status, :reason_len, :protocol_major_version, :protocol_minor_version, :length, :reason)
         
         def encode_setup_failed (s, status, protocol_major_version, protocol_minor_version, length, reason)
           reason_len = reason.length
@@ -3124,11 +3360,13 @@ module Alembic
         end
         
         def decode_setup_failed (s)
-          x = {}
+          x = SetupFailed.new
           x[:status], x[:reason_len], x[:protocol_major_version], x[:protocol_minor_version], x[:length], = s.slice!(0, 8).unpack("CCSSS")
           x[:reason] = s.slice!(0, x[:reason_len])
           x
         end
+        
+        SetupAuthenticate = Struct.new(:status, :length, :reason)
         
         def encode_setup_authenticate (s, status, length, reason)
           s << [status, length, pad(reason)].pack("Cx5SA*")
@@ -3136,11 +3374,13 @@ module Alembic
         end
         
         def decode_setup_authenticate (s)
-          x = {}
+          x = SetupAuthenticate.new
           x[:status], x[:length], = s.slice!(0, 8).unpack("Cx5S")
           x[:reason] = s.slice!(0, (x[:length] * 4))
           x
         end
+        
+        Setup = Struct.new(:status, :protocol_major_version, :protocol_minor_version, :length, :release_number, :resource_id_base, :resource_id_mask, :motion_buffer_size, :vendor_len, :maximum_request_length, :roots_len, :pixmap_formats_len, :image_byte_order, :bitmap_format_bit_order, :bitmap_format_scanline_unit, :bitmap_format_scanline_pad, :min_keycode, :max_keycode, :vendor, :pixmap_formats, :roots)
         
         def encode_setup (s, status, protocol_major_version, protocol_minor_version, length, release_number, resource_id_base, resource_id_mask, motion_buffer_size, maximum_request_length, image_byte_order, bitmap_format_bit_order, bitmap_format_scanline_unit, bitmap_format_scanline_pad, min_keycode, max_keycode, vendor, pixmap_formats, roots)
           vendor_len = vendor.length
@@ -3153,7 +3393,7 @@ module Alembic
         end
         
         def decode_setup (s)
-          x = {}
+          x = Setup.new
           x[:status], x[:protocol_major_version], x[:protocol_minor_version], x[:length], x[:release_number], x[:resource_id_base], x[:resource_id_mask], x[:motion_buffer_size], x[:vendor_len], x[:maximum_request_length], x[:roots_len], x[:pixmap_formats_len], x[:image_byte_order], x[:bitmap_format_bit_order], x[:bitmap_format_scanline_unit], x[:bitmap_format_scanline_pad], x[:min_keycode], x[:max_keycode], = s.slice!(0, 40).unpack("Cx1SSSLLLLSSCCCCCCCCx4")
           x[:vendor] = s.slice!(0, x[:vendor_len])
           x[:pixmap_formats] = x[:pixmap_formats_len].times.map{decode_format(s)}
@@ -3161,16 +3401,20 @@ module Alembic
           x
         end
         
+        Timecoord = Struct.new(:time, :x, :y)
+        
         def encode_timecoord (s, time, x, y)
           s << [time, x, y].pack("Lss")
           s
         end
         
         def decode_timecoord (s)
-          x = {}
+          x = Timecoord.new
           x[:time], x[:x], x[:y], = s.slice!(0, 8).unpack("Lss")
           x
         end
+        
+        Fontprop = Struct.new(:name, :value)
         
         def encode_fontprop (s, name, value)
           s << [Atom.to_xid(self, name), value].pack("LL")
@@ -3178,11 +3422,13 @@ module Alembic
         end
         
         def decode_fontprop (s)
-          x = {}
+          x = Fontprop.new
           x[:name], x[:value], = s.slice!(0, 8).unpack("LL")
           x[:name] = Atom[self, x[:name]]
           x
         end
+        
+        Charinfo = Struct.new(:left_side_bearing, :right_side_bearing, :character_width, :ascent, :descent, :attributes)
         
         def encode_charinfo (s, left_side_bearing, right_side_bearing, character_width, ascent, descent, attributes)
           s << [left_side_bearing, right_side_bearing, character_width, ascent, descent, attributes].pack("sssssS")
@@ -3190,10 +3436,12 @@ module Alembic
         end
         
         def decode_charinfo (s)
-          x = {}
+          x = Charinfo.new
           x[:left_side_bearing], x[:right_side_bearing], x[:character_width], x[:ascent], x[:descent], x[:attributes], = s.slice!(0, 12).unpack("sssssS")
           x
         end
+        
+        Str = Struct.new(:name_len, :name)
         
         def encode_str (s, name)
           name_len = name.length
@@ -3202,11 +3450,13 @@ module Alembic
         end
         
         def decode_str (s)
-          x = {}
+          x = Str.new
           x[:name_len], = s.slice!(0, 1).unpack("C")
           x[:name] = s.slice!(0, x[:name_len])
           x
         end
+        
+        Segment = Struct.new(:x1, :y1, :x2, :y2)
         
         def encode_segment (s, x1, y1, x2, y2)
           s << [x1, y1, x2, y2].pack("ssss")
@@ -3214,10 +3464,12 @@ module Alembic
         end
         
         def decode_segment (s)
-          x = {}
+          x = Segment.new
           x[:x1], x[:y1], x[:x2], x[:y2], = s.slice!(0, 8).unpack("ssss")
           x
         end
+        
+        Coloritem = Struct.new(:pixel, :red, :green, :blue, :flags)
         
         def encode_coloritem (s, pixel, red, green, blue, flags)
           s << [pixel, red, green, blue, flags].pack("LSSSCx1")
@@ -3225,10 +3477,12 @@ module Alembic
         end
         
         def decode_coloritem (s)
-          x = {}
+          x = Coloritem.new
           x[:pixel], x[:red], x[:green], x[:blue], x[:flags], = s.slice!(0, 12).unpack("LSSSCx1")
           x
         end
+        
+        Rgb = Struct.new(:red, :green, :blue)
         
         def encode_rgb (s, red, green, blue)
           s << [red, green, blue].pack("SSSx2")
@@ -3236,10 +3490,12 @@ module Alembic
         end
         
         def decode_rgb (s)
-          x = {}
+          x = Rgb.new
           x[:red], x[:green], x[:blue], = s.slice!(0, 8).unpack("SSSx2")
           x
         end
+        
+        Host = Struct.new(:family, :address_len, :address)
         
         def encode_host (s, family, address)
           address_len = address.length
@@ -3248,7 +3504,7 @@ module Alembic
         end
         
         def decode_host (s)
-          x = {}
+          x = Host.new
           x[:family], x[:address_len], = s.slice!(0, 4).unpack("Cx1S")
           x[:address] = s.slice!(0, x[:address_len])
           x
@@ -3290,6 +3546,426 @@ module Alembic
           Fontable.new(self, alloc_xid)
         end
       
+      end
+      
+      class Xproto::Window
+        def create_window (depth, x, y, width, height, border_width, klass, visual, value_hash = {})
+          connection.create_window(depth, self, x, y, width, height, border_width, klass, visual, value_hash)
+        end
+      end
+      
+      class Xproto::Window
+        def change_window_attributes (value_hash = {})
+          connection.change_window_attributes(self, value_hash)
+        end
+      end
+      
+      class Xproto::Window
+        def get_window_attributes ()
+          connection.get_window_attributes(self)
+        end
+      end
+      
+      class Xproto::Window
+        def destroy_window ()
+          connection.destroy_window(self)
+        end
+      end
+      
+      class Xproto::Window
+        def destroy_subwindows ()
+          connection.destroy_subwindows(self)
+        end
+      end
+      
+      class Xproto::Window
+        def change_save_set (mode)
+          connection.change_save_set(mode, self)
+        end
+      end
+      
+      class Xproto::Window
+        def reparent_window (parent, x, y)
+          connection.reparent_window(self, parent, x, y)
+        end
+      end
+      
+      class Xproto::Window
+        def map_window ()
+          connection.map_window(self)
+        end
+      end
+      
+      class Xproto::Window
+        def map_subwindows ()
+          connection.map_subwindows(self)
+        end
+      end
+      
+      class Xproto::Window
+        def unmap_window ()
+          connection.unmap_window(self)
+        end
+      end
+      
+      class Xproto::Window
+        def unmap_subwindows ()
+          connection.unmap_subwindows(self)
+        end
+      end
+      
+      class Xproto::Window
+        def configure_window (value_hash = {})
+          connection.configure_window(self, value_hash)
+        end
+      end
+      
+      class Xproto::Window
+        def circulate_window (direction)
+          connection.circulate_window(direction, self)
+        end
+      end
+      
+      class Xproto::Drawable
+        def get_geometry ()
+          connection.get_geometry(self)
+        end
+      end
+      
+      class Xproto::Window
+        def query_tree ()
+          connection.query_tree(self)
+        end
+      end
+      
+      class Xproto::Atom
+        def get_atom_name ()
+          connection.get_atom_name(self)
+        end
+      end
+      
+      class Xproto::Window
+        def change_property (mode, property, type, format, data_len, data)
+          connection.change_property(mode, self, property, type, format, data_len, data)
+        end
+      end
+      
+      class Xproto::Window
+        def delete_property (property)
+          connection.delete_property(self, property)
+        end
+      end
+      
+      class Xproto::Window
+        def get_property (delete, property, type, long_offset, long_length)
+          connection.get_property(delete, self, property, type, long_offset, long_length)
+        end
+      end
+      
+      class Xproto::Window
+        def list_properties ()
+          connection.list_properties(self)
+        end
+      end
+      
+      class Xproto::Window
+        def set_selection_owner (selection, time)
+          connection.set_selection_owner(self, selection, time)
+        end
+      end
+      
+      class Xproto::Atom
+        def get_selection_owner ()
+          connection.get_selection_owner(self)
+        end
+      end
+      
+      class Xproto::Atom
+        def convert_selection (requestor, target, property, time)
+          connection.convert_selection(requestor, self, target, property, time)
+        end
+      end
+      
+      class Xproto::Window
+        def send_event (propagate, event_mask, event)
+          connection.send_event(propagate, self, event_mask, event)
+        end
+      end
+      
+      class Xproto::Window
+        def grab_button (owner_events, event_mask, pointer_mode, keyboard_mode, confine_to, cursor, button, modifiers)
+          connection.grab_button(owner_events, self, event_mask, pointer_mode, keyboard_mode, confine_to, cursor, button, modifiers)
+        end
+      end
+      
+      class Xproto::Window
+        def ungrab_button (button, modifiers)
+          connection.ungrab_button(button, self, modifiers)
+        end
+      end
+      
+      class Xproto::Window
+        def grab_key (owner_events, modifiers, key, pointer_mode, keyboard_mode)
+          connection.grab_key(owner_events, self, modifiers, key, pointer_mode, keyboard_mode)
+        end
+      end
+      
+      class Xproto::Window
+        def ungrab_key (key, modifiers)
+          connection.ungrab_key(key, self, modifiers)
+        end
+      end
+      
+      class Xproto::Window
+        def query_pointer ()
+          connection.query_pointer(self)
+        end
+      end
+      
+      class Xproto::Window
+        def get_motion_events (start, stop)
+          connection.get_motion_events(self, start, stop)
+        end
+      end
+      
+      class Xproto::Drawable
+        def create_gc (value_hash = {})
+          connection.create_gc(self, value_hash)
+        end
+      end
+      
+      class Xproto::Gcontext
+        def copy_gc (dst_gc, value_mask)
+          connection.copy_gc(self, dst_gc, value_mask)
+        end
+      end
+      
+      class Xproto::Gcontext
+        def set_dashes (dash_offset, dashes)
+          connection.set_dashes(self, dash_offset, dashes)
+        end
+      end
+      
+      class Xproto::Gcontext
+        def set_clip_rectangles (ordering, clip_x_origin, clip_y_origin, rectangles)
+          connection.set_clip_rectangles(ordering, self, clip_x_origin, clip_y_origin, rectangles)
+        end
+      end
+      
+      class Xproto::Gcontext
+        def free_gc ()
+          connection.free_gc(self)
+        end
+      end
+      
+      class Xproto::Window
+        def clear_area (exposures, x, y, width, height)
+          connection.clear_area(exposures, self, x, y, width, height)
+        end
+      end
+      
+      class Xproto::Drawable
+        def copy_area (src_drawable, gc, src_x, src_y, dst_x, dst_y, width, height)
+          connection.copy_area(src_drawable, self, gc, src_x, src_y, dst_x, dst_y, width, height)
+        end
+      end
+      
+      class Xproto::Drawable
+        def copy_plane (src_drawable, gc, src_x, src_y, dst_x, dst_y, width, height, bit_plane)
+          connection.copy_plane(src_drawable, self, gc, src_x, src_y, dst_x, dst_y, width, height, bit_plane)
+        end
+      end
+      
+      class Xproto::Drawable
+        def poly_point (coordinate_mode, gc, points)
+          connection.poly_point(coordinate_mode, self, gc, points)
+        end
+      end
+      
+      class Xproto::Drawable
+        def poly_line (coordinate_mode, gc, points)
+          connection.poly_line(coordinate_mode, self, gc, points)
+        end
+      end
+      
+      class Xproto::Drawable
+        def poly_segment (gc, segments)
+          connection.poly_segment(self, gc, segments)
+        end
+      end
+      
+      class Xproto::Drawable
+        def poly_rectangle (gc, rectangles)
+          connection.poly_rectangle(self, gc, rectangles)
+        end
+      end
+      
+      class Xproto::Drawable
+        def poly_arc (gc, arcs)
+          connection.poly_arc(self, gc, arcs)
+        end
+      end
+      
+      class Xproto::Drawable
+        def fill_poly (gc, shape, coordinate_mode, points)
+          connection.fill_poly(self, gc, shape, coordinate_mode, points)
+        end
+      end
+      
+      class Xproto::Drawable
+        def poly_fill_rectangle (gc, rectangles)
+          connection.poly_fill_rectangle(self, gc, rectangles)
+        end
+      end
+      
+      class Xproto::Drawable
+        def poly_fill_arc (gc, arcs)
+          connection.poly_fill_arc(self, gc, arcs)
+        end
+      end
+      
+      class Xproto::Drawable
+        def put_image (format, gc, width, height, dst_x, dst_y, left_pad, depth, data)
+          connection.put_image(format, self, gc, width, height, dst_x, dst_y, left_pad, depth, data)
+        end
+      end
+      
+      class Xproto::Drawable
+        def get_image (format, x, y, width, height, plane_mask)
+          connection.get_image(format, self, x, y, width, height, plane_mask)
+        end
+      end
+      
+      class Xproto::Drawable
+        def poly_text8 (gc, x, y, items)
+          connection.poly_text8(self, gc, x, y, items)
+        end
+      end
+      
+      class Xproto::Drawable
+        def poly_text16 (gc, x, y, items)
+          connection.poly_text16(self, gc, x, y, items)
+        end
+      end
+      
+      class Xproto::Drawable
+        def image_text8 (gc, x, y, string)
+          connection.image_text8(self, gc, x, y, string)
+        end
+      end
+      
+      class Xproto::Drawable
+        def image_text16 (gc, x, y, string)
+          connection.image_text16(self, gc, x, y, string)
+        end
+      end
+      
+      class Xproto::Window
+        def create_colormap (alloc, visual)
+          connection.create_colormap(alloc, self, visual)
+        end
+      end
+      
+      class Xproto::Colormap
+        def free_colormap ()
+          connection.free_colormap(self)
+        end
+      end
+      
+      class Xproto::Colormap
+        def copy_colormap_and_free (src_cmap)
+          connection.copy_colormap_and_free(self, src_cmap)
+        end
+      end
+      
+      class Xproto::Colormap
+        def install_colormap ()
+          connection.install_colormap(self)
+        end
+      end
+      
+      class Xproto::Colormap
+        def uninstall_colormap ()
+          connection.uninstall_colormap(self)
+        end
+      end
+      
+      class Xproto::Window
+        def list_installed_colormaps ()
+          connection.list_installed_colormaps(self)
+        end
+      end
+      
+      class Xproto::Colormap
+        def alloc_color (red, green, blue)
+          connection.alloc_color(self, red, green, blue)
+        end
+      end
+      
+      class Xproto::Colormap
+        def alloc_named_color (name)
+          connection.alloc_named_color(self, name)
+        end
+      end
+      
+      class Xproto::Colormap
+        def alloc_color_cells (contiguous, colors, planes)
+          connection.alloc_color_cells(contiguous, self, colors, planes)
+        end
+      end
+      
+      class Xproto::Colormap
+        def alloc_color_planes (contiguous, colors, reds, greens, blues)
+          connection.alloc_color_planes(contiguous, self, colors, reds, greens, blues)
+        end
+      end
+      
+      class Xproto::Colormap
+        def free_colors (plane_mask, pixels)
+          connection.free_colors(self, plane_mask, pixels)
+        end
+      end
+      
+      class Xproto::Colormap
+        def store_colors (items)
+          connection.store_colors(self, items)
+        end
+      end
+      
+      class Xproto::Colormap
+        def store_named_color (flags, pixel, name)
+          connection.store_named_color(flags, self, pixel, name)
+        end
+      end
+      
+      class Xproto::Colormap
+        def query_colors (pixels)
+          connection.query_colors(self, pixels)
+        end
+      end
+      
+      class Xproto::Colormap
+        def lookup_color (name)
+          connection.lookup_color(self, name)
+        end
+      end
+      
+      class Xproto::Cursor
+        def recolor_cursor (fore_red, fore_green, fore_blue, back_red, back_green, back_blue)
+          connection.recolor_cursor(self, fore_red, fore_green, fore_blue, back_red, back_green, back_blue)
+        end
+      end
+      
+      class Xproto::Drawable
+        def query_best_size (klass, width, height)
+          connection.query_best_size(klass, self, width, height)
+        end
+      end
+      
+      class Xproto::Window
+        def rotate_properties (delta, atoms)
+          connection.rotate_properties(self, delta, atoms)
+        end
       end
       
     end

@@ -58,6 +58,10 @@ module Alembic
         [name]
       end
       
+      def args
+        params
+      end
+      
       def encoder
         e = lookup(type).encoder("x")
         "#{name}.map{|x|#{e}}.join"

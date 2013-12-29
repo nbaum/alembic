@@ -4,10 +4,6 @@ module Alembic
     class XidType < Primitive
       attr_accessor :name, :already_compiled
       
-      def class_name
-        name.capitalize
-      end
-      
       def pack_arguments (expr)
         "#{class_name}.to_xid(self, #{expr})"
       end
@@ -22,6 +18,10 @@ module Alembic
       
       def type
         "CARD32"
+      end
+      
+      def allocator
+        "alloc_#{class_name.snake_case}"
       end
       
       def encoder expr

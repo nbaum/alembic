@@ -1,0 +1,3 @@
+[submodule "xcb-proto"]
+	path = xcb-proto
+	url = git@github.com:nbaum/xcb-proto.git

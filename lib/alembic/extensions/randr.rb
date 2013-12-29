@@ -175,7 +175,7 @@ module Alembic
         end
         
         def randr_query_version (major_version, minor_version)
-          randr_query_version!(major_version, minor_version).wait
+          randr_query_version!(major_version, minor_version).wait.value
         end
         
         def randr_set_screen_config! (window, timestamp, config_timestamp, sizeID, rotation, rate)
@@ -191,7 +191,7 @@ module Alembic
         end
         
         def randr_set_screen_config (window, timestamp, config_timestamp, sizeID, rotation, rate)
-          randr_set_screen_config!(window, timestamp, config_timestamp, sizeID, rotation, rate).wait
+          randr_set_screen_config!(window, timestamp, config_timestamp, sizeID, rotation, rate).wait.value
         end
         
         def randr_select_input! (window, enable)
@@ -202,7 +202,7 @@ module Alembic
         end
         
         def randr_select_input (window, enable)
-          randr_select_input!(window, enable)
+          randr_select_input!(window, enable).value
         end
         
         def randr_get_screen_info! (window)
@@ -220,7 +220,7 @@ module Alembic
         end
         
         def randr_get_screen_info (window)
-          randr_get_screen_info!(window).wait
+          randr_get_screen_info!(window).wait.value
         end
         
         def randr_get_screen_size_range! (window)
@@ -235,7 +235,7 @@ module Alembic
         end
         
         def randr_get_screen_size_range (window)
-          randr_get_screen_size_range!(window).wait
+          randr_get_screen_size_range!(window).wait.value
         end
         
         def randr_set_screen_size! (window, width, height, mm_width, mm_height)
@@ -246,7 +246,7 @@ module Alembic
         end
         
         def randr_set_screen_size (window, width, height, mm_width, mm_height)
-          randr_set_screen_size!(window, width, height, mm_width, mm_height)
+          randr_set_screen_size!(window, width, height, mm_width, mm_height).value
         end
         
         def randr_get_screen_resources! (window)
@@ -265,7 +265,7 @@ module Alembic
         end
         
         def randr_get_screen_resources (window)
-          randr_get_screen_resources!(window).wait
+          randr_get_screen_resources!(window).wait.value
         end
         
         def randr_get_output_info! (output, config_timestamp)
@@ -285,7 +285,7 @@ module Alembic
         end
         
         def randr_get_output_info (output, config_timestamp)
-          randr_get_output_info!(output, config_timestamp).wait
+          randr_get_output_info!(output, config_timestamp).wait.value
         end
         
         def randr_list_output_properties! (output)
@@ -301,7 +301,7 @@ module Alembic
         end
         
         def randr_list_output_properties (output)
-          randr_list_output_properties!(output).wait
+          randr_list_output_properties!(output).wait.value
         end
         
         def randr_query_output_property! (output, property)
@@ -320,7 +320,7 @@ module Alembic
         end
         
         def randr_query_output_property (output, property)
-          randr_query_output_property!(output, property).wait
+          randr_query_output_property!(output, property).wait.value
         end
         
         def randr_configure_output_property! (output, property, pending, range, values)
@@ -331,7 +331,7 @@ module Alembic
         end
         
         def randr_configure_output_property (output, property, pending, range, values)
-          randr_configure_output_property!(output, property, pending, range, values)
+          randr_configure_output_property!(output, property, pending, range, values).value
         end
         
         def randr_change_output_property! (output, property, type, format, mode, num_units, data)
@@ -342,7 +342,7 @@ module Alembic
         end
         
         def randr_change_output_property (output, property, type, format, mode, num_units, data)
-          randr_change_output_property!(output, property, type, format, mode, num_units, data)
+          randr_change_output_property!(output, property, type, format, mode, num_units, data).value
         end
         
         def randr_delete_output_property! (output, property)
@@ -353,7 +353,7 @@ module Alembic
         end
         
         def randr_delete_output_property (output, property)
-          randr_delete_output_property!(output, property)
+          randr_delete_output_property!(output, property).value
         end
         
         def randr_get_output_property! (output, property, type, long_offset, long_length, delete, pending)
@@ -370,7 +370,7 @@ module Alembic
         end
         
         def randr_get_output_property (output, property, type, long_offset, long_length, delete, pending)
-          randr_get_output_property!(output, property, type, long_offset, long_length, delete, pending).wait
+          randr_get_output_property!(output, property, type, long_offset, long_length, delete, pending).wait.value
         end
         
         def randr_create_mode! (window, mode_info, name)
@@ -388,7 +388,7 @@ module Alembic
         end
         
         def randr_create_mode (window, mode_info, name)
-          randr_create_mode!(window, mode_info, name).wait
+          randr_create_mode!(window, mode_info, name).wait.value
         end
         
         def randr_destroy_mode! (mode)
@@ -399,7 +399,7 @@ module Alembic
         end
         
         def randr_destroy_mode (mode)
-          randr_destroy_mode!(mode)
+          randr_destroy_mode!(mode).value
         end
         
         def randr_add_output_mode! (output, mode)
@@ -410,7 +410,7 @@ module Alembic
         end
         
         def randr_add_output_mode (output, mode)
-          randr_add_output_mode!(output, mode)
+          randr_add_output_mode!(output, mode).value
         end
         
         def randr_delete_output_mode! (output, mode)
@@ -421,7 +421,7 @@ module Alembic
         end
         
         def randr_delete_output_mode (output, mode)
-          randr_delete_output_mode!(output, mode)
+          randr_delete_output_mode!(output, mode).value
         end
         
         def randr_get_crtc_info! (crtc, config_timestamp)
@@ -440,7 +440,7 @@ module Alembic
         end
         
         def randr_get_crtc_info (crtc, config_timestamp)
-          randr_get_crtc_info!(crtc, config_timestamp).wait
+          randr_get_crtc_info!(crtc, config_timestamp).wait.value
         end
         
         def randr_set_crtc_config! (crtc, timestamp, config_timestamp, x, y, mode, rotation, outputs)
@@ -455,7 +455,7 @@ module Alembic
         end
         
         def randr_set_crtc_config (crtc, timestamp, config_timestamp, x, y, mode, rotation, outputs)
-          randr_set_crtc_config!(crtc, timestamp, config_timestamp, x, y, mode, rotation, outputs).wait
+          randr_set_crtc_config!(crtc, timestamp, config_timestamp, x, y, mode, rotation, outputs).wait.value
         end
         
         def randr_get_crtc_gamma_size! (crtc)
@@ -470,7 +470,7 @@ module Alembic
         end
         
         def randr_get_crtc_gamma_size (crtc)
-          randr_get_crtc_gamma_size!(crtc).wait
+          randr_get_crtc_gamma_size!(crtc).wait.value
         end
         
         def randr_get_crtc_gamma! (crtc)
@@ -488,7 +488,7 @@ module Alembic
         end
         
         def randr_get_crtc_gamma (crtc)
-          randr_get_crtc_gamma!(crtc).wait
+          randr_get_crtc_gamma!(crtc).wait.value
         end
         
         def randr_set_crtc_gamma! (crtc, red, green, blue)
@@ -505,7 +505,7 @@ module Alembic
         end
         
         def randr_set_crtc_gamma (crtc, red, green, blue)
-          randr_set_crtc_gamma!(crtc, red, green, blue)
+          randr_set_crtc_gamma!(crtc, red, green, blue).value
         end
         
         def randr_get_screen_resources_current! (window)
@@ -524,7 +524,7 @@ module Alembic
         end
         
         def randr_get_screen_resources_current (window)
-          randr_get_screen_resources_current!(window).wait
+          randr_get_screen_resources_current!(window).wait.value
         end
         
         def randr_set_crtc_transform! (crtc, transform, filter_name, filter_params)
@@ -538,7 +538,7 @@ module Alembic
         end
         
         def randr_set_crtc_transform (crtc, transform, filter_name, filter_params)
-          randr_set_crtc_transform!(crtc, transform, filter_name, filter_params)
+          randr_set_crtc_transform!(crtc, transform, filter_name, filter_params).value
         end
         
         def randr_get_crtc_transform! (crtc)
@@ -562,7 +562,7 @@ module Alembic
         end
         
         def randr_get_crtc_transform (crtc)
-          randr_get_crtc_transform!(crtc).wait
+          randr_get_crtc_transform!(crtc).wait.value
         end
         
         def randr_get_panning! (crtc)
@@ -577,7 +577,7 @@ module Alembic
         end
         
         def randr_get_panning (crtc)
-          randr_get_panning!(crtc).wait
+          randr_get_panning!(crtc).wait.value
         end
         
         def randr_set_panning! (crtc, timestamp, left, top, width, height, track_left, track_top, track_width, track_height, border_left, border_top, border_right, border_bottom)
@@ -592,7 +592,7 @@ module Alembic
         end
         
         def randr_set_panning (crtc, timestamp, left, top, width, height, track_left, track_top, track_width, track_height, border_left, border_top, border_right, border_bottom)
-          randr_set_panning!(crtc, timestamp, left, top, width, height, track_left, track_top, track_width, track_height, border_left, border_top, border_right, border_bottom).wait
+          randr_set_panning!(crtc, timestamp, left, top, width, height, track_left, track_top, track_width, track_height, border_left, border_top, border_right, border_bottom).wait.value
         end
         
         def randr_set_output_primary! (window, output)
@@ -603,7 +603,7 @@ module Alembic
         end
         
         def randr_set_output_primary (window, output)
-          randr_set_output_primary!(window, output)
+          randr_set_output_primary!(window, output).value
         end
         
         def randr_get_output_primary! (window)
@@ -619,7 +619,7 @@ module Alembic
         end
         
         def randr_get_output_primary (window)
-          randr_get_output_primary!(window).wait
+          randr_get_output_primary!(window).wait.value
         end
         
         def randr_get_providers! (window)
@@ -635,7 +635,7 @@ module Alembic
         end
         
         def randr_get_providers (window)
-          randr_get_providers!(window).wait
+          randr_get_providers!(window).wait.value
         end
         
         def randr_get_provider_info! (provider, config_timestamp)
@@ -655,7 +655,7 @@ module Alembic
         end
         
         def randr_get_provider_info (provider, config_timestamp)
-          randr_get_provider_info!(provider, config_timestamp).wait
+          randr_get_provider_info!(provider, config_timestamp).wait.value
         end
         
         def randr_set_provider_offload_sink! (provider, sink_provider, config_timestamp)
@@ -666,7 +666,7 @@ module Alembic
         end
         
         def randr_set_provider_offload_sink (provider, sink_provider, config_timestamp)
-          randr_set_provider_offload_sink!(provider, sink_provider, config_timestamp)
+          randr_set_provider_offload_sink!(provider, sink_provider, config_timestamp).value
         end
         
         def randr_set_provider_output_source! (provider, source_provider, config_timestamp)
@@ -677,7 +677,7 @@ module Alembic
         end
         
         def randr_set_provider_output_source (provider, source_provider, config_timestamp)
-          randr_set_provider_output_source!(provider, source_provider, config_timestamp)
+          randr_set_provider_output_source!(provider, source_provider, config_timestamp).value
         end
         
         def randr_list_provider_properties! (provider)
@@ -693,7 +693,7 @@ module Alembic
         end
         
         def randr_list_provider_properties (provider)
-          randr_list_provider_properties!(provider).wait
+          randr_list_provider_properties!(provider).wait.value
         end
         
         def randr_query_provider_property! (provider, property)
@@ -712,7 +712,7 @@ module Alembic
         end
         
         def randr_query_provider_property (provider, property)
-          randr_query_provider_property!(provider, property).wait
+          randr_query_provider_property!(provider, property).wait.value
         end
         
         def randr_configure_provider_property! (provider, property, pending, range, values)
@@ -723,7 +723,7 @@ module Alembic
         end
         
         def randr_configure_provider_property (provider, property, pending, range, values)
-          randr_configure_provider_property!(provider, property, pending, range, values)
+          randr_configure_provider_property!(provider, property, pending, range, values).value
         end
         
         def randr_change_provider_property! (provider, property, type, format, mode, num_items, data)
@@ -734,7 +734,7 @@ module Alembic
         end
         
         def randr_change_provider_property (provider, property, type, format, mode, num_items, data)
-          randr_change_provider_property!(provider, property, type, format, mode, num_items, data)
+          randr_change_provider_property!(provider, property, type, format, mode, num_items, data).value
         end
         
         def randr_delete_provider_property! (provider, property)
@@ -745,7 +745,7 @@ module Alembic
         end
         
         def randr_delete_provider_property (provider, property)
-          randr_delete_provider_property!(provider, property)
+          randr_delete_provider_property!(provider, property).value
         end
         
         def randr_get_provider_property! (provider, property, type, long_offset, long_length, delete, pending)
@@ -762,7 +762,13 @@ module Alembic
         end
         
         def randr_get_provider_property (provider, property, type, long_offset, long_length, delete, pending)
-          randr_get_provider_property!(provider, property, type, long_offset, long_length, delete, pending).wait
+          randr_get_provider_property!(provider, property, type, long_offset, long_length, delete, pending).wait.value
+        end
+        
+        class ScreenChangeNotifyEvent < Struct.new(:rotation, :timestamp, :config_timestamp, :root, :request_window, :sizeID, :subpixel_order, :width, :height, :mwidth, :mheight, :synthetic)
+          def event_type
+            :randr_screen_change_notify_event
+          end
         end
         
         def encode_randr_screen_change_notify_event (rotation, timestamp, config_timestamp, root, request_window, sizeID, subpixel_order, width, height, mwidth, mheight)
@@ -774,11 +780,17 @@ module Alembic
         end
         
         def decode_randr_screen_change_notify_event (s)
-          x = {}
+          x = ScreenChangeNotifyEvent.new
           x[:rotation], x[:timestamp], x[:config_timestamp], x[:root], x[:request_window], x[:sizeID], x[:subpixel_order], x[:width], x[:height], x[:mwidth], x[:mheight], = s.slice!(0, 29).unpack("CLLLLSSSSSS")
           x[:root] = Window[self, x[:root]]
           x[:request_window] = Window[self, x[:request_window]]
           x
+        end
+        
+        class NotifyEvent < Struct.new(:subCode, :u, :synthetic)
+          def event_type
+            :randr_notify_event
+          end
         end
         
         def encode_randr_notify_event (subCode, u)
@@ -791,11 +803,13 @@ module Alembic
         end
         
         def decode_randr_notify_event (s)
-          x = {}
+          x = NotifyEvent.new
           x[:subCode], = s.slice!(0, 1).unpack("C")
           x[:u] = decode_randr_notify_data(s)
           x
         end
+        
+        ScreenSize = Struct.new(:width, :height, :mwidth, :mheight)
         
         def encode_randr_screen_size (s, width, height, mwidth, mheight)
           s << [width, height, mwidth, mheight].pack("SSSS")
@@ -803,10 +817,12 @@ module Alembic
         end
         
         def decode_randr_screen_size (s)
-          x = {}
+          x = ScreenSize.new
           x[:width], x[:height], x[:mwidth], x[:mheight], = s.slice!(0, 8).unpack("SSSS")
           x
         end
+        
+        RefreshRates = Struct.new(:nRates, :rates)
         
         def encode_randr_refresh_rates (s, rates)
           nRates = rates.length
@@ -815,11 +831,13 @@ module Alembic
         end
         
         def decode_randr_refresh_rates (s)
-          x = {}
+          x = RefreshRates.new
           x[:nRates], = s.slice!(0, 2).unpack("S")
           x[:rates] = s.slice!(0..2*(x[:nRates])).unpack('S*')
           x
         end
+        
+        ModeInfo = Struct.new(:id, :width, :height, :dot_clock, :hsync_start, :hsync_end, :htotal, :hskew, :vsync_start, :vsync_end, :vtotal, :name_len, :mode_flags)
         
         def encode_randr_mode_info (s, id, width, height, dot_clock, hsync_start, hsync_end, htotal, hskew, vsync_start, vsync_end, vtotal, name_len, mode_flags)
           s << [id, width, height, dot_clock, hsync_start, hsync_end, htotal, hskew, vsync_start, vsync_end, vtotal, name_len, mode_flags].pack("LSSLSSSSSSSSL")
@@ -827,10 +845,12 @@ module Alembic
         end
         
         def decode_randr_mode_info (s)
-          x = {}
+          x = ModeInfo.new
           x[:id], x[:width], x[:height], x[:dot_clock], x[:hsync_start], x[:hsync_end], x[:htotal], x[:hskew], x[:vsync_start], x[:vsync_end], x[:vtotal], x[:name_len], x[:mode_flags], = s.slice!(0, 32).unpack("LSSLSSSSSSSSL")
           x
         end
+        
+        CrtcChange = Struct.new(:timestamp, :window, :crtc, :mode, :rotation, :x, :y, :width, :height)
         
         def encode_randr_crtc_change (s, timestamp, window, crtc, mode, rotation, x, y, width, height)
           s << [timestamp, Window.to_xid(self, window), Crtc.to_xid(self, crtc), Mode.to_xid(self, mode), rotation, x, y, width, height].pack("LLLLSx2ssSS")
@@ -838,7 +858,7 @@ module Alembic
         end
         
         def decode_randr_crtc_change (s)
-          x = {}
+          x = CrtcChange.new
           x[:timestamp], x[:window], x[:crtc], x[:mode], x[:rotation], x[:x], x[:y], x[:width], x[:height], = s.slice!(0, 28).unpack("LLLLSx2ssSS")
           x[:window] = Window[self, x[:window]]
           x[:crtc] = Crtc[self, x[:crtc]]
@@ -846,13 +866,15 @@ module Alembic
           x
         end
         
+        OutputChange = Struct.new(:timestamp, :config_timestamp, :window, :output, :crtc, :mode, :rotation, :connection, :subpixel_order)
+        
         def encode_randr_output_change (s, timestamp, config_timestamp, window, output, crtc, mode, rotation, connection, subpixel_order)
           s << [timestamp, config_timestamp, Window.to_xid(self, window), Output.to_xid(self, output), Crtc.to_xid(self, crtc), Mode.to_xid(self, mode), rotation, connection, subpixel_order].pack("LLLLLLSCC")
           s
         end
         
         def decode_randr_output_change (s)
-          x = {}
+          x = OutputChange.new
           x[:timestamp], x[:config_timestamp], x[:window], x[:output], x[:crtc], x[:mode], x[:rotation], x[:connection], x[:subpixel_order], = s.slice!(0, 28).unpack("LLLLLLSCC")
           x[:window] = Window[self, x[:window]]
           x[:output] = Output[self, x[:output]]
@@ -861,13 +883,15 @@ module Alembic
           x
         end
         
+        OutputProperty = Struct.new(:window, :output, :atom, :timestamp, :status)
+        
         def encode_randr_output_property (s, window, output, atom, timestamp, status)
           s << [Window.to_xid(self, window), Output.to_xid(self, output), Atom.to_xid(self, atom), timestamp, status].pack("LLLLCx11")
           s
         end
         
         def decode_randr_output_property (s)
-          x = {}
+          x = OutputProperty.new
           x[:window], x[:output], x[:atom], x[:timestamp], x[:status], = s.slice!(0, 28).unpack("LLLLCx11")
           x[:window] = Window[self, x[:window]]
           x[:output] = Output[self, x[:output]]
@@ -875,18 +899,22 @@ module Alembic
           x
         end
         
+        ProviderChange = Struct.new(:timestamp, :window, :provider)
+        
         def encode_randr_provider_change (s, timestamp, window, provider)
           s << [timestamp, Window.to_xid(self, window), Provider.to_xid(self, provider)].pack("LLLx16")
           s
         end
         
         def decode_randr_provider_change (s)
-          x = {}
+          x = ProviderChange.new
           x[:timestamp], x[:window], x[:provider], = s.slice!(0, 28).unpack("LLLx16")
           x[:window] = Window[self, x[:window]]
           x[:provider] = Provider[self, x[:provider]]
           x
         end
+        
+        ProviderProperty = Struct.new(:window, :provider, :atom, :timestamp, :state)
         
         def encode_randr_provider_property (s, window, provider, atom, timestamp, state)
           s << [Window.to_xid(self, window), Provider.to_xid(self, provider), Atom.to_xid(self, atom), timestamp, state].pack("LLLLCx11")
@@ -894,7 +922,7 @@ module Alembic
         end
         
         def decode_randr_provider_property (s)
-          x = {}
+          x = ProviderProperty.new
           x[:window], x[:provider], x[:atom], x[:timestamp], x[:state], = s.slice!(0, 28).unpack("LLLLCx11")
           x[:window] = Window[self, x[:window]]
           x[:provider] = Provider[self, x[:provider]]
@@ -902,13 +930,15 @@ module Alembic
           x
         end
         
+        ResourceChange = Struct.new(:timestamp, :window)
+        
         def encode_randr_resource_change (s, timestamp, window)
           s << [timestamp, Window.to_xid(self, window)].pack("LLx20")
           s
         end
         
         def decode_randr_resource_change (s)
-          x = {}
+          x = ResourceChange.new
           x[:timestamp], x[:window], = s.slice!(0, 28).unpack("LLx20")
           x[:window] = Window[self, x[:window]]
           x
@@ -930,6 +960,240 @@ module Alembic
           Provider.new(self, alloc_xid)
         end
       
+      end
+      
+      class Xproto::Window
+        def randr_set_screen_config (timestamp, config_timestamp, sizeID, rotation, rate)
+          connection.randr_set_screen_config(self, timestamp, config_timestamp, sizeID, rotation, rate)
+        end
+      end
+      
+      class Xproto::Window
+        def randr_select_input (enable)
+          connection.randr_select_input(self, enable)
+        end
+      end
+      
+      class Xproto::Window
+        def randr_get_screen_info ()
+          connection.randr_get_screen_info(self)
+        end
+      end
+      
+      class Xproto::Window
+        def randr_get_screen_size_range ()
+          connection.randr_get_screen_size_range(self)
+        end
+      end
+      
+      class Xproto::Window
+        def randr_set_screen_size (width, height, mm_width, mm_height)
+          connection.randr_set_screen_size(self, width, height, mm_width, mm_height)
+        end
+      end
+      
+      class Xproto::Window
+        def randr_get_screen_resources ()
+          connection.randr_get_screen_resources(self)
+        end
+      end
+      
+      class RandR::Output
+        def randr_get_output_info (config_timestamp)
+          connection.randr_get_output_info(self, config_timestamp)
+        end
+      end
+      
+      class RandR::Output
+        def randr_list_output_properties ()
+          connection.randr_list_output_properties(self)
+        end
+      end
+      
+      class RandR::Output
+        def randr_query_output_property (property)
+          connection.randr_query_output_property(self, property)
+        end
+      end
+      
+      class RandR::Output
+        def randr_configure_output_property (property, pending, range, values)
+          connection.randr_configure_output_property(self, property, pending, range, values)
+        end
+      end
+      
+      class RandR::Output
+        def randr_change_output_property (property, type, format, mode, num_units, data)
+          connection.randr_change_output_property(self, property, type, format, mode, num_units, data)
+        end
+      end
+      
+      class RandR::Output
+        def randr_delete_output_property (property)
+          connection.randr_delete_output_property(self, property)
+        end
+      end
+      
+      class RandR::Output
+        def randr_get_output_property (property, type, long_offset, long_length, delete, pending)
+          connection.randr_get_output_property(self, property, type, long_offset, long_length, delete, pending)
+        end
+      end
+      
+      class Xproto::Window
+        def randr_create_mode (mode_info, name)
+          connection.randr_create_mode(self, mode_info, name)
+        end
+      end
+      
+      class RandR::Mode
+        def randr_destroy_mode ()
+          connection.randr_destroy_mode(self)
+        end
+      end
+      
+      class RandR::Output
+        def randr_add_output_mode (mode)
+          connection.randr_add_output_mode(self, mode)
+        end
+      end
+      
+      class RandR::Output
+        def randr_delete_output_mode (mode)
+          connection.randr_delete_output_mode(self, mode)
+        end
+      end
+      
+      class RandR::Crtc
+        def randr_get_crtc_info (config_timestamp)
+          connection.randr_get_crtc_info(self, config_timestamp)
+        end
+      end
+      
+      class RandR::Crtc
+        def randr_set_crtc_config (timestamp, config_timestamp, x, y, mode, rotation, outputs)
+          connection.randr_set_crtc_config(self, timestamp, config_timestamp, x, y, mode, rotation, outputs)
+        end
+      end
+      
+      class RandR::Crtc
+        def randr_get_crtc_gamma_size ()
+          connection.randr_get_crtc_gamma_size(self)
+        end
+      end
+      
+      class RandR::Crtc
+        def randr_get_crtc_gamma ()
+          connection.randr_get_crtc_gamma(self)
+        end
+      end
+      
+      class RandR::Crtc
+        def randr_set_crtc_gamma (red, green, blue)
+          connection.randr_set_crtc_gamma(self, red, green, blue)
+        end
+      end
+      
+      class Xproto::Window
+        def randr_get_screen_resources_current ()
+          connection.randr_get_screen_resources_current(self)
+        end
+      end
+      
+      class RandR::Crtc
+        def randr_set_crtc_transform (transform, filter_name, filter_params)
+          connection.randr_set_crtc_transform(self, transform, filter_name, filter_params)
+        end
+      end
+      
+      class RandR::Crtc
+        def randr_get_crtc_transform ()
+          connection.randr_get_crtc_transform(self)
+        end
+      end
+      
+      class RandR::Crtc
+        def randr_get_panning ()
+          connection.randr_get_panning(self)
+        end
+      end
+      
+      class RandR::Crtc
+        def randr_set_panning (timestamp, left, top, width, height, track_left, track_top, track_width, track_height, border_left, border_top, border_right, border_bottom)
+          connection.randr_set_panning(self, timestamp, left, top, width, height, track_left, track_top, track_width, track_height, border_left, border_top, border_right, border_bottom)
+        end
+      end
+      
+      class Xproto::Window
+        def randr_set_output_primary (output)
+          connection.randr_set_output_primary(self, output)
+        end
+      end
+      
+      class Xproto::Window
+        def randr_get_output_primary ()
+          connection.randr_get_output_primary(self)
+        end
+      end
+      
+      class Xproto::Window
+        def randr_get_providers ()
+          connection.randr_get_providers(self)
+        end
+      end
+      
+      class RandR::Provider
+        def randr_get_provider_info (config_timestamp)
+          connection.randr_get_provider_info(self, config_timestamp)
+        end
+      end
+      
+      class RandR::Provider
+        def randr_set_provider_offload_sink (sink_provider, config_timestamp)
+          connection.randr_set_provider_offload_sink(self, sink_provider, config_timestamp)
+        end
+      end
+      
+      class RandR::Provider
+        def randr_set_provider_output_source (source_provider, config_timestamp)
+          connection.randr_set_provider_output_source(self, source_provider, config_timestamp)
+        end
+      end
+      
+      class RandR::Provider
+        def randr_list_provider_properties ()
+          connection.randr_list_provider_properties(self)
+        end
+      end
+      
+      class RandR::Provider
+        def randr_query_provider_property (property)
+          connection.randr_query_provider_property(self, property)
+        end
+      end
+      
+      class RandR::Provider
+        def randr_configure_provider_property (property, pending, range, values)
+          connection.randr_configure_provider_property(self, property, pending, range, values)
+        end
+      end
+      
+      class RandR::Provider
+        def randr_change_provider_property (property, type, format, mode, num_items, data)
+          connection.randr_change_provider_property(self, property, type, format, mode, num_items, data)
+        end
+      end
+      
+      class RandR::Provider
+        def randr_delete_provider_property (property)
+          connection.randr_delete_provider_property(self, property)
+        end
+      end
+      
+      class RandR::Provider
+        def randr_get_provider_property (property, type, long_offset, long_length, delete, pending)
+          connection.randr_get_provider_property(self, property, type, long_offset, long_length, delete, pending)
+        end
       end
       
     end

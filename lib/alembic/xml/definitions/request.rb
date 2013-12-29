@@ -24,6 +24,25 @@ module Alembic
         ]
       end
       
+      def selfs
+        fields.flat_map do |field|
+          if field.respond_to?(:self) and field.self
+            [field]
+          else
+            []
+          end
+        end
+      end
+      
+      def creates
+        fields.each do |field|
+          if field.respond_to?(:create) and field.create
+            return field.name
+          end
+        end
+        nil
+      end
+      
       def caller_method
         [
           "def #{var_name.snake_case}! (#{params.join(", ")})",
@@ -40,6 +59,8 @@ module Alembic
               "send_request(s) do |s|",
               reply.compile,
               "end"
+            ] : creates ? [
+              "send_request(s, #{creates})"
             ] : [
               "send_request(s)"
             ]
@@ -49,14 +70,31 @@ module Alembic
           "def #{var_name.snake_case} (#{params.join(", ")})",
           [
             *reply ? [
-              "#{var_name.snake_case}!(#{params.join(", ")}).wait"
+              "#{var_name.snake_case}!(#{args.join(", ")}).wait.value"
             ] : [
-              "#{var_name.snake_case}!(#{params.join(", ")})"
+              "#{var_name.snake_case}!(#{args.join(", ")}).value"
             ]
           ],
           "end",
           nil
         ]
+      end
+      
+      def compile_class_methods
+        selfs.flat_map do |field|
+          [
+            "class #{lookup(field.type).extension.extension_name || 'Xproto'}::#{lookup(field.type).class_name}",
+            [
+              "def #{var_name.snake_case} (#{params.-([field.name]).join(", ")})",
+              [
+                "connection.#{var_name.snake_case}(#{args.map{|x|x == field.name ? 'self' : x}.join(", ")})"
+              ],
+              "end"
+            ],
+            "end",
+            nil
+          ]
+        end
       end
       
       def compile_methods

@@ -67,7 +67,7 @@ module Alembic
         def decode_configure_request_event (s)
           ev = super(s)
           CONFIG_WINDOW.each do |key, mask|
-            ev.delete(key) unless ev[:value_mask] & mask == mask
+            ev[key] = nil unless ev[:value_mask] & mask == mask
           end
           ev
         end

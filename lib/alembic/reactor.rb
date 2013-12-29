@@ -19,11 +19,11 @@ module Alembic
     
     def handle_event
       e = c.next_event
-      if respond_to?(e[:event_type])
+      if respond_to?(e.event_type)
         #puts "handled #{e[:event_type]}"
-        __send__(e[:event_type], e)
+        __send__(e.event_type, e)
       else
-        puts "unhandled #{e[:event_type]}"
+        puts "unhandled #{e.event_type}"
       end
     rescue => e
       STDERR.puts "#{e.class} (#{e.message})\n  #{e.backtrace.join("\n  ")}"

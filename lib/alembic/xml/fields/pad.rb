@@ -45,6 +45,10 @@ module Alembic
         []
       end
       
+      def args
+        params
+      end
+      
       def encoder
         if bytes
           (' ' * bytes.to_i).inspect

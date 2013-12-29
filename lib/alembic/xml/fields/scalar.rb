@@ -3,7 +3,7 @@ module Alembic
   module Xml
     class Scalar < Element
       
-      attr_accessor :name, :type, :enum, :mask
+      attr_accessor :name, :type, :enum, :mask, :create, :self
       
       alias altenum= enum=
       
@@ -48,6 +48,10 @@ module Alembic
         lookup(type).pack_arguments(argument)
       end
       
+      def args
+        params
+      end
+      
       def params
         [name]
       end
@@ -60,8 +64,22 @@ module Alembic
         "x[:#{name}] = #{lookup(type).decoder}"
       end
       
+      def hides
+        if create
+          [name]
+        else
+          []
+        end
+      end
+      
       def lengther
-        []
+        if create
+          [
+            "#{name} = #{lookup(type).allocator}"
+          ]
+        else
+          []
+        end
       end
       
     end

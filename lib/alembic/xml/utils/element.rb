@@ -10,6 +10,10 @@ module Alembic
         parse(node, attrs)
       end
       
+      def class_name
+        name.snake_case.to_const_string
+      end
+      
       def parse (node, attrs = {})
         if node
           node.attributes.each do |name, value|

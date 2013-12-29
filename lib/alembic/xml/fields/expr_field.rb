@@ -17,6 +17,10 @@ module Alembic
         []
       end
       
+      def args
+        params
+      end
+      
       def encoder
         "raise('this doesn\\\'t work')"
       end

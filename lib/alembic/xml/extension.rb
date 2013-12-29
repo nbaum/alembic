@@ -123,6 +123,7 @@ module Alembic
                 ],
                 "end",
                 nil,
+                *compile_types(Request, :class_methods)
               ],
               "end",
             ],

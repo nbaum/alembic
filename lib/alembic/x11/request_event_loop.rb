@@ -5,30 +5,64 @@ module Alembic
   class Ticket
     attr_reader :stack
     
-    def initialize (conn, block, stack)
+    def initialize (conn, value, stack, &block)
+      extend MonitorMixin
+      @state = true
+      @value = value
       @block = block
       @conn = conn
       @stack = stack
-      @queue = Queue.new
+      @signal = new_cond
+    end
+    
+    def value
+      synchronize do
+        @triggered = true
+        if @state
+          @value
+        else
+          raise @value, @value.message, caller[1..-1]
+        end
+      end
     end
     
     def wait
-      @conn.get_selection_owner!(1) unless @block
-      state, value = @queue.pop
-      if state
-        value
-      else
-        raise value, value.message, caller[1..-1]
+      synchronize do
+        @signal.wait unless @triggered
+      end
+      self
+    end
+    
+    def resolve (state, value)
+      synchronize do
+        if @triggered
+          unless state
+            puts "Unwaited-for #{value.class}"
+            puts "  " + stack.join("\n  ")
+            puts
+          end
+        else
+          @state, @value = state, value
+          @triggered = true
+          @signal.broadcast
+        end
       end
     end
     
     def fail (data)
-      @queue.push [false, data]
+      resolve false, data
     end
     
     def succeed (data)
-      data = @block.(data) if @block
-      @queue.push [true, data]
+      resolve true, @block ? @block.(data) : data
+    end
+    
+    def force
+      if @block
+        fail "Out-of-order reply"
+      else
+        succeed @value
+      end
     end
     
   end
@@ -48,7 +82,7 @@ module Alembic
     
     def skip_events event
       loop do
-        if ne = check_event(event[:event_type])
+        if ne = check_event(event.event_type)
           event = ne
         else
           return event
@@ -65,7 +99,7 @@ module Alembic
         loop do
           if type
             @event_queue.each_with_index do |ev, idx|
-              if type == ev[:event_type]
+              if type == ev.event_type
                 @event_queue.delete_at(idx)
                 return ev
               end
@@ -101,65 +135,66 @@ module Alembic
         @tickets.keys.each do |seq|
           break if seq > maxseq
           ticket = @tickets.delete(seq)
-          ticket.succeed(true)
+          ticket.force
         end
       end
     end
     
     def event_loop
       loop do
-        code = read(1).ord
-        case code & 0x7f
-        when 1
-          extra, seq, len = read(7).unpack('aSL')
-          data = extra + read(24 + len * 4)
-          q = @tickets.synchronize do
-            @tickets.delete(seq)
-          end
-          sweep_tickets(seq - 1)
-          q.succeed(data) if q
-        when 0
-          code, seq = read(3).unpack("CS")
-          data = read(28)
-          q = @tickets.synchronize do
-            @tickets.delete(seq)
-          end
-          sweep_tickets(seq - 1)
-          if q
-            q.fail(errors[code].new(data.inspect))
+        begin
+          code = read(1).ord
+          case code & 0x7f
+          when 1
+            extra, seq, len = read(7).unpack('aSL')
+            data = extra + read(24 + len * 4)
+            q = @tickets.synchronize do
+              @tickets.delete(seq)
+            end
+            sweep_tickets(seq - 1)
+            q.succeed(data) if q
+          when 0
+            code, seq = read(3).unpack("CS")
+            data = read(28)
+            q = @tickets.synchronize do
+              @tickets.delete(seq)
+            end
+            sweep_tickets(seq - 1)
+            if q
+              q.fail(errors[code].new(data.inspect))
+            else
+              puts "Unhandled #{errors[code]}"
+            end
           else
-            puts "Unhandled #{errors[code]}"
+            name, no_sequence_number = events[code & 0x7f]
+            synth = code & 0x80 == 0x80
+            ev = nil
+            if !name
+              read(31)
+            elsif no_sequence_number
+              ev = (__send__("decode_#{name}", read(31)))
+            else
+              detail, _ = read(3).unpack('aS')
+              ev = (__send__("decode_#{name}", detail + read(28)))
+            end
+            if ev
+              ev[:synthetic] = synth
+              record_event ev
+            end
           end
-        else
-          name, no_sequence_number = events[code & 0x7f]
-          synth = code & 0x80 == 0x80
-          ev = nil
-          if !name
-            read(31)
-          elsif no_sequence_number
-            ev = __send__("decode_#{name}", read(31))
-          else
-            detail, _ = read(3).unpack('aS')
-            ev = __send__("decode_#{name}", detail + read(28))
-          end
-          if ev
-            ev[:synthetic] = synth
-            ev[:event_type] = name
-            record_event ev
-          end
+        rescue => e
+          p e
         end
       end
     end
     
-    def send_request (data, &block)
+    def send_request (data, value = nil, &block)
       sync = true
       data = pad(data, 2)
       data[2, 0] = [(data.length + 2) / 4].pack("S")
-      t = Ticket.new(self, block, caller[0])
+      t = Ticket.new(self, value, caller, &block)
       @tickets.synchronize do
-        if @sequence_no == 0xFFFF and !block
-          get_selection_owner!(1)
-        end
+        get_selection_owner!(1) if @sequence_no == 0xFFFF and !block
         @tickets[@sequence_no] = t
         @sequence_no = (@sequence_no + 1) % 0x10000
       end
