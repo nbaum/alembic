@@ -21,15 +21,19 @@ module Alembic
       event[:detail] == kc and event[:state] == mod
     end
     
+    def modmap
+      @modmap ||= {
+        "S" => 1,
+        "C" => 4,
+        "A" => 8,
+        "W" => 64,
+      }
+    end
+    
     def chord_to_keymask (kc)
       *mods, key = kc.split("-")
       mod = mods.map do |mod|
-        {
-          "S" => 1,
-          "C" => 4,
-          "A" => 8,
-          "M" => 64,
-        }[mod]
+        modmap[mod]
       end.reduce(0, &:|)
       [mod, keysym_to_keycode(key)]
     end
@@ -37,12 +41,7 @@ module Alembic
     def chord_to_buttonmask (kc)
       *mods, key = kc.split("-")
       mod = mods.map do |mod|
-        {
-          "S" => 1,
-          "C" => 4,
-          "A" => 8,
-          "M" => 64,
-        }[mod]
+        modmap[mod]
       end.reduce(0, &:|)
       [key.to_i, mod]
     end

@@ -14,24 +14,42 @@ require 'alembic/extensions/randr'
 
 require 'alembic/polyfill/xproto'
 
+module HashWithAccessors
+  def method_missing (key, value = nil)
+    if key[-1] == "="
+      self[key[0..-2].to_sym] = value
+    else
+      self[key]
+    end
+  end
+end
+
+class Hash
+  def with_accessors!
+    extend HashWithAccessors
+    self
+  end
+  def with_accessors
+    dup.with_accessors!
+  end
+end
+
 module Alembic
   
   class HashWithMethodMissing < Hash
-    def method_missing (key, value = nil)
-      if key[-1] == "="
-        self[key[0..-2].to_sym] = value
-      else
-        self[key]
-      end
-    end
+    include HashWithAccessors
   end
   
   class Connection
     
-    attr_reader :events, :errors, :resources, :setup, :opcodes, :atoms, :sync
+    attr_reader :events, :errors, :resources, :setup, :opcodes, :atoms, :sync, :mod
     
     include ConnectionUtils
     include RequestEventLoop
+    
+    def mod= (n)
+      modmap["M"] = modmap[n]
+    end
     
     def initialize (display = ENV["DISPLAY"])
       @display = display
@@ -41,6 +59,7 @@ module Alembic
       @opcodes = {}
       @atoms = {}
       @xid = 0
+      self.mod = "W"
       parse_display
       @auth = X11::Authorizer.new[@display] || ["", ""]
       connect
