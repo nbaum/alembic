@@ -1,12 +1,12 @@
 module Alembic
   module Extensions
     module Xproto
-      extend Alembic::ExtensionMethods
+      include Alembic::Extension
       
-      extension_xname nil
+      self.name = nil
       
-      # create_window (depth, parent, x, y, width, height, border_width, klass, visual, value_hash = {})
-      # change_window_attributes (window, value_hash = {})
+      # create_window (depth, wid, parent, x, y, width, height, border_width, klass, visual, value_mask, value_list)
+      # change_window_attributes (window, value_mask, value_list)
       # get_window_attributes (window)
       # destroy_window (window)
       # destroy_subwindows (window)
@@ -16,7 +16,7 @@ module Alembic
       # map_subwindows (window)
       # unmap_window (window)
       # unmap_subwindows (window)
-      # configure_window (window, value_hash = {})
+      # configure_window (window, value_mask, value_list)
       # circulate_window (direction, window)
       # get_geometry (drawable)
       # query_tree (window)
@@ -49,7 +49,7 @@ module Alembic
       # set_input_focus (revert_to, focus, time)
       # get_input_focus ()
       # query_keymap ()
-      # open_font (name)
+      # open_font (fid, name)
       # close_font (font)
       # query_font (font)
       # query_text_extents (font, string)
@@ -57,10 +57,10 @@ module Alembic
       # list_fonts_with_info (max_names, pattern)
       # set_font_path (font)
       # get_font_path ()
-      # create_pixmap (depth, drawable, width, height)
+      # create_pixmap (depth, pid, drawable, width, height)
       # free_pixmap (pixmap)
-      # create_gc (drawable, value_hash = {})
-      # change_gc (gc, value_hash = {})
+      # create_gc (cid, drawable, value_mask, value_list)
+      # change_gc (gc, value_mask, value_list)
       # copy_gc (src_gc, dst_gc, value_mask)
       # set_dashes (gc, dash_offset, dashes)
       # set_clip_rectangles (ordering, gc, clip_x_origin, clip_y_origin, rectangles)
@@ -82,7 +82,7 @@ module Alembic
       # poly_text16 (drawable, gc, x, y, items)
       # image_text8 (drawable, gc, x, y, string)
       # image_text16 (drawable, gc, x, y, string)
-      # create_colormap (alloc, window, visual)
+      # create_colormap (alloc, mid, window, visual)
       # free_colormap (cmap)
       # copy_colormap_and_free (mid, src_cmap)
       # install_colormap (cmap)
@@ -97,8 +97,8 @@ module Alembic
       # store_named_color (flags, cmap, pixel, name)
       # query_colors (cmap, pixels)
       # lookup_color (cmap, name)
-      # create_cursor (source, mask, fore_red, fore_green, fore_blue, back_red, back_green, back_blue, x, y)
-      # create_glyph_cursor (source_font, mask_font, source_char, mask_char, fore_red, fore_green, fore_blue, back_red, back_green, back_blue)
+      # create_cursor (cid, source, mask, fore_red, fore_green, fore_blue, back_red, back_green, back_blue, x, y)
+      # create_glyph_cursor (cid, source_font, mask_font, source_char, mask_char, fore_red, fore_green, fore_blue, back_red, back_green, back_blue)
       # free_cursor (cursor)
       # recolor_cursor (cursor, fore_red, fore_green, fore_blue, back_red, back_green, back_blue)
       # query_best_size (klass, drawable, width, height)
@@ -106,7 +106,7 @@ module Alembic
       # list_extensions ()
       # change_keyboard_mapping (keycode_count, first_keycode, keysyms_per_keycode, keysyms)
       # get_keyboard_mapping (first_keycode, count)
-      # change_keyboard_control (value_hash = {})
+      # change_keyboard_control (value_mask, value_list)
       # get_keyboard_control ()
       # bell (percent)
       # change_pointer_control (acceleration_numerator, acceleration_denominator, threshold, do_acceleration, do_threshold)
@@ -171,8 +171,6 @@ module Alembic
       VISUAL_CLASS_TRUE_COLOR = 4
       VISUAL_CLASS_DIRECT_COLOR = 5
       
-      VISUAL_CLASS.extend Alembic::ValueParamHelper
-      
       EVENT_MASK = {:no_event=>0, :key_press=>1, :key_release=>2, :button_press=>4, :button_release=>8, :enter_window=>16, :leave_window=>32, :pointer_motion=>64, :pointer_motion_hint=>128, :button1motion=>256, :button2motion=>512, :button3motion=>1024, :button4motion=>2048, :button5motion=>4096, :button_motion=>8192, :keymap_state=>16384, :exposure=>32768, :visibility_change=>65536, :structure_notify=>131072, :resize_redirect=>262144, :substructure_notify=>524288, :substructure_redirect=>1048576, :focus_change=>2097152, :property_change=>4194304, :color_map_change=>8388608, :owner_grab_button=>16777216}
       EVENT_MASK_I = {0=>:no_event, 1=>:key_press, 2=>:key_release, 4=>:button_press, 8=>:button_release, 16=>:enter_window, 32=>:leave_window, 64=>:pointer_motion, 128=>:pointer_motion_hint, 256=>:button1motion, 512=>:button2motion, 1024=>:button3motion, 2048=>:button4motion, 4096=>:button5motion, 8192=>:button_motion, 16384=>:keymap_state, 32768=>:exposure, 65536=>:visibility_change, 131072=>:structure_notify, 262144=>:resize_redirect, 524288=>:substructure_notify, 1048576=>:substructure_redirect, 2097152=>:focus_change, 4194304=>:property_change, 8388608=>:color_map_change, 16777216=>:owner_grab_button}
       
@@ -203,8 +201,6 @@ module Alembic
       EVENT_MASK_COLOR_MAP_CHANGE = 8388608
       EVENT_MASK_OWNER_GRAB_BUTTON = 16777216
       
-      EVENT_MASK.extend Alembic::ValueParamHelper
-      
       BACKING_STORE = {:not_useful=>0, :when_mapped=>1, :always=>2}
       BACKING_STORE_I = {0=>:not_useful, 1=>:when_mapped, 2=>:always}
       
@@ -212,15 +208,11 @@ module Alembic
       BACKING_STORE_WHEN_MAPPED = 1
       BACKING_STORE_ALWAYS = 2
       
-      BACKING_STORE.extend Alembic::ValueParamHelper
-      
       IMAGE_ORDER = {:lsb_first=>0, :msb_first=>1}
       IMAGE_ORDER_I = {0=>:lsb_first, 1=>:msb_first}
       
       IMAGE_ORDER_LSB_FIRST = 0
       IMAGE_ORDER_MSB_FIRST = 1
-      
-      IMAGE_ORDER.extend Alembic::ValueParamHelper
       
       MOD_MASK = {:shift=>1, :lock=>2, :control=>4, :"1"=>8, :"2"=>16, :"3"=>32, :"4"=>64, :"5"=>128, :any=>32768}
       MOD_MASK_I = {1=>:shift, 2=>:lock, 4=>:control, 8=>:"1", 16=>:"2", 32=>:"3", 64=>:"4", 128=>:"5", 32768=>:any}
@@ -234,8 +226,6 @@ module Alembic
       MOD_MASK_4 = 64
       MOD_MASK_5 = 128
       MOD_MASK_ANY = 32768
-      
-      MOD_MASK.extend Alembic::ValueParamHelper
       
       KEY_BUT_MASK = {:shift=>1, :lock=>2, :control=>4, :mod1=>8, :mod2=>16, :mod3=>32, :mod4=>64, :mod5=>128, :button1=>256, :button2=>512, :button3=>1024, :button4=>2048, :button5=>4096}
       KEY_BUT_MASK_I = {1=>:shift, 2=>:lock, 4=>:control, 8=>:mod1, 16=>:mod2, 32=>:mod3, 64=>:mod4, 128=>:mod5, 256=>:button1, 512=>:button2, 1024=>:button3, 2048=>:button4, 4096=>:button5}
@@ -254,14 +244,10 @@ module Alembic
       KEY_BUT_MASK_BUTTON4 = 2048
       KEY_BUT_MASK_BUTTON5 = 4096
       
-      KEY_BUT_MASK.extend Alembic::ValueParamHelper
-      
       WINDOW = {:none=>0}
       WINDOW_I = {0=>:none}
       
       WINDOW_NONE = 0
-      
-      WINDOW.extend Alembic::ValueParamHelper
       
       BUTTON_MASK = {:"1"=>256, :"2"=>512, :"3"=>1024, :"4"=>2048, :"5"=>4096, :any=>32768}
       BUTTON_MASK_I = {256=>:"1", 512=>:"2", 1024=>:"3", 2048=>:"4", 4096=>:"5", 32768=>:any}
@@ -273,15 +259,11 @@ module Alembic
       BUTTON_MASK_5 = 4096
       BUTTON_MASK_ANY = 32768
       
-      BUTTON_MASK.extend Alembic::ValueParamHelper
-      
       MOTION = {:normal=>0, :hint=>1}
       MOTION_I = {0=>:normal, 1=>:hint}
       
       MOTION_NORMAL = 0
       MOTION_HINT = 1
-      
-      MOTION.extend Alembic::ValueParamHelper
       
       NOTIFY_DETAIL = {:ancestor=>0, :virtual=>1, :inferior=>2, :nonlinear=>3, :nonlinear_virtual=>4, :pointer=>5, :pointer_root=>6, :none=>7}
       NOTIFY_DETAIL_I = {0=>:ancestor, 1=>:virtual, 2=>:inferior, 3=>:nonlinear, 4=>:nonlinear_virtual, 5=>:pointer, 6=>:pointer_root, 7=>:none}
@@ -295,8 +277,6 @@ module Alembic
       NOTIFY_DETAIL_POINTER_ROOT = 6
       NOTIFY_DETAIL_NONE = 7
       
-      NOTIFY_DETAIL.extend Alembic::ValueParamHelper
-      
       NOTIFY_MODE = {:normal=>0, :grab=>1, :ungrab=>2, :while_grabbed=>3}
       NOTIFY_MODE_I = {0=>:normal, 1=>:grab, 2=>:ungrab, 3=>:while_grabbed}
       
@@ -305,8 +285,6 @@ module Alembic
       NOTIFY_MODE_UNGRAB = 2
       NOTIFY_MODE_WHILE_GRABBED = 3
       
-      NOTIFY_MODE.extend Alembic::ValueParamHelper
-      
       VISIBILITY = {:unobscured=>0, :partially_obscured=>1, :fully_obscured=>2}
       VISIBILITY_I = {0=>:unobscured, 1=>:partially_obscured, 2=>:fully_obscured}
       
@@ -314,15 +292,11 @@ module Alembic
       VISIBILITY_PARTIALLY_OBSCURED = 1
       VISIBILITY_FULLY_OBSCURED = 2
       
-      VISIBILITY.extend Alembic::ValueParamHelper
-      
       PLACE = {:on_top=>0, :on_bottom=>1}
       PLACE_I = {0=>:on_top, 1=>:on_bottom}
       
       PLACE_ON_TOP = 0
       PLACE_ON_BOTTOM = 1
-      
-      PLACE.extend Alembic::ValueParamHelper
       
       PROPERTY = {:new_value=>0, :delete=>1}
       PROPERTY_I = {0=>:new_value, 1=>:delete}
@@ -330,14 +304,10 @@ module Alembic
       PROPERTY_NEW_VALUE = 0
       PROPERTY_DELETE = 1
       
-      PROPERTY.extend Alembic::ValueParamHelper
-      
       TIME = {:current_time=>0}
       TIME_I = {0=>:current_time}
       
       TIME_CURRENT_TIME = 0
-      
-      TIME.extend Alembic::ValueParamHelper
       
       ATOM = {:none=>0, :any=>0, :primary=>1, :secondary=>2, :arc=>3, :atom=>4, :bitmap=>5, :cardinal=>6, :colormap=>7, :cursor=>8, :cut_buffer0=>9, :cut_buffer1=>10, :cut_buffer2=>11, :cut_buffer3=>12, :cut_buffer4=>13, :cut_buffer5=>14, :cut_buffer6=>15, :cut_buffer7=>16, :drawable=>17, :font=>18, :integer=>19, :pixmap=>20, :point=>21, :rectangle=>22, :resource_manager=>23, :rgb_color_map=>24, :rgb_best_map=>25, :rgb_blue_map=>26, :rgb_default_map=>27, :rgb_gray_map=>28, :rgb_green_map=>29, :rgb_red_map=>30, :string=>31, :visualid=>32, :window=>33, :wm_command=>34, :wm_hints=>35, :wm_client_machine=>36, :wm_icon_name=>37, :wm_icon_size=>38, :wm_name=>39, :wm_normal_hints=>40, :wm_size_hints=>41, :wm_zoom_hints=>42, :min_space=>43, :norm_space=>44, :max_space=>45, :end_space=>46, :superscript_x=>47, :superscript_y=>48, :subscript_x=>49, :subscript_y=>50, :underline_position=>51, :underline_thickness=>52, :strikeout_ascent=>53, :strikeout_descent=>54, :italic_angle=>55, :x_height=>56, :quad_width=>57, :weight=>58, :point_size=>59, :resolution=>60, :copyright=>61, :notice=>62, :font_name=>63, :family_name=>64, :full_name=>65, :cap_height=>66, :wm_class=>67, :wm_transient_for=>68}
       ATOM_I = {0=>:any, 1=>:primary, 2=>:secondary, 3=>:arc, 4=>:atom, 5=>:bitmap, 6=>:cardinal, 7=>:colormap, 8=>:cursor, 9=>:cut_buffer0, 10=>:cut_buffer1, 11=>:cut_buffer2, 12=>:cut_buffer3, 13=>:cut_buffer4, 14=>:cut_buffer5, 15=>:cut_buffer6, 16=>:cut_buffer7, 17=>:drawable, 18=>:font, 19=>:integer, 20=>:pixmap, 21=>:point, 22=>:rectangle, 23=>:resource_manager, 24=>:rgb_color_map, 25=>:rgb_best_map, 26=>:rgb_blue_map, 27=>:rgb_default_map, 28=>:rgb_gray_map, 29=>:rgb_green_map, 30=>:rgb_red_map, 31=>:string, 32=>:visualid, 33=>:window, 34=>:wm_command, 35=>:wm_hints, 36=>:wm_client_machine, 37=>:wm_icon_name, 38=>:wm_icon_size, 39=>:wm_name, 40=>:wm_normal_hints, 41=>:wm_size_hints, 42=>:wm_zoom_hints, 43=>:min_space, 44=>:norm_space, 45=>:max_space, 46=>:end_space, 47=>:superscript_x, 48=>:superscript_y, 49=>:subscript_x, 50=>:subscript_y, 51=>:underline_position, 52=>:underline_thickness, 53=>:strikeout_ascent, 54=>:strikeout_descent, 55=>:italic_angle, 56=>:x_height, 57=>:quad_width, 58=>:weight, 59=>:point_size, 60=>:resolution, 61=>:copyright, 62=>:notice, 63=>:font_name, 64=>:family_name, 65=>:full_name, 66=>:cap_height, 67=>:wm_class, 68=>:wm_transient_for}
@@ -413,22 +383,16 @@ module Alembic
       ATOM_WM_CLASS = 67
       ATOM_WM_TRANSIENT_FOR = 68
       
-      ATOM.extend Alembic::ValueParamHelper
-      
       COLORMAP_STATE = {:uninstalled=>0, :installed=>1}
       COLORMAP_STATE_I = {0=>:uninstalled, 1=>:installed}
       
       COLORMAP_STATE_UNINSTALLED = 0
       COLORMAP_STATE_INSTALLED = 1
       
-      COLORMAP_STATE.extend Alembic::ValueParamHelper
-      
       COLORMAP = {:none=>0}
       COLORMAP_I = {0=>:none}
       
       COLORMAP_NONE = 0
-      
-      COLORMAP.extend Alembic::ValueParamHelper
       
       MAPPING = {:modifier=>0, :keyboard=>1, :pointer=>2}
       MAPPING_I = {0=>:modifier, 1=>:keyboard, 2=>:pointer}
@@ -437,16 +401,12 @@ module Alembic
       MAPPING_KEYBOARD = 1
       MAPPING_POINTER = 2
       
-      MAPPING.extend Alembic::ValueParamHelper
-      
       WINDOW_CLASS = {:copy_from_parent=>0, :input_output=>1, :input_only=>2}
       WINDOW_CLASS_I = {0=>:copy_from_parent, 1=>:input_output, 2=>:input_only}
       
       WINDOW_CLASS_COPY_FROM_PARENT = 0
       WINDOW_CLASS_INPUT_OUTPUT = 1
       WINDOW_CLASS_INPUT_ONLY = 2
-      
-      WINDOW_CLASS.extend Alembic::ValueParamHelper
       
       CW = {:back_pixmap=>1, :back_pixel=>2, :border_pixmap=>4, :border_pixel=>8, :bit_gravity=>16, :win_gravity=>32, :backing_store=>64, :backing_planes=>128, :backing_pixel=>256, :override_redirect=>512, :save_under=>1024, :event_mask=>2048, :dont_propagate=>4096, :colormap=>8192, :cursor=>16384}
       CW_I = {1=>:back_pixmap, 2=>:back_pixel, 4=>:border_pixmap, 8=>:border_pixel, 16=>:bit_gravity, 32=>:win_gravity, 64=>:backing_store, 128=>:backing_planes, 256=>:backing_pixel, 512=>:override_redirect, 1024=>:save_under, 2048=>:event_mask, 4096=>:dont_propagate, 8192=>:colormap, 16384=>:cursor}
@@ -467,15 +427,11 @@ module Alembic
       CW_COLORMAP = 8192
       CW_CURSOR = 16384
       
-      CW.extend Alembic::ValueParamHelper
-      
       BACK_PIXMAP = {:none=>0, :parent_relative=>1}
       BACK_PIXMAP_I = {0=>:none, 1=>:parent_relative}
       
       BACK_PIXMAP_NONE = 0
       BACK_PIXMAP_PARENT_RELATIVE = 1
-      
-      BACK_PIXMAP.extend Alembic::ValueParamHelper
       
       GRAVITY = {:bit_forget=>0, :win_unmap=>0, :north_west=>1, :north=>2, :north_east=>3, :west=>4, :center=>5, :east=>6, :south_west=>7, :south=>8, :south_east=>9, :static=>10}
       GRAVITY_I = {0=>:win_unmap, 1=>:north_west, 2=>:north, 3=>:north_east, 4=>:west, 5=>:center, 6=>:east, 7=>:south_west, 8=>:south, 9=>:south_east, 10=>:static}
@@ -493,8 +449,6 @@ module Alembic
       GRAVITY_SOUTH_EAST = 9
       GRAVITY_STATIC = 10
       
-      GRAVITY.extend Alembic::ValueParamHelper
-      
       MAP_STATE = {:unmapped=>0, :unviewable=>1, :viewable=>2}
       MAP_STATE_I = {0=>:unmapped, 1=>:unviewable, 2=>:viewable}
       
@@ -502,15 +456,11 @@ module Alembic
       MAP_STATE_UNVIEWABLE = 1
       MAP_STATE_VIEWABLE = 2
       
-      MAP_STATE.extend Alembic::ValueParamHelper
-      
       SET_MODE = {:insert=>0, :delete=>1}
       SET_MODE_I = {0=>:insert, 1=>:delete}
       
       SET_MODE_INSERT = 0
       SET_MODE_DELETE = 1
-      
-      SET_MODE.extend Alembic::ValueParamHelper
       
       CONFIG_WINDOW = {:x=>1, :y=>2, :width=>4, :height=>8, :border_width=>16, :sibling=>32, :stack_mode=>64}
       CONFIG_WINDOW_I = {1=>:x, 2=>:y, 4=>:width, 8=>:height, 16=>:border_width, 32=>:sibling, 64=>:stack_mode}
@@ -523,8 +473,6 @@ module Alembic
       CONFIG_WINDOW_SIBLING = 32
       CONFIG_WINDOW_STACK_MODE = 64
       
-      CONFIG_WINDOW.extend Alembic::ValueParamHelper
-      
       STACK_MODE = {:above=>0, :below=>1, :top_if=>2, :bottom_if=>3, :opposite=>4}
       STACK_MODE_I = {0=>:above, 1=>:below, 2=>:top_if, 3=>:bottom_if, 4=>:opposite}
       
@@ -534,15 +482,11 @@ module Alembic
       STACK_MODE_BOTTOM_IF = 3
       STACK_MODE_OPPOSITE = 4
       
-      STACK_MODE.extend Alembic::ValueParamHelper
-      
       CIRCULATE = {:raise_lowest=>0, :lower_highest=>1}
       CIRCULATE_I = {0=>:raise_lowest, 1=>:lower_highest}
       
       CIRCULATE_RAISE_LOWEST = 0
       CIRCULATE_LOWER_HIGHEST = 1
-      
-      CIRCULATE.extend Alembic::ValueParamHelper
       
       PROP_MODE = {:replace=>0, :prepend=>1, :append=>2}
       PROP_MODE_I = {0=>:replace, 1=>:prepend, 2=>:append}
@@ -551,14 +495,10 @@ module Alembic
       PROP_MODE_PREPEND = 1
       PROP_MODE_APPEND = 2
       
-      PROP_MODE.extend Alembic::ValueParamHelper
-      
       GET_PROPERTY_TYPE = {:any=>0}
       GET_PROPERTY_TYPE_I = {0=>:any}
       
       GET_PROPERTY_TYPE_ANY = 0
-      
-      GET_PROPERTY_TYPE.extend Alembic::ValueParamHelper
       
       SEND_EVENT_DEST = {:pointer_window=>0, :item_focus=>1}
       SEND_EVENT_DEST_I = {0=>:pointer_window, 1=>:item_focus}
@@ -566,15 +506,11 @@ module Alembic
       SEND_EVENT_DEST_POINTER_WINDOW = 0
       SEND_EVENT_DEST_ITEM_FOCUS = 1
       
-      SEND_EVENT_DEST.extend Alembic::ValueParamHelper
-      
       GRAB_MODE = {:sync=>0, :async=>1}
       GRAB_MODE_I = {0=>:sync, 1=>:async}
       
       GRAB_MODE_SYNC = 0
       GRAB_MODE_ASYNC = 1
-      
-      GRAB_MODE.extend Alembic::ValueParamHelper
       
       GRAB_STATUS = {:success=>0, :already_grabbed=>1, :invalid_time=>2, :not_viewable=>3, :frozen=>4}
       GRAB_STATUS_I = {0=>:success, 1=>:already_grabbed, 2=>:invalid_time, 3=>:not_viewable, 4=>:frozen}
@@ -585,14 +521,10 @@ module Alembic
       GRAB_STATUS_NOT_VIEWABLE = 3
       GRAB_STATUS_FROZEN = 4
       
-      GRAB_STATUS.extend Alembic::ValueParamHelper
-      
       CURSOR = {:none=>0}
       CURSOR_I = {0=>:none}
       
       CURSOR_NONE = 0
-      
-      CURSOR.extend Alembic::ValueParamHelper
       
       BUTTON_INDEX = {:any=>0, :"1"=>1, :"2"=>2, :"3"=>3, :"4"=>4, :"5"=>5}
       BUTTON_INDEX_I = {0=>:any, 1=>:"1", 2=>:"2", 3=>:"3", 4=>:"4", 5=>:"5"}
@@ -604,14 +536,10 @@ module Alembic
       BUTTON_INDEX_4 = 4
       BUTTON_INDEX_5 = 5
       
-      BUTTON_INDEX.extend Alembic::ValueParamHelper
-      
       GRAB = {:any=>0}
       GRAB_I = {0=>:any}
       
       GRAB_ANY = 0
-      
-      GRAB.extend Alembic::ValueParamHelper
       
       ALLOW = {:async_pointer=>0, :sync_pointer=>1, :replay_pointer=>2, :async_keyboard=>3, :sync_keyboard=>4, :replay_keyboard=>5, :async_both=>6, :sync_both=>7}
       ALLOW_I = {0=>:async_pointer, 1=>:sync_pointer, 2=>:replay_pointer, 3=>:async_keyboard, 4=>:sync_keyboard, 5=>:replay_keyboard, 6=>:async_both, 7=>:sync_both}
@@ -625,8 +553,6 @@ module Alembic
       ALLOW_ASYNC_BOTH = 6
       ALLOW_SYNC_BOTH = 7
       
-      ALLOW.extend Alembic::ValueParamHelper
-      
       INPUT_FOCUS = {:none=>0, :pointer_root=>1, :parent=>2, :follow_keyboard=>3}
       INPUT_FOCUS_I = {0=>:none, 1=>:pointer_root, 2=>:parent, 3=>:follow_keyboard}
       
@@ -635,15 +561,11 @@ module Alembic
       INPUT_FOCUS_PARENT = 2
       INPUT_FOCUS_FOLLOW_KEYBOARD = 3
       
-      INPUT_FOCUS.extend Alembic::ValueParamHelper
-      
       FONT_DRAW = {:left_to_right=>0, :right_to_left=>1}
       FONT_DRAW_I = {0=>:left_to_right, 1=>:right_to_left}
       
       FONT_DRAW_LEFT_TO_RIGHT = 0
       FONT_DRAW_RIGHT_TO_LEFT = 1
-      
-      FONT_DRAW.extend Alembic::ValueParamHelper
       
       GC = {:function=>1, :plane_mask=>2, :foreground=>4, :background=>8, :line_width=>16, :line_style=>32, :cap_style=>64, :join_style=>128, :fill_style=>256, :fill_rule=>512, :tile=>1024, :stipple=>2048, :tile_stipple_origin_x=>4096, :tile_stipple_origin_y=>8192, :font=>16384, :subwindow_mode=>32768, :graphics_exposures=>65536, :clip_origin_x=>131072, :clip_origin_y=>262144, :clip_mask=>524288, :dash_offset=>1048576, :dash_list=>2097152, :arc_mode=>4194304}
       GC_I = {1=>:function, 2=>:plane_mask, 4=>:foreground, 8=>:background, 16=>:line_width, 32=>:line_style, 64=>:cap_style, 128=>:join_style, 256=>:fill_style, 512=>:fill_rule, 1024=>:tile, 2048=>:stipple, 4096=>:tile_stipple_origin_x, 8192=>:tile_stipple_origin_y, 16384=>:font, 32768=>:subwindow_mode, 65536=>:graphics_exposures, 131072=>:clip_origin_x, 262144=>:clip_origin_y, 524288=>:clip_mask, 1048576=>:dash_offset, 2097152=>:dash_list, 4194304=>:arc_mode}
@@ -672,8 +594,6 @@ module Alembic
       GC_DASH_LIST = 2097152
       GC_ARC_MODE = 4194304
       
-      GC.extend Alembic::ValueParamHelper
-      
       GX = {:clear=>0, :and=>1, :and_reverse=>2, :copy=>3, :and_inverted=>4, :noop=>5, :xor=>6, :or=>7, :nor=>8, :equiv=>9, :invert=>10, :or_reverse=>11, :copy_inverted=>12, :or_inverted=>13, :nand=>14, :set=>15}
       GX_I = {0=>:clear, 1=>:and, 2=>:and_reverse, 3=>:copy, 4=>:and_inverted, 5=>:noop, 6=>:xor, 7=>:or, 8=>:nor, 9=>:equiv, 10=>:invert, 11=>:or_reverse, 12=>:copy_inverted, 13=>:or_inverted, 14=>:nand, 15=>:set}
       
@@ -694,16 +614,12 @@ module Alembic
       GX_NAND = 14
       GX_SET = 15
       
-      GX.extend Alembic::ValueParamHelper
-      
       LINE_STYLE = {:solid=>0, :on_off_dash=>1, :double_dash=>2}
       LINE_STYLE_I = {0=>:solid, 1=>:on_off_dash, 2=>:double_dash}
       
       LINE_STYLE_SOLID = 0
       LINE_STYLE_ON_OFF_DASH = 1
       LINE_STYLE_DOUBLE_DASH = 2
-      
-      LINE_STYLE.extend Alembic::ValueParamHelper
       
       CAP_STYLE = {:not_last=>0, :butt=>1, :round=>2, :projecting=>3}
       CAP_STYLE_I = {0=>:not_last, 1=>:butt, 2=>:round, 3=>:projecting}
@@ -713,16 +629,12 @@ module Alembic
       CAP_STYLE_ROUND = 2
       CAP_STYLE_PROJECTING = 3
       
-      CAP_STYLE.extend Alembic::ValueParamHelper
-      
       JOIN_STYLE = {:miter=>0, :round=>1, :bevel=>2}
       JOIN_STYLE_I = {0=>:miter, 1=>:round, 2=>:bevel}
       
       JOIN_STYLE_MITER = 0
       JOIN_STYLE_ROUND = 1
       JOIN_STYLE_BEVEL = 2
-      
-      JOIN_STYLE.extend Alembic::ValueParamHelper
       
       FILL_STYLE = {:solid=>0, :tiled=>1, :stippled=>2, :opaque_stippled=>3}
       FILL_STYLE_I = {0=>:solid, 1=>:tiled, 2=>:stippled, 3=>:opaque_stippled}
@@ -732,15 +644,11 @@ module Alembic
       FILL_STYLE_STIPPLED = 2
       FILL_STYLE_OPAQUE_STIPPLED = 3
       
-      FILL_STYLE.extend Alembic::ValueParamHelper
-      
       FILL_RULE = {:even_odd=>0, :winding=>1}
       FILL_RULE_I = {0=>:even_odd, 1=>:winding}
       
       FILL_RULE_EVEN_ODD = 0
       FILL_RULE_WINDING = 1
-      
-      FILL_RULE.extend Alembic::ValueParamHelper
       
       SUBWINDOW_MODE = {:clip_by_children=>0, :include_inferiors=>1}
       SUBWINDOW_MODE_I = {0=>:clip_by_children, 1=>:include_inferiors}
@@ -748,15 +656,11 @@ module Alembic
       SUBWINDOW_MODE_CLIP_BY_CHILDREN = 0
       SUBWINDOW_MODE_INCLUDE_INFERIORS = 1
       
-      SUBWINDOW_MODE.extend Alembic::ValueParamHelper
-      
       ARC_MODE = {:chord=>0, :pie_slice=>1}
       ARC_MODE_I = {0=>:chord, 1=>:pie_slice}
       
       ARC_MODE_CHORD = 0
       ARC_MODE_PIE_SLICE = 1
-      
-      ARC_MODE.extend Alembic::ValueParamHelper
       
       CLIP_ORDERING = {:unsorted=>0, :y_sorted=>1, :yx_sorted=>2, :yx_banded=>3}
       CLIP_ORDERING_I = {0=>:unsorted, 1=>:y_sorted, 2=>:yx_sorted, 3=>:yx_banded}
@@ -766,15 +670,11 @@ module Alembic
       CLIP_ORDERING_YX_SORTED = 2
       CLIP_ORDERING_YX_BANDED = 3
       
-      CLIP_ORDERING.extend Alembic::ValueParamHelper
-      
       COORD_MODE = {:origin=>0, :previous=>1}
       COORD_MODE_I = {0=>:origin, 1=>:previous}
       
       COORD_MODE_ORIGIN = 0
       COORD_MODE_PREVIOUS = 1
-      
-      COORD_MODE.extend Alembic::ValueParamHelper
       
       POLY_SHAPE = {:complex=>0, :nonconvex=>1, :convex=>2}
       POLY_SHAPE_I = {0=>:complex, 1=>:nonconvex, 2=>:convex}
@@ -783,8 +683,6 @@ module Alembic
       POLY_SHAPE_NONCONVEX = 1
       POLY_SHAPE_CONVEX = 2
       
-      POLY_SHAPE.extend Alembic::ValueParamHelper
-      
       IMAGE_FORMAT = {:xy_bitmap=>0, :xy_pixmap=>1, :z_pixmap=>2}
       IMAGE_FORMAT_I = {0=>:xy_bitmap, 1=>:xy_pixmap, 2=>:z_pixmap}
       
@@ -792,15 +690,11 @@ module Alembic
       IMAGE_FORMAT_XY_PIXMAP = 1
       IMAGE_FORMAT_Z_PIXMAP = 2
       
-      IMAGE_FORMAT.extend Alembic::ValueParamHelper
-      
       COLORMAP_ALLOC = {:none=>0, :all=>1}
       COLORMAP_ALLOC_I = {0=>:none, 1=>:all}
       
       COLORMAP_ALLOC_NONE = 0
       COLORMAP_ALLOC_ALL = 1
-      
-      COLORMAP_ALLOC.extend Alembic::ValueParamHelper
       
       COLOR_FLAG = {:red=>1, :green=>2, :blue=>4}
       COLOR_FLAG_I = {1=>:red, 2=>:green, 4=>:blue}
@@ -809,21 +703,15 @@ module Alembic
       COLOR_FLAG_GREEN = 2
       COLOR_FLAG_BLUE = 4
       
-      COLOR_FLAG.extend Alembic::ValueParamHelper
-      
       PIXMAP = {:none=>0}
       PIXMAP_I = {0=>:none}
       
       PIXMAP_NONE = 0
       
-      PIXMAP.extend Alembic::ValueParamHelper
-      
       FONT = {:none=>0}
       FONT_I = {0=>:none}
       
       FONT_NONE = 0
-      
-      FONT.extend Alembic::ValueParamHelper
       
       QUERY_SHAPE_OF = {:largest_cursor=>0, :fastest_tile=>1, :fastest_stipple=>2}
       QUERY_SHAPE_OF_I = {0=>:largest_cursor, 1=>:fastest_tile, 2=>:fastest_stipple}
@@ -831,8 +719,6 @@ module Alembic
       QUERY_SHAPE_OF_LARGEST_CURSOR = 0
       QUERY_SHAPE_OF_FASTEST_TILE = 1
       QUERY_SHAPE_OF_FASTEST_STIPPLE = 2
-      
-      QUERY_SHAPE_OF.extend Alembic::ValueParamHelper
       
       KB = {:key_click_percent=>1, :bell_percent=>2, :bell_pitch=>4, :bell_duration=>8, :led=>16, :led_mode=>32, :key=>64, :auto_repeat_mode=>128}
       KB_I = {1=>:key_click_percent, 2=>:bell_percent, 4=>:bell_pitch, 8=>:bell_duration, 16=>:led, 32=>:led_mode, 64=>:key, 128=>:auto_repeat_mode}
@@ -846,15 +732,11 @@ module Alembic
       KB_KEY = 64
       KB_AUTO_REPEAT_MODE = 128
       
-      KB.extend Alembic::ValueParamHelper
-      
       LED_MODE = {:off=>0, :on=>1}
       LED_MODE_I = {0=>:off, 1=>:on}
       
       LED_MODE_OFF = 0
       LED_MODE_ON = 1
-      
-      LED_MODE.extend Alembic::ValueParamHelper
       
       AUTO_REPEAT_MODE = {:off=>0, :on=>1, :default=>2}
       AUTO_REPEAT_MODE_I = {0=>:off, 1=>:on, 2=>:default}
@@ -863,16 +745,12 @@ module Alembic
       AUTO_REPEAT_MODE_ON = 1
       AUTO_REPEAT_MODE_DEFAULT = 2
       
-      AUTO_REPEAT_MODE.extend Alembic::ValueParamHelper
-      
       BLANKING = {:not_preferred=>0, :preferred=>1, :default=>2}
       BLANKING_I = {0=>:not_preferred, 1=>:preferred, 2=>:default}
       
       BLANKING_NOT_PREFERRED = 0
       BLANKING_PREFERRED = 1
       BLANKING_DEFAULT = 2
-      
-      BLANKING.extend Alembic::ValueParamHelper
       
       EXPOSURES = {:not_allowed=>0, :allowed=>1, :default=>2}
       EXPOSURES_I = {0=>:not_allowed, 1=>:allowed, 2=>:default}
@@ -881,15 +759,11 @@ module Alembic
       EXPOSURES_ALLOWED = 1
       EXPOSURES_DEFAULT = 2
       
-      EXPOSURES.extend Alembic::ValueParamHelper
-      
       HOST_MODE = {:insert=>0, :delete=>1}
       HOST_MODE_I = {0=>:insert, 1=>:delete}
       
       HOST_MODE_INSERT = 0
       HOST_MODE_DELETE = 1
-      
-      HOST_MODE.extend Alembic::ValueParamHelper
       
       FAMILY = {:internet=>0, :de_cnet=>1, :chaos=>2, :server_interpreted=>5, :internet6=>6}
       FAMILY_I = {0=>:internet, 1=>:de_cnet, 2=>:chaos, 5=>:server_interpreted, 6=>:internet6}
@@ -900,15 +774,11 @@ module Alembic
       FAMILY_SERVER_INTERPRETED = 5
       FAMILY_INTERNET6 = 6
       
-      FAMILY.extend Alembic::ValueParamHelper
-      
       ACCESS_CONTROL = {:disable=>0, :enable=>1}
       ACCESS_CONTROL_I = {0=>:disable, 1=>:enable}
       
       ACCESS_CONTROL_DISABLE = 0
       ACCESS_CONTROL_ENABLE = 1
-      
-      ACCESS_CONTROL.extend Alembic::ValueParamHelper
       
       CLOSE_DOWN = {:destroy_all=>0, :retain_permanent=>1, :retain_temporary=>2}
       CLOSE_DOWN_I = {0=>:destroy_all, 1=>:retain_permanent, 2=>:retain_temporary}
@@ -917,14 +787,10 @@ module Alembic
       CLOSE_DOWN_RETAIN_PERMANENT = 1
       CLOSE_DOWN_RETAIN_TEMPORARY = 2
       
-      CLOSE_DOWN.extend Alembic::ValueParamHelper
-      
       KILL = {:all_temporary=>0}
       KILL_I = {0=>:all_temporary}
       
       KILL_ALL_TEMPORARY = 0
-      
-      KILL.extend Alembic::ValueParamHelper
       
       SCREEN_SAVER = {:reset=>0, :active=>1}
       SCREEN_SAVER_I = {0=>:reset, 1=>:active}
@@ -932,16 +798,12 @@ module Alembic
       SCREEN_SAVER_RESET = 0
       SCREEN_SAVER_ACTIVE = 1
       
-      SCREEN_SAVER.extend Alembic::ValueParamHelper
-      
       MAPPING_STATUS = {:success=>0, :busy=>1, :failure=>2}
       MAPPING_STATUS_I = {0=>:success, 1=>:busy, 2=>:failure}
       
       MAPPING_STATUS_SUCCESS = 0
       MAPPING_STATUS_BUSY = 1
       MAPPING_STATUS_FAILURE = 2
-      
-      MAPPING_STATUS.extend Alembic::ValueParamHelper
       
       MAP_INDEX = {:shift=>0, :lock=>1, :control=>2, :"1"=>3, :"2"=>4, :"3"=>5, :"4"=>6, :"5"=>7}
       MAP_INDEX_I = {0=>:shift, 1=>:lock, 2=>:control, 3=>:"1", 4=>:"2", 5=>:"3", 6=>:"4", 7=>:"5"}
@@ -955,245 +817,235 @@ module Alembic
       MAP_INDEX_4 = 6
       MAP_INDEX_5 = 7
       
-      MAP_INDEX.extend Alembic::ValueParamHelper
+      self.events << [2, "key_press_event", false]
+      self.events << [3, "key_release_event", false]
+      self.events << [4, "button_press_event", false]
+      self.events << [5, "button_release_event", false]
+      self.events << [6, "motion_notify_event", false]
+      self.events << [7, "enter_notify_event", false]
+      self.events << [8, "leave_notify_event", false]
+      self.events << [9, "focus_in_event", false]
+      self.events << [10, "focus_out_event", false]
+      self.events << [11, "keymap_notify_event", true]
+      self.events << [12, "expose_event", false]
+      self.events << [13, "graphics_exposure_event", false]
+      self.events << [14, "no_exposure_event", false]
+      self.events << [15, "visibility_notify_event", false]
+      self.events << [16, "create_notify_event", false]
+      self.events << [17, "destroy_notify_event", false]
+      self.events << [18, "unmap_notify_event", false]
+      self.events << [19, "map_notify_event", false]
+      self.events << [20, "map_request_event", false]
+      self.events << [21, "reparent_notify_event", false]
+      self.events << [22, "configure_notify_event", false]
+      self.events << [23, "configure_request_event", false]
+      self.events << [24, "gravity_notify_event", false]
+      self.events << [25, "resize_request_event", false]
+      self.events << [26, "circulate_notify_event", false]
+      self.events << [27, "circulate_request_event", false]
+      self.events << [28, "property_notify_event", false]
+      self.events << [29, "selection_clear_event", false]
+      self.events << [30, "selection_request_event", false]
+      self.events << [31, "selection_notify_event", false]
+      self.events << [32, "colormap_notify_event", false]
+      self.events << [33, "client_message_event", false]
+      self.events << [34, "mapping_notify_event", false]
+      self.events << [35, "ge_generic_event", false]
       
-      define_event 2, :key_press_event, false
-      define_event 3, :key_release_event, false
-      define_event 4, :button_press_event, false
-      define_event 5, :button_release_event, false
-      define_event 6, :motion_notify_event, false
-      define_event 7, :enter_notify_event, false
-      define_event 8, :leave_notify_event, false
-      define_event 9, :focus_in_event, false
-      define_event 10, :focus_out_event, false
-      define_event 11, :keymap_notify_event, true
-      define_event 12, :expose_event, false
-      define_event 13, :graphics_exposure_event, false
-      define_event 14, :no_exposure_event, false
-      define_event 15, :visibility_notify_event, false
-      define_event 16, :create_notify_event, false
-      define_event 17, :destroy_notify_event, false
-      define_event 18, :unmap_notify_event, false
-      define_event 19, :map_notify_event, false
-      define_event 20, :map_request_event, false
-      define_event 21, :reparent_notify_event, false
-      define_event 22, :configure_notify_event, false
-      define_event 23, :configure_request_event, false
-      define_event 24, :gravity_notify_event, false
-      define_event 25, :resize_request_event, false
-      define_event 26, :circulate_notify_event, false
-      define_event 27, :circulate_request_event, false
-      define_event 28, :property_notify_event, false
-      define_event 29, :selection_clear_event, false
-      define_event 30, :selection_request_event, false
-      define_event 31, :selection_notify_event, false
-      define_event 32, :colormap_notify_event, false
-      define_event 33, :client_message_event, false
-      define_event 34, :mapping_notify_event, false
-      define_event 35, :ge_generic_event, false
-      
-      define_error 1, RequestError = Class.new(X11Error)
-      define_error 2, ValueError = Class.new(X11Error)
-      define_error 3, WindowError = Class.new(X11Error)
-      define_error 4, PixmapError = Class.new(X11Error)
-      define_error 5, AtomError = Class.new(X11Error)
-      define_error 6, CursorError = Class.new(X11Error)
-      define_error 7, FontError = Class.new(X11Error)
-      define_error 8, MatchError = Class.new(X11Error)
-      define_error 9, DrawableError = Class.new(X11Error)
-      define_error 10, AccessError = Class.new(X11Error)
-      define_error 11, AllocError = Class.new(X11Error)
-      define_error 12, ColormapError = Class.new(X11Error)
-      define_error 13, GContextError = Class.new(X11Error)
-      define_error 14, IDChoiceError = Class.new(X11Error)
-      define_error 15, NameError = Class.new(X11Error)
-      define_error 16, LengthError = Class.new(X11Error)
-      define_error 17, ImplementationError = Class.new(X11Error)
-      
-      Drawable = Class.new(Resource)
-      Window = Class.new(Drawable)
-      Pixmap = Class.new(Drawable)
-      Cursor = Class.new(Resource)
-      Fontable = Class.new(Resource)
-      Font = Class.new(Fontable)
-      Gcontext = Class.new(Fontable)
-      Colormap = Class.new(Resource)
-      Atom = Class.new()
+      self.errors << [1, "RequestError"]
+      self.errors << [2, "ValueError"]
+      self.errors << [3, "WindowError"]
+      self.errors << [4, "PixmapError"]
+      self.errors << [5, "AtomError"]
+      self.errors << [6, "CursorError"]
+      self.errors << [7, "FontError"]
+      self.errors << [8, "MatchError"]
+      self.errors << [9, "DrawableError"]
+      self.errors << [10, "AccessError"]
+      self.errors << [11, "AllocError"]
+      self.errors << [12, "ColormapError"]
+      self.errors << [13, "GContextError"]
+      self.errors << [14, "IDChoiceError"]
+      self.errors << [15, "NameError"]
+      self.errors << [16, "LengthError"]
+      self.errors << [17, "ImplementationError"]
       
       module Methods
         
-        def create_window! (depth, parent, x, y, width, height, border_width, klass, visual, value_hash = {})
+        def create_window! (depth, wid, parent, x, y, width, height, border_width, klass, visual, value_mask, value_list)
           s = 1.chr.encode('BINARY')
-          wid = alloc_window
-          value_mask, value_list = CW.value_param(value_hash)
-          s << [depth, Window.to_xid(self, wid), Window.to_xid(self, parent), x, y, width, height, border_width, klass, visual, value_mask, *value_list.map(&:to_i)].pack("CLLssSSSSLLL*")
-          send_request(s, wid)
+          s << [depth, wid.to_i, parent.to_i, x, y, width, height, border_width, klass, visual, value_mask, *value_list.map(&:to_i)].pack("CLLssSSSSLLL*")
+          send_request(s, :create_window, false)
         end
         
-        def create_window (depth, parent, x, y, width, height, border_width, klass, visual, value_hash = {})
-          create_window!(depth, parent, x, y, width, height, border_width, klass, visual, value_hash).sync.abandon
+        def create_window (depth, wid, parent, x, y, width, height, border_width, klass, visual, value_mask, value_list)
+          create_window!(depth, wid, parent, x, y, width, height, border_width, klass, visual, value_mask, value_list).abandon
         end
         
-        def change_window_attributes! (window, value_hash = {})
+        def change_window_attributes! (window, value_mask, value_list)
           s = 2.chr.encode('BINARY')
-          value_mask, value_list = CW.value_param(value_hash)
-          s << [Window.to_xid(self, window), value_mask, *value_list.map(&:to_i)].pack("x1LLL*")
-          send_request(s)
+          s << [window.to_i, value_mask, *value_list.map(&:to_i)].pack("x1LLL*")
+          send_request(s, :change_window_attributes, false)
         end
         
-        def change_window_attributes (window, value_hash = {})
-          change_window_attributes!(window, value_hash).sync.abandon
+        def change_window_attributes (window, value_mask, value_list)
+          change_window_attributes!(window, value_mask, value_list).abandon
         end
         
         def get_window_attributes! (window)
           s = 3.chr.encode('BINARY')
-          s << [Window.to_xid(self, window)].pack("x1L")
-          send_request(s) do |s|
-            x = HashWithMethodMissing.new
-            x[:backing_store], x[:visual], x[:klass], x[:bit_gravity], x[:win_gravity], x[:backing_planes], x[:backing_pixel], x[:save_under], x[:map_is_installed], x[:map_state], x[:override_redirect], x[:colormap], x[:all_event_masks], x[:your_event_mask], x[:do_not_propagate_mask], = s.slice!(0, 37).unpack("CLSCCLLCCCCLLLSx2")
-            x[:save_under] = x[:save_under] != 0
-            x[:map_is_installed] = x[:map_is_installed] != 0
-            x[:override_redirect] = x[:override_redirect] != 0
-            x[:colormap] = Colormap[self, x[:colormap]]
-            x
-          end
+          s << [window.to_i].pack("x1L")
+          send_request(s, :get_window_attributes, true)
         end
         
         def get_window_attributes (window)
-          get_window_attributes!(window).sync.result
+          get_window_attributes!(window).wait
+        end
+        
+        def get_window_attributes_reply (s)
+          x = {}
+          x[:backing_store], x[:visual], x[:klass], x[:bit_gravity], x[:win_gravity], x[:backing_planes], x[:backing_pixel], x[:save_under], x[:map_is_installed], x[:map_state], x[:override_redirect], x[:colormap], x[:all_event_masks], x[:your_event_mask], x[:do_not_propagate_mask], = s.slice!(0, 37).unpack("CLSCCLLCCCCLLLSx2")
+          x[:save_under] = x[:save_under] != 0
+          x[:map_is_installed] = x[:map_is_installed] != 0
+          x[:override_redirect] = x[:override_redirect] != 0
+          x[:colormap] = find_resource(x[:colormap], "Colormap")
+          x
         end
         
         def destroy_window! (window)
           s = 4.chr.encode('BINARY')
-          s << [Window.to_xid(self, window)].pack("x1L")
-          send_request(s)
+          s << [window.to_i].pack("x1L")
+          send_request(s, :destroy_window, false)
         end
         
         def destroy_window (window)
-          destroy_window!(window).sync.abandon
+          destroy_window!(window).abandon
         end
         
         def destroy_subwindows! (window)
           s = 5.chr.encode('BINARY')
-          s << [Window.to_xid(self, window)].pack("x1L")
-          send_request(s)
+          s << [window.to_i].pack("x1L")
+          send_request(s, :destroy_subwindows, false)
         end
         
         def destroy_subwindows (window)
-          destroy_subwindows!(window).sync.abandon
+          destroy_subwindows!(window).abandon
         end
         
         def change_save_set! (mode, window)
           s = 6.chr.encode('BINARY')
-          s << [mode, Window.to_xid(self, window)].pack("CL")
-          send_request(s)
+          s << [mode, window.to_i].pack("CL")
+          send_request(s, :change_save_set, false)
         end
         
         def change_save_set (mode, window)
-          change_save_set!(mode, window).sync.abandon
+          change_save_set!(mode, window).abandon
         end
         
         def reparent_window! (window, parent, x, y)
           s = 7.chr.encode('BINARY')
-          s << [Window.to_xid(self, window), Window.to_xid(self, parent), x, y].pack("x1LLss")
-          send_request(s)
+          s << [window.to_i, parent.to_i, x, y].pack("x1LLss")
+          send_request(s, :reparent_window, false)
         end
         
         def reparent_window (window, parent, x, y)
-          reparent_window!(window, parent, x, y).sync.abandon
+          reparent_window!(window, parent, x, y).abandon
         end
         
         def map_window! (window)
           s = 8.chr.encode('BINARY')
-          s << [Window.to_xid(self, window)].pack("x1L")
-          send_request(s)
+          s << [window.to_i].pack("x1L")
+          send_request(s, :map_window, false)
         end
         
         def map_window (window)
-          map_window!(window).sync.abandon
+          map_window!(window).abandon
         end
         
         def map_subwindows! (window)
           s = 9.chr.encode('BINARY')
-          s << [Window.to_xid(self, window)].pack("x1L")
-          send_request(s)
+          s << [window.to_i].pack("x1L")
+          send_request(s, :map_subwindows, false)
         end
         
         def map_subwindows (window)
-          map_subwindows!(window).sync.abandon
+          map_subwindows!(window).abandon
         end
         
         def unmap_window! (window)
           s = 10.chr.encode('BINARY')
-          s << [Window.to_xid(self, window)].pack("x1L")
-          send_request(s)
+          s << [window.to_i].pack("x1L")
+          send_request(s, :unmap_window, false)
         end
         
         def unmap_window (window)
-          unmap_window!(window).sync.abandon
+          unmap_window!(window).abandon
         end
         
         def unmap_subwindows! (window)
           s = 11.chr.encode('BINARY')
-          s << [Window.to_xid(self, window)].pack("x1L")
-          send_request(s)
+          s << [window.to_i].pack("x1L")
+          send_request(s, :unmap_subwindows, false)
         end
         
         def unmap_subwindows (window)
-          unmap_subwindows!(window).sync.abandon
+          unmap_subwindows!(window).abandon
         end
         
-        def configure_window! (window, value_hash = {})
+        def configure_window! (window, value_mask, value_list)
           s = 12.chr.encode('BINARY')
-          value_mask, value_list = CONFIG_WINDOW.value_param(value_hash)
-          s << [Window.to_xid(self, window), value_mask, *value_list.map(&:to_i)].pack("x1LSx2L*")
-          send_request(s)
+          s << [window.to_i, value_mask, *value_list.map(&:to_i)].pack("x1LSx2L*")
+          send_request(s, :configure_window, false)
         end
         
-        def configure_window (window, value_hash = {})
-          configure_window!(window, value_hash).sync.abandon
+        def configure_window (window, value_mask, value_list)
+          configure_window!(window, value_mask, value_list).abandon
         end
         
         def circulate_window! (direction, window)
           s = 13.chr.encode('BINARY')
-          s << [direction, Window.to_xid(self, window)].pack("CL")
-          send_request(s)
+          s << [direction, window.to_i].pack("CL")
+          send_request(s, :circulate_window, false)
         end
         
         def circulate_window (direction, window)
-          circulate_window!(direction, window).sync.abandon
+          circulate_window!(direction, window).abandon
         end
         
         def get_geometry! (drawable)
           s = 14.chr.encode('BINARY')
-          s << [Drawable.to_xid(self, drawable)].pack("x1L")
-          send_request(s) do |s|
-            x = HashWithMethodMissing.new
-            x[:depth], x[:root], x[:x], x[:y], x[:width], x[:height], x[:border_width], = s.slice!(0, 17).unpack("CLssSSSx2")
-            x[:root] = Window[self, x[:root]]
-            x
-          end
+          s << [drawable.to_i].pack("x1L")
+          send_request(s, :get_geometry, true)
         end
         
         def get_geometry (drawable)
-          get_geometry!(drawable).sync.result
+          get_geometry!(drawable).wait
+        end
+        
+        def get_geometry_reply (s)
+          x = {}
+          x[:depth], x[:root], x[:x], x[:y], x[:width], x[:height], x[:border_width], = s.slice!(0, 17).unpack("CLssSSSx2")
+          x[:root] = find_resource(x[:root], "Window")
+          x
         end
         
         def query_tree! (window)
           s = 15.chr.encode('BINARY')
-          s << [Window.to_xid(self, window)].pack("x1L")
-          send_request(s) do |s|
-            x = HashWithMethodMissing.new
-            x[:root], x[:parent], x[:children_len], *x[:children] = s.unpack("x1LLSx14L*")
-            x[:root] = Window[self, x[:root]]
-            x[:parent] = Window[self, x[:parent]]
-            x[:children] = x[:children] ? x[:children].map{|x|Window[self, x]} : []
-            x
-          end
+          s << [window.to_i].pack("x1L")
+          send_request(s, :query_tree, true)
         end
         
         def query_tree (window)
-          query_tree!(window).sync.result
+          query_tree!(window).wait
+        end
+        
+        def query_tree_reply (s)
+          x = {}
+          x[:root], x[:parent], x[:children_len], *x[:children] = s.unpack("x1LLSx14L*")
+          x[:root] = find_resource(x[:root], "Window")
+          x[:parent] = find_resource(x[:parent], "Window")
+          x[:children] = x[:children] ? x[:children].map{|x|find_resource(x, "Window")} : []
+          x
         end
         
         def intern_atom! (only_if_exists, name)
@@ -1201,408 +1053,435 @@ module Alembic
           name = name.force_encoding('BINARY')
           name_len = name.bytesize
           s << [only_if_exists ? 1 : 0, name_len, pad(name)].pack("CSx2A*")
-          send_request(s) do |s|
-            x = HashWithMethodMissing.new
-            x[:atom], = s.slice!(0, 5).unpack("x1L")
-            x[:atom] = Atom[self, x[:atom]]
-            x[:atom]
-          end
+          send_request(s, :intern_atom, true)
         end
         
         def intern_atom (only_if_exists, name)
-          intern_atom!(only_if_exists, name).sync.result
+          intern_atom!(only_if_exists, name).wait
+        end
+        
+        def intern_atom_reply (s)
+          x = {}
+          x[:atom], = s.slice!(0, 5).unpack("x1L")
+          x[:atom] = find_atom(x[:atom])
+          x[:atom]
         end
         
         def get_atom_name! (atom)
           s = 17.chr.encode('BINARY')
-          s << [Atom.to_xid(self, atom)].pack("x1L")
-          send_request(s) do |s|
-            x = HashWithMethodMissing.new
-            x[:name_len], = s.slice!(0, 25).unpack("x1Sx22")
-            x[:name] = s.slice!(0, x[:name_len])
-            x[:name]
-          end
+          s << [atom(atom)].pack("x1L")
+          send_request(s, :get_atom_name, true)
         end
         
         def get_atom_name (atom)
-          get_atom_name!(atom).sync.result
+          get_atom_name!(atom).wait
+        end
+        
+        def get_atom_name_reply (s)
+          x = {}
+          x[:name_len], = s.slice!(0, 25).unpack("x1Sx22")
+          x[:name] = s.slice!(0, x[:name_len])
+          x[:name]
         end
         
         def change_property! (mode, window, property, type, format, data_len, data)
           s = 18.chr.encode('BINARY')
-          s << [mode, Window.to_xid(self, window), Atom.to_xid(self, property), Atom.to_xid(self, type), format, data_len, pad(data)].pack("CLLLCx3LA*")
-          send_request(s)
+          s << [mode, window.to_i, atom(property), atom(type), format, data_len, pad(data)].pack("CLLLCx3LA*")
+          send_request(s, :change_property, false)
         end
         
         def change_property (mode, window, property, type, format, data_len, data)
-          change_property!(mode, window, property, type, format, data_len, data).sync.abandon
+          change_property!(mode, window, property, type, format, data_len, data).abandon
         end
         
         def delete_property! (window, property)
           s = 19.chr.encode('BINARY')
-          s << [Window.to_xid(self, window), Atom.to_xid(self, property)].pack("x1LL")
-          send_request(s)
+          s << [window.to_i, atom(property)].pack("x1LL")
+          send_request(s, :delete_property, false)
         end
         
         def delete_property (window, property)
-          delete_property!(window, property).sync.abandon
+          delete_property!(window, property).abandon
         end
         
         def get_property! (delete, window, property, type, long_offset, long_length)
           s = 20.chr.encode('BINARY')
-          s << [delete ? 1 : 0, Window.to_xid(self, window), Atom.to_xid(self, property), Atom.to_xid(self, type), long_offset, long_length].pack("CLLLLL")
-          send_request(s) do |s|
-            x = HashWithMethodMissing.new
-            x[:format], x[:type], x[:bytes_after], x[:value_len], = s.slice!(0, 25).unpack("CLLLx12")
-            x[:type] = Atom[self, x[:type]]
-            x[:value] = s.slice!(0, (x[:value_len] * (x[:format] / 8)))
-            x
-          end
+          s << [delete ? 1 : 0, window.to_i, atom(property), atom(type), long_offset, long_length].pack("CLLLLL")
+          send_request(s, :get_property, true)
         end
         
         def get_property (delete, window, property, type, long_offset, long_length)
-          get_property!(delete, window, property, type, long_offset, long_length).sync.result
+          get_property!(delete, window, property, type, long_offset, long_length).wait
+        end
+        
+        def get_property_reply (s)
+          x = {}
+          x[:format], x[:type], x[:bytes_after], x[:value_len], = s.slice!(0, 25).unpack("CLLLx12")
+          x[:type] = find_atom(x[:type])
+          x[:value] = s.slice!(0, (x[:value_len] * (x[:format] / 8)))
+          x
         end
         
         def list_properties! (window)
           s = 21.chr.encode('BINARY')
-          s << [Window.to_xid(self, window)].pack("x1L")
-          send_request(s) do |s|
-            x = HashWithMethodMissing.new
-            x[:atoms_len], *x[:atoms] = s.unpack("x1Sx22L*")
-            x[:atoms] = x[:atoms] ? x[:atoms].map{|x|Atom[self, x]} : []
-            x[:atoms]
-          end
+          s << [window.to_i].pack("x1L")
+          send_request(s, :list_properties, true)
         end
         
         def list_properties (window)
-          list_properties!(window).sync.result
+          list_properties!(window).wait
+        end
+        
+        def list_properties_reply (s)
+          x = {}
+          x[:atoms_len], *x[:atoms] = s.unpack("x1Sx22L*")
+          x[:atoms] = x[:atoms] ? x[:atoms].map{|x|find_atom(x)} : []
+          x[:atoms]
         end
         
         def set_selection_owner! (owner, selection, time)
           s = 22.chr.encode('BINARY')
-          s << [Window.to_xid(self, owner), Atom.to_xid(self, selection), time].pack("x1LLL")
-          send_request(s)
+          s << [owner.to_i, atom(selection), time].pack("x1LLL")
+          send_request(s, :set_selection_owner, false)
         end
         
         def set_selection_owner (owner, selection, time)
-          set_selection_owner!(owner, selection, time).sync.abandon
+          set_selection_owner!(owner, selection, time).abandon
         end
         
         def get_selection_owner! (selection)
           s = 23.chr.encode('BINARY')
-          s << [Atom.to_xid(self, selection)].pack("x1L")
-          send_request(s) do |s|
-            x = HashWithMethodMissing.new
-            x[:owner], = s.slice!(0, 5).unpack("x1L")
-            x[:owner] = Window[self, x[:owner]]
-            x[:owner]
-          end
+          s << [atom(selection)].pack("x1L")
+          send_request(s, :get_selection_owner, true)
         end
         
         def get_selection_owner (selection)
-          get_selection_owner!(selection).sync.result
+          get_selection_owner!(selection).wait
+        end
+        
+        def get_selection_owner_reply (s)
+          x = {}
+          x[:owner], = s.slice!(0, 5).unpack("x1L")
+          x[:owner] = find_resource(x[:owner], "Window")
+          x[:owner]
         end
         
         def convert_selection! (requestor, selection, target, property, time)
           s = 24.chr.encode('BINARY')
-          s << [Window.to_xid(self, requestor), Atom.to_xid(self, selection), Atom.to_xid(self, target), Atom.to_xid(self, property), time].pack("x1LLLLL")
-          send_request(s)
+          s << [requestor.to_i, atom(selection), atom(target), atom(property), time].pack("x1LLLLL")
+          send_request(s, :convert_selection, false)
         end
         
         def convert_selection (requestor, selection, target, property, time)
-          convert_selection!(requestor, selection, target, property, time).sync.abandon
+          convert_selection!(requestor, selection, target, property, time).abandon
         end
         
         def send_event! (propagate, destination, event_mask, event)
           s = 25.chr.encode('BINARY')
-          s << [propagate ? 1 : 0, Window.to_xid(self, destination), event_mask, pad(event)].pack("CLLA*")
-          send_request(s)
+          s << [propagate ? 1 : 0, destination.to_i, event_mask, pad(event)].pack("CLLA*")
+          send_request(s, :send_event, false)
         end
         
         def send_event (propagate, destination, event_mask, event)
-          send_event!(propagate, destination, event_mask, event).sync.abandon
+          send_event!(propagate, destination, event_mask, event).abandon
         end
         
         def grab_pointer! (owner_events, grab_window, event_mask, pointer_mode, keyboard_mode, confine_to, cursor, time)
           s = 26.chr.encode('BINARY')
-          s << [owner_events ? 1 : 0, Window.to_xid(self, grab_window), event_mask, pointer_mode, keyboard_mode, Window.to_xid(self, confine_to), Cursor.to_xid(self, cursor), time].pack("CLSCCLLL")
-          send_request(s) do |s|
-            x = HashWithMethodMissing.new
-            x[:status], = s.slice!(0, 1).unpack("C")
-            x[:status]
-          end
+          s << [owner_events ? 1 : 0, grab_window.to_i, event_mask, pointer_mode, keyboard_mode, confine_to.to_i, cursor.to_i, time].pack("CLSCCLLL")
+          send_request(s, :grab_pointer, true)
         end
         
         def grab_pointer (owner_events, grab_window, event_mask, pointer_mode, keyboard_mode, confine_to, cursor, time)
-          grab_pointer!(owner_events, grab_window, event_mask, pointer_mode, keyboard_mode, confine_to, cursor, time).sync.result
+          grab_pointer!(owner_events, grab_window, event_mask, pointer_mode, keyboard_mode, confine_to, cursor, time).wait
+        end
+        
+        def grab_pointer_reply (s)
+          x = {}
+          x[:status], = s.slice!(0, 1).unpack("C")
+          x[:status]
         end
         
         def ungrab_pointer! (time)
           s = 27.chr.encode('BINARY')
           s << [time].pack("x1L")
-          send_request(s)
+          send_request(s, :ungrab_pointer, false)
         end
         
         def ungrab_pointer (time)
-          ungrab_pointer!(time).sync.abandon
+          ungrab_pointer!(time).abandon
         end
         
         def grab_button! (owner_events, grab_window, event_mask, pointer_mode, keyboard_mode, confine_to, cursor, button, modifiers)
           s = 28.chr.encode('BINARY')
-          s << [owner_events ? 1 : 0, Window.to_xid(self, grab_window), event_mask, pointer_mode, keyboard_mode, Window.to_xid(self, confine_to), Cursor.to_xid(self, cursor), button, modifiers].pack("CLSCCLLCx1S")
-          send_request(s)
+          s << [owner_events ? 1 : 0, grab_window.to_i, event_mask, pointer_mode, keyboard_mode, confine_to.to_i, cursor.to_i, button, modifiers].pack("CLSCCLLCx1S")
+          send_request(s, :grab_button, false)
         end
         
         def grab_button (owner_events, grab_window, event_mask, pointer_mode, keyboard_mode, confine_to, cursor, button, modifiers)
-          grab_button!(owner_events, grab_window, event_mask, pointer_mode, keyboard_mode, confine_to, cursor, button, modifiers).sync.abandon
+          grab_button!(owner_events, grab_window, event_mask, pointer_mode, keyboard_mode, confine_to, cursor, button, modifiers).abandon
         end
         
         def ungrab_button! (button, grab_window, modifiers)
           s = 29.chr.encode('BINARY')
-          s << [button, Window.to_xid(self, grab_window), modifiers].pack("CLSx2")
-          send_request(s)
+          s << [button, grab_window.to_i, modifiers].pack("CLSx2")
+          send_request(s, :ungrab_button, false)
         end
         
         def ungrab_button (button, grab_window, modifiers)
-          ungrab_button!(button, grab_window, modifiers).sync.abandon
+          ungrab_button!(button, grab_window, modifiers).abandon
         end
         
         def change_active_pointer_grab! (cursor, time, event_mask)
           s = 30.chr.encode('BINARY')
-          s << [Cursor.to_xid(self, cursor), time, event_mask].pack("x1LLSx2")
-          send_request(s)
+          s << [cursor.to_i, time, event_mask].pack("x1LLSx2")
+          send_request(s, :change_active_pointer_grab, false)
         end
         
         def change_active_pointer_grab (cursor, time, event_mask)
-          change_active_pointer_grab!(cursor, time, event_mask).sync.abandon
+          change_active_pointer_grab!(cursor, time, event_mask).abandon
         end
         
         def grab_keyboard! (owner_events, grab_window, time, pointer_mode, keyboard_mode)
           s = 31.chr.encode('BINARY')
-          s << [owner_events ? 1 : 0, Window.to_xid(self, grab_window), time, pointer_mode, keyboard_mode].pack("CLLCCx2")
-          send_request(s) do |s|
-            x = HashWithMethodMissing.new
-            x[:status], = s.slice!(0, 1).unpack("C")
-            x[:status]
-          end
+          s << [owner_events ? 1 : 0, grab_window.to_i, time, pointer_mode, keyboard_mode].pack("CLLCCx2")
+          send_request(s, :grab_keyboard, true)
         end
         
         def grab_keyboard (owner_events, grab_window, time, pointer_mode, keyboard_mode)
-          grab_keyboard!(owner_events, grab_window, time, pointer_mode, keyboard_mode).sync.result
+          grab_keyboard!(owner_events, grab_window, time, pointer_mode, keyboard_mode).wait
+        end
+        
+        def grab_keyboard_reply (s)
+          x = {}
+          x[:status], = s.slice!(0, 1).unpack("C")
+          x[:status]
         end
         
         def ungrab_keyboard! (time)
           s = 32.chr.encode('BINARY')
           s << [time].pack("x1L")
-          send_request(s)
+          send_request(s, :ungrab_keyboard, false)
         end
         
         def ungrab_keyboard (time)
-          ungrab_keyboard!(time).sync.abandon
+          ungrab_keyboard!(time).abandon
         end
         
         def grab_key! (owner_events, grab_window, modifiers, key, pointer_mode, keyboard_mode)
           s = 33.chr.encode('BINARY')
-          s << [owner_events ? 1 : 0, Window.to_xid(self, grab_window), modifiers, key, pointer_mode, keyboard_mode].pack("CLSCCCx3")
-          send_request(s)
+          s << [owner_events ? 1 : 0, grab_window.to_i, modifiers, key, pointer_mode, keyboard_mode].pack("CLSCCCx3")
+          send_request(s, :grab_key, false)
         end
         
         def grab_key (owner_events, grab_window, modifiers, key, pointer_mode, keyboard_mode)
-          grab_key!(owner_events, grab_window, modifiers, key, pointer_mode, keyboard_mode).sync.abandon
+          grab_key!(owner_events, grab_window, modifiers, key, pointer_mode, keyboard_mode).abandon
         end
         
         def ungrab_key! (key, grab_window, modifiers)
           s = 34.chr.encode('BINARY')
-          s << [key, Window.to_xid(self, grab_window), modifiers].pack("CLSx2")
-          send_request(s)
+          s << [key, grab_window.to_i, modifiers].pack("CLSx2")
+          send_request(s, :ungrab_key, false)
         end
         
         def ungrab_key (key, grab_window, modifiers)
-          ungrab_key!(key, grab_window, modifiers).sync.abandon
+          ungrab_key!(key, grab_window, modifiers).abandon
         end
         
         def allow_events! (mode, time)
           s = 35.chr.encode('BINARY')
           s << [mode, time].pack("CL")
-          send_request(s)
+          send_request(s, :allow_events, false)
         end
         
         def allow_events (mode, time)
-          allow_events!(mode, time).sync.abandon
+          allow_events!(mode, time).abandon
         end
         
         def grab_server! ()
           s = 36.chr.encode('BINARY')
-          send_request(s)
+          send_request(s, :grab_server, false)
         end
         
         def grab_server ()
-          grab_server!().sync.abandon
+          grab_server!().abandon
         end
         
         def ungrab_server! ()
           s = 37.chr.encode('BINARY')
-          send_request(s)
+          send_request(s, :ungrab_server, false)
         end
         
         def ungrab_server ()
-          ungrab_server!().sync.abandon
+          ungrab_server!().abandon
         end
         
         def query_pointer! (window)
           s = 38.chr.encode('BINARY')
-          s << [Window.to_xid(self, window)].pack("x1L")
-          send_request(s) do |s|
-            x = HashWithMethodMissing.new
-            x[:same_screen], x[:root], x[:child], x[:root_x], x[:root_y], x[:win_x], x[:win_y], x[:mask], = s.slice!(0, 21).unpack("CLLssssSx2")
-            x[:same_screen] = x[:same_screen] != 0
-            x[:root] = Window[self, x[:root]]
-            x[:child] = Window[self, x[:child]]
-            x
-          end
+          s << [window.to_i].pack("x1L")
+          send_request(s, :query_pointer, true)
         end
         
         def query_pointer (window)
-          query_pointer!(window).sync.result
+          query_pointer!(window).wait
+        end
+        
+        def query_pointer_reply (s)
+          x = {}
+          x[:same_screen], x[:root], x[:child], x[:root_x], x[:root_y], x[:win_x], x[:win_y], x[:mask], = s.slice!(0, 21).unpack("CLLssssSx2")
+          x[:same_screen] = x[:same_screen] != 0
+          x[:root] = find_resource(x[:root], "Window")
+          x[:child] = find_resource(x[:child], "Window")
+          x
         end
         
         def get_motion_events! (window, start, stop)
           s = 39.chr.encode('BINARY')
-          s << [Window.to_xid(self, window), start, stop].pack("x1LLL")
-          send_request(s) do |s|
-            x = HashWithMethodMissing.new
-            x[:events_len], = s.slice!(0, 25).unpack("x1Lx20")
-            x[:events] = x[:events_len].times.map{decode_timecoord(s)}
-            x[:events]
-          end
+          s << [window.to_i, start, stop].pack("x1LLL")
+          send_request(s, :get_motion_events, true)
         end
         
         def get_motion_events (window, start, stop)
-          get_motion_events!(window, start, stop).sync.result
+          get_motion_events!(window, start, stop).wait
+        end
+        
+        def get_motion_events_reply (s)
+          x = {}
+          x[:events_len], = s.slice!(0, 25).unpack("x1Lx20")
+          x[:events] = x[:events_len].times.map{decode_timecoord(s)}
+          x[:events]
         end
         
         def translate_coordinates! (src_window, dst_window, src_x, src_y)
           s = 40.chr.encode('BINARY')
-          s << [Window.to_xid(self, src_window), Window.to_xid(self, dst_window), src_x, src_y].pack("x1LLss")
-          send_request(s) do |s|
-            x = HashWithMethodMissing.new
-            x[:same_screen], x[:child], x[:dst_x], x[:dst_y], = s.slice!(0, 9).unpack("CLss")
-            x[:same_screen] = x[:same_screen] != 0
-            x[:child] = Window[self, x[:child]]
-            x
-          end
+          s << [src_window.to_i, dst_window.to_i, src_x, src_y].pack("x1LLss")
+          send_request(s, :translate_coordinates, true)
         end
         
         def translate_coordinates (src_window, dst_window, src_x, src_y)
-          translate_coordinates!(src_window, dst_window, src_x, src_y).sync.result
+          translate_coordinates!(src_window, dst_window, src_x, src_y).wait
+        end
+        
+        def translate_coordinates_reply (s)
+          x = {}
+          x[:same_screen], x[:child], x[:dst_x], x[:dst_y], = s.slice!(0, 9).unpack("CLss")
+          x[:same_screen] = x[:same_screen] != 0
+          x[:child] = find_resource(x[:child], "Window")
+          x
         end
         
         def warp_pointer! (src_window, dst_window, src_x, src_y, src_width, src_height, dst_x, dst_y)
           s = 41.chr.encode('BINARY')
-          s << [Window.to_xid(self, src_window), Window.to_xid(self, dst_window), src_x, src_y, src_width, src_height, dst_x, dst_y].pack("x1LLssSSss")
-          send_request(s)
+          s << [src_window.to_i, dst_window.to_i, src_x, src_y, src_width, src_height, dst_x, dst_y].pack("x1LLssSSss")
+          send_request(s, :warp_pointer, false)
         end
         
         def warp_pointer (src_window, dst_window, src_x, src_y, src_width, src_height, dst_x, dst_y)
-          warp_pointer!(src_window, dst_window, src_x, src_y, src_width, src_height, dst_x, dst_y).sync.abandon
+          warp_pointer!(src_window, dst_window, src_x, src_y, src_width, src_height, dst_x, dst_y).abandon
         end
         
         def set_input_focus! (revert_to, focus, time)
           s = 42.chr.encode('BINARY')
-          s << [revert_to, Window.to_xid(self, focus), time].pack("CLL")
-          send_request(s)
+          s << [revert_to, focus.to_i, time].pack("CLL")
+          send_request(s, :set_input_focus, false)
         end
         
         def set_input_focus (revert_to, focus, time)
-          set_input_focus!(revert_to, focus, time).sync.abandon
+          set_input_focus!(revert_to, focus, time).abandon
         end
         
         def get_input_focus! ()
           s = 43.chr.encode('BINARY')
-          send_request(s) do |s|
-            x = HashWithMethodMissing.new
-            x[:revert_to], x[:focus], = s.slice!(0, 5).unpack("CL")
-            x[:focus] = Window[self, x[:focus]]
-            x
-          end
+          send_request(s, :get_input_focus, true)
         end
         
         def get_input_focus ()
-          get_input_focus!().sync.result
+          get_input_focus!().wait
+        end
+        
+        def get_input_focus_reply (s)
+          x = {}
+          x[:revert_to], x[:focus], = s.slice!(0, 5).unpack("CL")
+          x[:focus] = find_resource(x[:focus], "Window")
+          x
         end
         
         def query_keymap! ()
           s = 44.chr.encode('BINARY')
-          send_request(s) do |s|
-            x = HashWithMethodMissing.new
-            s.slice!(0, 1)
-            x[:keys] = s.slice!(0..32).unpack('C*')
-            x[:keys]
-          end
+          send_request(s, :query_keymap, true)
         end
         
         def query_keymap ()
-          query_keymap!().sync.result
+          query_keymap!().wait
         end
         
-        def open_font! (name)
+        def query_keymap_reply (s)
+          x = {}
+          s.slice!(0, 1)
+          x[:keys] = s.slice!(0..32).unpack('C*')
+          x[:keys]
+        end
+        
+        def open_font! (fid, name)
           s = 45.chr.encode('BINARY')
-          fid = alloc_font
           name = name.force_encoding('BINARY')
           name_len = name.bytesize
-          s << [Font.to_xid(self, fid), name_len, pad(name)].pack("x1LSx2A*")
-          send_request(s, fid)
+          s << [fid.to_i, name_len, pad(name)].pack("x1LSx2A*")
+          send_request(s, :open_font, false)
         end
         
-        def open_font (name)
-          open_font!(name).sync.abandon
+        def open_font (fid, name)
+          open_font!(fid, name).abandon
         end
         
         def close_font! (font)
           s = 46.chr.encode('BINARY')
-          s << [Font.to_xid(self, font)].pack("x1L")
-          send_request(s)
+          s << [font.to_i].pack("x1L")
+          send_request(s, :close_font, false)
         end
         
         def close_font (font)
-          close_font!(font).sync.abandon
+          close_font!(font).abandon
         end
         
         def query_font! (font)
           s = 47.chr.encode('BINARY')
-          s << [Fontable.to_xid(self, font)].pack("x1L")
-          send_request(s) do |s|
-            x = HashWithMethodMissing.new
-            s.slice!(0, 1)
-            x[:min_bounds] = decode_charinfo(s)
-            s.slice!(0, 4)
-            x[:max_bounds] = decode_charinfo(s)
-            x[:min_char_or_byte2], x[:max_char_or_byte2], x[:default_char], x[:properties_len], x[:draw_direction], x[:min_byte1], x[:max_byte1], x[:all_chars_exist], x[:font_ascent], x[:font_descent], x[:char_infos_len], = s.slice!(0, 24).unpack("x4SSSSCCCCssL")
-            x[:all_chars_exist] = x[:all_chars_exist] != 0
-            x[:properties] = x[:properties_len].times.map{decode_fontprop(s)}
-            x[:char_infos] = x[:char_infos_len].times.map{decode_charinfo(s)}
-            x
-          end
+          s << [font.to_i].pack("x1L")
+          send_request(s, :query_font, true)
         end
         
         def query_font (font)
-          query_font!(font).sync.result
+          query_font!(font).wait
+        end
+        
+        def query_font_reply (s)
+          x = {}
+          s.slice!(0, 1)
+          x[:min_bounds] = decode_charinfo(s)
+          s.slice!(0, 4)
+          x[:max_bounds] = decode_charinfo(s)
+          x[:min_char_or_byte2], x[:max_char_or_byte2], x[:default_char], x[:properties_len], x[:draw_direction], x[:min_byte1], x[:max_byte1], x[:all_chars_exist], x[:font_ascent], x[:font_descent], x[:char_infos_len], = s.slice!(0, 24).unpack("x4SSSSCCCCssL")
+          x[:all_chars_exist] = x[:all_chars_exist] != 0
+          x[:properties] = x[:properties_len].times.map{decode_fontprop(s)}
+          x[:char_infos] = x[:char_infos_len].times.map{decode_charinfo(s)}
+          x
         end
         
         def query_text_extents! (font, string)
           s = 48.chr.encode('BINARY')
-          s << raise('this doesn\'t work')
-          s << [Fontable.to_xid(self, font), pad(string)].pack("LA*")
-          send_request(s) do |s|
-            x = HashWithMethodMissing.new
-            x[:draw_direction], x[:font_ascent], x[:font_descent], x[:overall_ascent], x[:overall_descent], x[:overall_width], x[:overall_left], x[:overall_right], = s.slice!(0, 21).unpack("Csssslll")
-            x
-          end
+          s << (string.length & 1)
+          s << [font.to_i, pad(string)].pack("LA*")
+          send_request(s, :query_text_extents, true)
         end
         
         def query_text_extents (font, string)
-          query_text_extents!(font, string).sync.result
+          query_text_extents!(font, string).wait
+        end
+        
+        def query_text_extents_reply (s)
+          x = {}
+          x[:draw_direction], x[:font_ascent], x[:font_descent], x[:overall_ascent], x[:overall_descent], x[:overall_width], x[:overall_left], x[:overall_right], = s.slice!(0, 21).unpack("Csssslll")
+          x
         end
         
         def list_fonts! (max_names, pattern)
@@ -1610,16 +1489,18 @@ module Alembic
           pattern = pattern.force_encoding('BINARY')
           pattern_len = pattern.bytesize
           s << [max_names, pattern_len, pad(pattern)].pack("x1SSA*")
-          send_request(s) do |s|
-            x = HashWithMethodMissing.new
-            x[:names_len], = s.slice!(0, 25).unpack("x1Sx22")
-            x[:names] = x[:names_len].times.map{decode_str(s)}
-            x[:names]
-          end
+          send_request(s, :list_fonts, true)
         end
         
         def list_fonts (max_names, pattern)
-          list_fonts!(max_names, pattern).sync.result
+          list_fonts!(max_names, pattern).wait
+        end
+        
+        def list_fonts_reply (s)
+          x = {}
+          x[:names_len], = s.slice!(0, 25).unpack("x1Sx22")
+          x[:names] = x[:names_len].times.map{decode_str(s)}
+          x[:names]
         end
         
         def list_fonts_with_info! (max_names, pattern)
@@ -1627,22 +1508,24 @@ module Alembic
           pattern = pattern.force_encoding('BINARY')
           pattern_len = pattern.bytesize
           s << [max_names, pattern_len, pad(pattern)].pack("x1SSA*")
-          send_request(s) do |s|
-            x = HashWithMethodMissing.new
-            x[:name_len], = s.slice!(0, 1).unpack("C")
-            x[:min_bounds] = decode_charinfo(s)
-            s.slice!(0, 4)
-            x[:max_bounds] = decode_charinfo(s)
-            x[:min_char_or_byte2], x[:max_char_or_byte2], x[:default_char], x[:properties_len], x[:draw_direction], x[:min_byte1], x[:max_byte1], x[:all_chars_exist], x[:font_ascent], x[:font_descent], x[:replies_hint], = s.slice!(0, 24).unpack("x4SSSSCCCCssL")
-            x[:all_chars_exist] = x[:all_chars_exist] != 0
-            x[:properties] = x[:properties_len].times.map{decode_fontprop(s)}
-            x[:name] = s.slice!(0, x[:name_len])
-            x
-          end
+          send_request(s, :list_fonts_with_info, true)
         end
         
         def list_fonts_with_info (max_names, pattern)
-          list_fonts_with_info!(max_names, pattern).sync.result
+          list_fonts_with_info!(max_names, pattern).wait
+        end
+        
+        def list_fonts_with_info_reply (s)
+          x = {}
+          x[:name_len], = s.slice!(0, 1).unpack("C")
+          x[:min_bounds] = decode_charinfo(s)
+          s.slice!(0, 4)
+          x[:max_bounds] = decode_charinfo(s)
+          x[:min_char_or_byte2], x[:max_char_or_byte2], x[:default_char], x[:properties_len], x[:draw_direction], x[:min_byte1], x[:max_byte1], x[:all_chars_exist], x[:font_ascent], x[:font_descent], x[:replies_hint], = s.slice!(0, 24).unpack("x4SSSSCCCCssL")
+          x[:all_chars_exist] = x[:all_chars_exist] != 0
+          x[:properties] = x[:properties_len].times.map{decode_fontprop(s)}
+          x[:name] = s.slice!(0, x[:name_len])
+          x
         end
         
         def set_font_path! (font)
@@ -1650,544 +1533,557 @@ module Alembic
           font_qty = font.length
           s << [font_qty].pack("x1Sx2")
           s << font.map{|x|encode_str(''.encode('BINARY'), *x)}.join
-          send_request(s)
+          send_request(s, :set_font_path, false)
         end
         
         def set_font_path (font)
-          set_font_path!(font).sync.abandon
+          set_font_path!(font).abandon
         end
         
         def get_font_path! ()
           s = 52.chr.encode('BINARY')
-          send_request(s) do |s|
-            x = HashWithMethodMissing.new
-            x[:path_len], = s.slice!(0, 25).unpack("x1Sx22")
-            x[:path] = x[:path_len].times.map{decode_str(s)}
-            x[:path]
-          end
+          send_request(s, :get_font_path, true)
         end
         
         def get_font_path ()
-          get_font_path!().sync.result
+          get_font_path!().wait
         end
         
-        def create_pixmap! (depth, drawable, width, height)
+        def get_font_path_reply (s)
+          x = {}
+          x[:path_len], = s.slice!(0, 25).unpack("x1Sx22")
+          x[:path] = x[:path_len].times.map{decode_str(s)}
+          x[:path]
+        end
+        
+        def create_pixmap! (depth, pid, drawable, width, height)
           s = 53.chr.encode('BINARY')
-          pid = alloc_pixmap
-          s << [depth, Pixmap.to_xid(self, pid), Drawable.to_xid(self, drawable), width, height].pack("CLLSS")
-          send_request(s, pid)
+          s << [depth, pid.to_i, drawable.to_i, width, height].pack("CLLSS")
+          send_request(s, :create_pixmap, false)
         end
         
-        def create_pixmap (depth, drawable, width, height)
-          create_pixmap!(depth, drawable, width, height).sync.abandon
+        def create_pixmap (depth, pid, drawable, width, height)
+          create_pixmap!(depth, pid, drawable, width, height).abandon
         end
         
         def free_pixmap! (pixmap)
           s = 54.chr.encode('BINARY')
-          s << [Pixmap.to_xid(self, pixmap)].pack("x1L")
-          send_request(s)
+          s << [pixmap.to_i].pack("x1L")
+          send_request(s, :free_pixmap, false)
         end
         
         def free_pixmap (pixmap)
-          free_pixmap!(pixmap).sync.abandon
+          free_pixmap!(pixmap).abandon
         end
         
-        def create_gc! (drawable, value_hash = {})
+        def create_gc! (cid, drawable, value_mask, value_list)
           s = 55.chr.encode('BINARY')
-          cid = alloc_gcontext
-          value_mask, value_list = GC.value_param(value_hash)
-          s << [Gcontext.to_xid(self, cid), Drawable.to_xid(self, drawable), value_mask, *value_list.map(&:to_i)].pack("x1LLLL*")
-          send_request(s, cid)
+          s << [cid.to_i, drawable.to_i, value_mask, *value_list.map(&:to_i)].pack("x1LLLL*")
+          send_request(s, :create_gc, false)
         end
         
-        def create_gc (drawable, value_hash = {})
-          create_gc!(drawable, value_hash).sync.abandon
+        def create_gc (cid, drawable, value_mask, value_list)
+          create_gc!(cid, drawable, value_mask, value_list).abandon
         end
         
-        def change_gc! (gc, value_hash = {})
+        def change_gc! (gc, value_mask, value_list)
           s = 56.chr.encode('BINARY')
-          value_mask, value_list = GC.value_param(value_hash)
-          s << [Gcontext.to_xid(self, gc), value_mask, *value_list.map(&:to_i)].pack("x1LLL*")
-          send_request(s)
+          s << [gc.to_i, value_mask, *value_list.map(&:to_i)].pack("x1LLL*")
+          send_request(s, :change_gc, false)
         end
         
-        def change_gc (gc, value_hash = {})
-          change_gc!(gc, value_hash).sync.abandon
+        def change_gc (gc, value_mask, value_list)
+          change_gc!(gc, value_mask, value_list).abandon
         end
         
         def copy_gc! (src_gc, dst_gc, value_mask)
           s = 57.chr.encode('BINARY')
-          s << [Gcontext.to_xid(self, src_gc), Gcontext.to_xid(self, dst_gc), value_mask].pack("x1LLL")
-          send_request(s)
+          s << [src_gc.to_i, dst_gc.to_i, value_mask].pack("x1LLL")
+          send_request(s, :copy_gc, false)
         end
         
         def copy_gc (src_gc, dst_gc, value_mask)
-          copy_gc!(src_gc, dst_gc, value_mask).sync.abandon
+          copy_gc!(src_gc, dst_gc, value_mask).abandon
         end
         
         def set_dashes! (gc, dash_offset, dashes)
           s = 58.chr.encode('BINARY')
           dashes_len = dashes.length
-          s << [Gcontext.to_xid(self, gc), dash_offset, dashes_len, *dashes].pack("x1LSSC*")
-          send_request(s)
+          s << [gc.to_i, dash_offset, dashes_len, *dashes].pack("x1LSSC*")
+          send_request(s, :set_dashes, false)
         end
         
         def set_dashes (gc, dash_offset, dashes)
-          set_dashes!(gc, dash_offset, dashes).sync.abandon
+          set_dashes!(gc, dash_offset, dashes).abandon
         end
         
         def set_clip_rectangles! (ordering, gc, clip_x_origin, clip_y_origin, rectangles)
           s = 59.chr.encode('BINARY')
-          s << [ordering, Gcontext.to_xid(self, gc), clip_x_origin, clip_y_origin].pack("CLss")
+          s << [ordering, gc.to_i, clip_x_origin, clip_y_origin].pack("CLss")
           s << rectangles.map{|x|encode_rectangle(''.encode('BINARY'), *x)}.join
-          send_request(s)
+          send_request(s, :set_clip_rectangles, false)
         end
         
         def set_clip_rectangles (ordering, gc, clip_x_origin, clip_y_origin, rectangles)
-          set_clip_rectangles!(ordering, gc, clip_x_origin, clip_y_origin, rectangles).sync.abandon
+          set_clip_rectangles!(ordering, gc, clip_x_origin, clip_y_origin, rectangles).abandon
         end
         
         def free_gc! (gc)
           s = 60.chr.encode('BINARY')
-          s << [Gcontext.to_xid(self, gc)].pack("x1L")
-          send_request(s)
+          s << [gc.to_i].pack("x1L")
+          send_request(s, :free_gc, false)
         end
         
         def free_gc (gc)
-          free_gc!(gc).sync.abandon
+          free_gc!(gc).abandon
         end
         
         def clear_area! (exposures, window, x, y, width, height)
           s = 61.chr.encode('BINARY')
-          s << [exposures ? 1 : 0, Window.to_xid(self, window), x, y, width, height].pack("CLssSS")
-          send_request(s)
+          s << [exposures ? 1 : 0, window.to_i, x, y, width, height].pack("CLssSS")
+          send_request(s, :clear_area, false)
         end
         
         def clear_area (exposures, window, x, y, width, height)
-          clear_area!(exposures, window, x, y, width, height).sync.abandon
+          clear_area!(exposures, window, x, y, width, height).abandon
         end
         
         def copy_area! (src_drawable, dst_drawable, gc, src_x, src_y, dst_x, dst_y, width, height)
           s = 62.chr.encode('BINARY')
-          s << [Drawable.to_xid(self, src_drawable), Drawable.to_xid(self, dst_drawable), Gcontext.to_xid(self, gc), src_x, src_y, dst_x, dst_y, width, height].pack("x1LLLssssSS")
-          send_request(s)
+          s << [src_drawable.to_i, dst_drawable.to_i, gc.to_i, src_x, src_y, dst_x, dst_y, width, height].pack("x1LLLssssSS")
+          send_request(s, :copy_area, false)
         end
         
         def copy_area (src_drawable, dst_drawable, gc, src_x, src_y, dst_x, dst_y, width, height)
-          copy_area!(src_drawable, dst_drawable, gc, src_x, src_y, dst_x, dst_y, width, height).sync.abandon
+          copy_area!(src_drawable, dst_drawable, gc, src_x, src_y, dst_x, dst_y, width, height).abandon
         end
         
         def copy_plane! (src_drawable, dst_drawable, gc, src_x, src_y, dst_x, dst_y, width, height, bit_plane)
           s = 63.chr.encode('BINARY')
-          s << [Drawable.to_xid(self, src_drawable), Drawable.to_xid(self, dst_drawable), Gcontext.to_xid(self, gc), src_x, src_y, dst_x, dst_y, width, height, bit_plane].pack("x1LLLssssSSL")
-          send_request(s)
+          s << [src_drawable.to_i, dst_drawable.to_i, gc.to_i, src_x, src_y, dst_x, dst_y, width, height, bit_plane].pack("x1LLLssssSSL")
+          send_request(s, :copy_plane, false)
         end
         
         def copy_plane (src_drawable, dst_drawable, gc, src_x, src_y, dst_x, dst_y, width, height, bit_plane)
-          copy_plane!(src_drawable, dst_drawable, gc, src_x, src_y, dst_x, dst_y, width, height, bit_plane).sync.abandon
+          copy_plane!(src_drawable, dst_drawable, gc, src_x, src_y, dst_x, dst_y, width, height, bit_plane).abandon
         end
         
         def poly_point! (coordinate_mode, drawable, gc, points)
           s = 64.chr.encode('BINARY')
-          s << [coordinate_mode, Drawable.to_xid(self, drawable), Gcontext.to_xid(self, gc)].pack("CLL")
+          s << [coordinate_mode, drawable.to_i, gc.to_i].pack("CLL")
           s << points.map{|x|encode_point(''.encode('BINARY'), *x)}.join
-          send_request(s)
+          send_request(s, :poly_point, false)
         end
         
         def poly_point (coordinate_mode, drawable, gc, points)
-          poly_point!(coordinate_mode, drawable, gc, points).sync.abandon
+          poly_point!(coordinate_mode, drawable, gc, points).abandon
         end
         
         def poly_line! (coordinate_mode, drawable, gc, points)
           s = 65.chr.encode('BINARY')
-          s << [coordinate_mode, Drawable.to_xid(self, drawable), Gcontext.to_xid(self, gc)].pack("CLL")
+          s << [coordinate_mode, drawable.to_i, gc.to_i].pack("CLL")
           s << points.map{|x|encode_point(''.encode('BINARY'), *x)}.join
-          send_request(s)
+          send_request(s, :poly_line, false)
         end
         
         def poly_line (coordinate_mode, drawable, gc, points)
-          poly_line!(coordinate_mode, drawable, gc, points).sync.abandon
+          poly_line!(coordinate_mode, drawable, gc, points).abandon
         end
         
         def poly_segment! (drawable, gc, segments)
           s = 66.chr.encode('BINARY')
-          s << [Drawable.to_xid(self, drawable), Gcontext.to_xid(self, gc)].pack("x1LL")
+          s << [drawable.to_i, gc.to_i].pack("x1LL")
           s << segments.map{|x|encode_segment(''.encode('BINARY'), *x)}.join
-          send_request(s)
+          send_request(s, :poly_segment, false)
         end
         
         def poly_segment (drawable, gc, segments)
-          poly_segment!(drawable, gc, segments).sync.abandon
+          poly_segment!(drawable, gc, segments).abandon
         end
         
         def poly_rectangle! (drawable, gc, rectangles)
           s = 67.chr.encode('BINARY')
-          s << [Drawable.to_xid(self, drawable), Gcontext.to_xid(self, gc)].pack("x1LL")
+          s << [drawable.to_i, gc.to_i].pack("x1LL")
           s << rectangles.map{|x|encode_rectangle(''.encode('BINARY'), *x)}.join
-          send_request(s)
+          send_request(s, :poly_rectangle, false)
         end
         
         def poly_rectangle (drawable, gc, rectangles)
-          poly_rectangle!(drawable, gc, rectangles).sync.abandon
+          poly_rectangle!(drawable, gc, rectangles).abandon
         end
         
         def poly_arc! (drawable, gc, arcs)
           s = 68.chr.encode('BINARY')
-          s << [Drawable.to_xid(self, drawable), Gcontext.to_xid(self, gc)].pack("x1LL")
+          s << [drawable.to_i, gc.to_i].pack("x1LL")
           s << arcs.map{|x|encode_arc(''.encode('BINARY'), *x)}.join
-          send_request(s)
+          send_request(s, :poly_arc, false)
         end
         
         def poly_arc (drawable, gc, arcs)
-          poly_arc!(drawable, gc, arcs).sync.abandon
+          poly_arc!(drawable, gc, arcs).abandon
         end
         
         def fill_poly! (drawable, gc, shape, coordinate_mode, points)
           s = 69.chr.encode('BINARY')
-          s << [Drawable.to_xid(self, drawable), Gcontext.to_xid(self, gc), shape, coordinate_mode].pack("x1LLCCx2")
+          s << [drawable.to_i, gc.to_i, shape, coordinate_mode].pack("x1LLCCx2")
           s << points.map{|x|encode_point(''.encode('BINARY'), *x)}.join
-          send_request(s)
+          send_request(s, :fill_poly, false)
         end
         
         def fill_poly (drawable, gc, shape, coordinate_mode, points)
-          fill_poly!(drawable, gc, shape, coordinate_mode, points).sync.abandon
+          fill_poly!(drawable, gc, shape, coordinate_mode, points).abandon
         end
         
         def poly_fill_rectangle! (drawable, gc, rectangles)
           s = 70.chr.encode('BINARY')
-          s << [Drawable.to_xid(self, drawable), Gcontext.to_xid(self, gc)].pack("x1LL")
+          s << [drawable.to_i, gc.to_i].pack("x1LL")
           s << rectangles.map{|x|encode_rectangle(''.encode('BINARY'), *x)}.join
-          send_request(s)
+          send_request(s, :poly_fill_rectangle, false)
         end
         
         def poly_fill_rectangle (drawable, gc, rectangles)
-          poly_fill_rectangle!(drawable, gc, rectangles).sync.abandon
+          poly_fill_rectangle!(drawable, gc, rectangles).abandon
         end
         
         def poly_fill_arc! (drawable, gc, arcs)
           s = 71.chr.encode('BINARY')
-          s << [Drawable.to_xid(self, drawable), Gcontext.to_xid(self, gc)].pack("x1LL")
+          s << [drawable.to_i, gc.to_i].pack("x1LL")
           s << arcs.map{|x|encode_arc(''.encode('BINARY'), *x)}.join
-          send_request(s)
+          send_request(s, :poly_fill_arc, false)
         end
         
         def poly_fill_arc (drawable, gc, arcs)
-          poly_fill_arc!(drawable, gc, arcs).sync.abandon
+          poly_fill_arc!(drawable, gc, arcs).abandon
         end
         
         def put_image! (format, drawable, gc, width, height, dst_x, dst_y, left_pad, depth, data)
           s = 72.chr.encode('BINARY')
-          s << [format, Drawable.to_xid(self, drawable), Gcontext.to_xid(self, gc), width, height, dst_x, dst_y, left_pad, depth, pad(data)].pack("CLLSSssCCx2A*")
-          send_request(s)
+          s << [format, drawable.to_i, gc.to_i, width, height, dst_x, dst_y, left_pad, depth, pad(data)].pack("CLLSSssCCx2A*")
+          send_request(s, :put_image, false)
         end
         
         def put_image (format, drawable, gc, width, height, dst_x, dst_y, left_pad, depth, data)
-          put_image!(format, drawable, gc, width, height, dst_x, dst_y, left_pad, depth, data).sync.abandon
+          put_image!(format, drawable, gc, width, height, dst_x, dst_y, left_pad, depth, data).abandon
         end
         
         def get_image! (format, drawable, x, y, width, height, plane_mask)
           s = 73.chr.encode('BINARY')
-          s << [format, Drawable.to_xid(self, drawable), x, y, width, height, plane_mask].pack("CLssSSL")
-          send_request(s) do |s|
-            x = HashWithMethodMissing.new
-            x[:depth], x[:visual], = s.slice!(0, 25).unpack("CLx20")
-            x[:data] = s.slice!(0, (x[:length] * 4))
-            x
-          end
+          s << [format, drawable.to_i, x, y, width, height, plane_mask].pack("CLssSSL")
+          send_request(s, :get_image, true)
         end
         
         def get_image (format, drawable, x, y, width, height, plane_mask)
-          get_image!(format, drawable, x, y, width, height, plane_mask).sync.result
+          get_image!(format, drawable, x, y, width, height, plane_mask).wait
+        end
+        
+        def get_image_reply (s)
+          x = {}
+          x[:depth], x[:visual], = s.slice!(0, 25).unpack("CLx20")
+          x[:data] = s.slice!(0, (x[:length] * 4))
+          x
         end
         
         def poly_text8! (drawable, gc, x, y, items)
           s = 74.chr.encode('BINARY')
-          s << [Drawable.to_xid(self, drawable), Gcontext.to_xid(self, gc), x, y, pad(items)].pack("x1LLssA*")
-          send_request(s)
+          s << [drawable.to_i, gc.to_i, x, y, pad(items)].pack("x1LLssA*")
+          send_request(s, :poly_text8, false)
         end
         
         def poly_text8 (drawable, gc, x, y, items)
-          poly_text8!(drawable, gc, x, y, items).sync.abandon
+          poly_text8!(drawable, gc, x, y, items).abandon
         end
         
         def poly_text16! (drawable, gc, x, y, items)
           s = 75.chr.encode('BINARY')
-          s << [Drawable.to_xid(self, drawable), Gcontext.to_xid(self, gc), x, y, pad(items)].pack("x1LLssA*")
-          send_request(s)
+          s << [drawable.to_i, gc.to_i, x, y, pad(items)].pack("x1LLssA*")
+          send_request(s, :poly_text16, false)
         end
         
         def poly_text16 (drawable, gc, x, y, items)
-          poly_text16!(drawable, gc, x, y, items).sync.abandon
+          poly_text16!(drawable, gc, x, y, items).abandon
         end
         
         def image_text8! (drawable, gc, x, y, string)
           s = 76.chr.encode('BINARY')
           string = string.force_encoding('BINARY')
           string_len = string.bytesize
-          s << [string_len, Drawable.to_xid(self, drawable), Gcontext.to_xid(self, gc), x, y, pad(string)].pack("CLLssA*")
-          send_request(s)
+          s << [string_len, drawable.to_i, gc.to_i, x, y, pad(string)].pack("CLLssA*")
+          send_request(s, :image_text8, false)
         end
         
         def image_text8 (drawable, gc, x, y, string)
-          image_text8!(drawable, gc, x, y, string).sync.abandon
+          image_text8!(drawable, gc, x, y, string).abandon
         end
         
         def image_text16! (drawable, gc, x, y, string)
           s = 77.chr.encode('BINARY')
           string = string.encode('UTF-16BE').force_encoding('BINARY')
           string_len = string.bytesize / 2
-          s << [string_len, Drawable.to_xid(self, drawable), Gcontext.to_xid(self, gc), x, y, pad(string)].pack("CLLssA*")
-          send_request(s)
+          s << [string_len, drawable.to_i, gc.to_i, x, y, pad(string)].pack("CLLssA*")
+          send_request(s, :image_text16, false)
         end
         
         def image_text16 (drawable, gc, x, y, string)
-          image_text16!(drawable, gc, x, y, string).sync.abandon
+          image_text16!(drawable, gc, x, y, string).abandon
         end
         
-        def create_colormap! (alloc, window, visual)
+        def create_colormap! (alloc, mid, window, visual)
           s = 78.chr.encode('BINARY')
-          mid = alloc_colormap
-          s << [alloc, Colormap.to_xid(self, mid), Window.to_xid(self, window), visual].pack("CLLL")
-          send_request(s, mid)
+          s << [alloc, mid.to_i, window.to_i, visual].pack("CLLL")
+          send_request(s, :create_colormap, false)
         end
         
-        def create_colormap (alloc, window, visual)
-          create_colormap!(alloc, window, visual).sync.abandon
+        def create_colormap (alloc, mid, window, visual)
+          create_colormap!(alloc, mid, window, visual).abandon
         end
         
         def free_colormap! (cmap)
           s = 79.chr.encode('BINARY')
-          s << [Colormap.to_xid(self, cmap)].pack("x1L")
-          send_request(s)
+          s << [cmap.to_i].pack("x1L")
+          send_request(s, :free_colormap, false)
         end
         
         def free_colormap (cmap)
-          free_colormap!(cmap).sync.abandon
+          free_colormap!(cmap).abandon
         end
         
         def copy_colormap_and_free! (mid, src_cmap)
           s = 80.chr.encode('BINARY')
-          s << [Colormap.to_xid(self, mid), Colormap.to_xid(self, src_cmap)].pack("x1LL")
-          send_request(s)
+          s << [mid.to_i, src_cmap.to_i].pack("x1LL")
+          send_request(s, :copy_colormap_and_free, false)
         end
         
         def copy_colormap_and_free (mid, src_cmap)
-          copy_colormap_and_free!(mid, src_cmap).sync.abandon
+          copy_colormap_and_free!(mid, src_cmap).abandon
         end
         
         def install_colormap! (cmap)
           s = 81.chr.encode('BINARY')
-          s << [Colormap.to_xid(self, cmap)].pack("x1L")
-          send_request(s)
+          s << [cmap.to_i].pack("x1L")
+          send_request(s, :install_colormap, false)
         end
         
         def install_colormap (cmap)
-          install_colormap!(cmap).sync.abandon
+          install_colormap!(cmap).abandon
         end
         
         def uninstall_colormap! (cmap)
           s = 82.chr.encode('BINARY')
-          s << [Colormap.to_xid(self, cmap)].pack("x1L")
-          send_request(s)
+          s << [cmap.to_i].pack("x1L")
+          send_request(s, :uninstall_colormap, false)
         end
         
         def uninstall_colormap (cmap)
-          uninstall_colormap!(cmap).sync.abandon
+          uninstall_colormap!(cmap).abandon
         end
         
         def list_installed_colormaps! (window)
           s = 83.chr.encode('BINARY')
-          s << [Window.to_xid(self, window)].pack("x1L")
-          send_request(s) do |s|
-            x = HashWithMethodMissing.new
-            x[:cmaps_len], *x[:cmaps] = s.unpack("x1Sx22L*")
-            x[:cmaps] = x[:cmaps] ? x[:cmaps].map{|x|Colormap[self, x]} : []
-            x[:cmaps]
-          end
+          s << [window.to_i].pack("x1L")
+          send_request(s, :list_installed_colormaps, true)
         end
         
         def list_installed_colormaps (window)
-          list_installed_colormaps!(window).sync.result
+          list_installed_colormaps!(window).wait
+        end
+        
+        def list_installed_colormaps_reply (s)
+          x = {}
+          x[:cmaps_len], *x[:cmaps] = s.unpack("x1Sx22L*")
+          x[:cmaps] = x[:cmaps] ? x[:cmaps].map{|x|find_resource(x, "Colormap")} : []
+          x[:cmaps]
         end
         
         def alloc_color! (cmap, red, green, blue)
           s = 84.chr.encode('BINARY')
-          s << [Colormap.to_xid(self, cmap), red, green, blue].pack("x1LSSSx2")
-          send_request(s) do |s|
-            x = HashWithMethodMissing.new
-            x[:red], x[:green], x[:blue], x[:pixel], = s.slice!(0, 13).unpack("x1SSSx2L")
-            x
-          end
+          s << [cmap.to_i, red, green, blue].pack("x1LSSSx2")
+          send_request(s, :alloc_color, true)
         end
         
         def alloc_color (cmap, red, green, blue)
-          alloc_color!(cmap, red, green, blue).sync.result
+          alloc_color!(cmap, red, green, blue).wait
+        end
+        
+        def alloc_color_reply (s)
+          x = {}
+          x[:red], x[:green], x[:blue], x[:pixel], = s.slice!(0, 13).unpack("x1SSSx2L")
+          x
         end
         
         def alloc_named_color! (cmap, name)
           s = 85.chr.encode('BINARY')
           name = name.force_encoding('BINARY')
           name_len = name.bytesize
-          s << [Colormap.to_xid(self, cmap), name_len, pad(name)].pack("x1LSx2A*")
-          send_request(s) do |s|
-            x = HashWithMethodMissing.new
-            x[:pixel], x[:exact_red], x[:exact_green], x[:exact_blue], x[:visual_red], x[:visual_green], x[:visual_blue], = s.slice!(0, 17).unpack("x1LSSSSSS")
-            x
-          end
+          s << [cmap.to_i, name_len, pad(name)].pack("x1LSx2A*")
+          send_request(s, :alloc_named_color, true)
         end
         
         def alloc_named_color (cmap, name)
-          alloc_named_color!(cmap, name).sync.result
+          alloc_named_color!(cmap, name).wait
+        end
+        
+        def alloc_named_color_reply (s)
+          x = {}
+          x[:pixel], x[:exact_red], x[:exact_green], x[:exact_blue], x[:visual_red], x[:visual_green], x[:visual_blue], = s.slice!(0, 17).unpack("x1LSSSSSS")
+          x
         end
         
         def alloc_color_cells! (contiguous, cmap, colors, planes)
           s = 86.chr.encode('BINARY')
-          s << [contiguous ? 1 : 0, Colormap.to_xid(self, cmap), colors, planes].pack("CLSS")
-          send_request(s) do |s|
-            x = HashWithMethodMissing.new
-            x[:pixels_len], x[:masks_len], = s.slice!(0, 25).unpack("x1SSx20")
-            x[:pixels] = s.slice!(0..4*(x[:pixels_len])).unpack('L*')
-            *x[:masks] = s.unpack("L*")
-            x
-          end
+          s << [contiguous ? 1 : 0, cmap.to_i, colors, planes].pack("CLSS")
+          send_request(s, :alloc_color_cells, true)
         end
         
         def alloc_color_cells (contiguous, cmap, colors, planes)
-          alloc_color_cells!(contiguous, cmap, colors, planes).sync.result
+          alloc_color_cells!(contiguous, cmap, colors, planes).wait
+        end
+        
+        def alloc_color_cells_reply (s)
+          x = {}
+          x[:pixels_len], x[:masks_len], = s.slice!(0, 25).unpack("x1SSx20")
+          x[:pixels] = s.slice!(0..4*(x[:pixels_len])).unpack('L*')
+          *x[:masks] = s.unpack("L*")
+          x
         end
         
         def alloc_color_planes! (contiguous, cmap, colors, reds, greens, blues)
           s = 87.chr.encode('BINARY')
-          s << [contiguous ? 1 : 0, Colormap.to_xid(self, cmap), colors, reds, greens, blues].pack("CLSSSS")
-          send_request(s) do |s|
-            x = HashWithMethodMissing.new
-            x[:pixels_len], x[:red_mask], x[:green_mask], x[:blue_mask], *x[:pixels] = s.unpack("x1Sx2LLLx8L*")
-            x
-          end
+          s << [contiguous ? 1 : 0, cmap.to_i, colors, reds, greens, blues].pack("CLSSSS")
+          send_request(s, :alloc_color_planes, true)
         end
         
         def alloc_color_planes (contiguous, cmap, colors, reds, greens, blues)
-          alloc_color_planes!(contiguous, cmap, colors, reds, greens, blues).sync.result
+          alloc_color_planes!(contiguous, cmap, colors, reds, greens, blues).wait
+        end
+        
+        def alloc_color_planes_reply (s)
+          x = {}
+          x[:pixels_len], x[:red_mask], x[:green_mask], x[:blue_mask], *x[:pixels] = s.unpack("x1Sx2LLLx8L*")
+          x
         end
         
         def free_colors! (cmap, plane_mask, pixels)
           s = 88.chr.encode('BINARY')
-          s << [Colormap.to_xid(self, cmap), plane_mask, *pixels].pack("x1LLL*")
-          send_request(s)
+          s << [cmap.to_i, plane_mask, *pixels].pack("x1LLL*")
+          send_request(s, :free_colors, false)
         end
         
         def free_colors (cmap, plane_mask, pixels)
-          free_colors!(cmap, plane_mask, pixels).sync.abandon
+          free_colors!(cmap, plane_mask, pixels).abandon
         end
         
         def store_colors! (cmap, items)
           s = 89.chr.encode('BINARY')
-          s << [Colormap.to_xid(self, cmap)].pack("x1L")
+          s << [cmap.to_i].pack("x1L")
           s << items.map{|x|encode_coloritem(''.encode('BINARY'), *x)}.join
-          send_request(s)
+          send_request(s, :store_colors, false)
         end
         
         def store_colors (cmap, items)
-          store_colors!(cmap, items).sync.abandon
+          store_colors!(cmap, items).abandon
         end
         
         def store_named_color! (flags, cmap, pixel, name)
           s = 90.chr.encode('BINARY')
           name = name.force_encoding('BINARY')
           name_len = name.bytesize
-          s << [flags, Colormap.to_xid(self, cmap), pixel, name_len, pad(name)].pack("CLLSx2A*")
-          send_request(s)
+          s << [flags, cmap.to_i, pixel, name_len, pad(name)].pack("CLLSx2A*")
+          send_request(s, :store_named_color, false)
         end
         
         def store_named_color (flags, cmap, pixel, name)
-          store_named_color!(flags, cmap, pixel, name).sync.abandon
+          store_named_color!(flags, cmap, pixel, name).abandon
         end
         
         def query_colors! (cmap, pixels)
           s = 91.chr.encode('BINARY')
-          s << [Colormap.to_xid(self, cmap), *pixels].pack("x1LL*")
-          send_request(s) do |s|
-            x = HashWithMethodMissing.new
-            x[:colors_len], = s.slice!(0, 25).unpack("x1Sx22")
-            x[:colors] = x[:colors_len].times.map{decode_rgb(s)}
-            x[:colors]
-          end
+          s << [cmap.to_i, *pixels].pack("x1LL*")
+          send_request(s, :query_colors, true)
         end
         
         def query_colors (cmap, pixels)
-          query_colors!(cmap, pixels).sync.result
+          query_colors!(cmap, pixels).wait
+        end
+        
+        def query_colors_reply (s)
+          x = {}
+          x[:colors_len], = s.slice!(0, 25).unpack("x1Sx22")
+          x[:colors] = x[:colors_len].times.map{decode_rgb(s)}
+          x[:colors]
         end
         
         def lookup_color! (cmap, name)
           s = 92.chr.encode('BINARY')
           name = name.force_encoding('BINARY')
           name_len = name.bytesize
-          s << [Colormap.to_xid(self, cmap), name_len, pad(name)].pack("x1LSx2A*")
-          send_request(s) do |s|
-            x = HashWithMethodMissing.new
-            x[:exact_red], x[:exact_green], x[:exact_blue], x[:visual_red], x[:visual_green], x[:visual_blue], = s.slice!(0, 13).unpack("x1SSSSSS")
-            x
-          end
+          s << [cmap.to_i, name_len, pad(name)].pack("x1LSx2A*")
+          send_request(s, :lookup_color, true)
         end
         
         def lookup_color (cmap, name)
-          lookup_color!(cmap, name).sync.result
+          lookup_color!(cmap, name).wait
         end
         
-        def create_cursor! (source, mask, fore_red, fore_green, fore_blue, back_red, back_green, back_blue, x, y)
+        def lookup_color_reply (s)
+          x = {}
+          x[:exact_red], x[:exact_green], x[:exact_blue], x[:visual_red], x[:visual_green], x[:visual_blue], = s.slice!(0, 13).unpack("x1SSSSSS")
+          x
+        end
+        
+        def create_cursor! (cid, source, mask, fore_red, fore_green, fore_blue, back_red, back_green, back_blue, x, y)
           s = 93.chr.encode('BINARY')
-          cid = alloc_cursor
-          s << [Cursor.to_xid(self, cid), Pixmap.to_xid(self, source), Pixmap.to_xid(self, mask), fore_red, fore_green, fore_blue, back_red, back_green, back_blue, x, y].pack("x1LLLSSSSSSSS")
-          send_request(s, cid)
+          s << [cid.to_i, source.to_i, mask.to_i, fore_red, fore_green, fore_blue, back_red, back_green, back_blue, x, y].pack("x1LLLSSSSSSSS")
+          send_request(s, :create_cursor, false)
         end
         
-        def create_cursor (source, mask, fore_red, fore_green, fore_blue, back_red, back_green, back_blue, x, y)
-          create_cursor!(source, mask, fore_red, fore_green, fore_blue, back_red, back_green, back_blue, x, y).sync.abandon
+        def create_cursor (cid, source, mask, fore_red, fore_green, fore_blue, back_red, back_green, back_blue, x, y)
+          create_cursor!(cid, source, mask, fore_red, fore_green, fore_blue, back_red, back_green, back_blue, x, y).abandon
         end
         
-        def create_glyph_cursor! (source_font, mask_font, source_char, mask_char, fore_red, fore_green, fore_blue, back_red, back_green, back_blue)
+        def create_glyph_cursor! (cid, source_font, mask_font, source_char, mask_char, fore_red, fore_green, fore_blue, back_red, back_green, back_blue)
           s = 94.chr.encode('BINARY')
-          cid = alloc_cursor
-          s << [Cursor.to_xid(self, cid), Font.to_xid(self, source_font), Font.to_xid(self, mask_font), source_char, mask_char, fore_red, fore_green, fore_blue, back_red, back_green, back_blue].pack("x1LLLSSSSSSSS")
-          send_request(s, cid)
+          s << [cid.to_i, source_font.to_i, mask_font.to_i, source_char, mask_char, fore_red, fore_green, fore_blue, back_red, back_green, back_blue].pack("x1LLLSSSSSSSS")
+          send_request(s, :create_glyph_cursor, false)
         end
         
-        def create_glyph_cursor (source_font, mask_font, source_char, mask_char, fore_red, fore_green, fore_blue, back_red, back_green, back_blue)
-          create_glyph_cursor!(source_font, mask_font, source_char, mask_char, fore_red, fore_green, fore_blue, back_red, back_green, back_blue).sync.abandon
+        def create_glyph_cursor (cid, source_font, mask_font, source_char, mask_char, fore_red, fore_green, fore_blue, back_red, back_green, back_blue)
+          create_glyph_cursor!(cid, source_font, mask_font, source_char, mask_char, fore_red, fore_green, fore_blue, back_red, back_green, back_blue).abandon
         end
         
         def free_cursor! (cursor)
           s = 95.chr.encode('BINARY')
-          s << [Cursor.to_xid(self, cursor)].pack("x1L")
-          send_request(s)
+          s << [cursor.to_i].pack("x1L")
+          send_request(s, :free_cursor, false)
         end
         
         def free_cursor (cursor)
-          free_cursor!(cursor).sync.abandon
+          free_cursor!(cursor).abandon
         end
         
         def recolor_cursor! (cursor, fore_red, fore_green, fore_blue, back_red, back_green, back_blue)
           s = 96.chr.encode('BINARY')
-          s << [Cursor.to_xid(self, cursor), fore_red, fore_green, fore_blue, back_red, back_green, back_blue].pack("x1LSSSSSS")
-          send_request(s)
+          s << [cursor.to_i, fore_red, fore_green, fore_blue, back_red, back_green, back_blue].pack("x1LSSSSSS")
+          send_request(s, :recolor_cursor, false)
         end
         
         def recolor_cursor (cursor, fore_red, fore_green, fore_blue, back_red, back_green, back_blue)
-          recolor_cursor!(cursor, fore_red, fore_green, fore_blue, back_red, back_green, back_blue).sync.abandon
+          recolor_cursor!(cursor, fore_red, fore_green, fore_blue, back_red, back_green, back_blue).abandon
         end
         
         def query_best_size! (klass, drawable, width, height)
           s = 97.chr.encode('BINARY')
-          s << [klass, Drawable.to_xid(self, drawable), width, height].pack("CLSS")
-          send_request(s) do |s|
-            x = HashWithMethodMissing.new
-            x[:width], x[:height], = s.slice!(0, 5).unpack("x1SS")
-            x
-          end
+          s << [klass, drawable.to_i, width, height].pack("CLSS")
+          send_request(s, :query_best_size, true)
         end
         
         def query_best_size (klass, drawable, width, height)
-          query_best_size!(klass, drawable, width, height).sync.result
+          query_best_size!(klass, drawable, width, height).wait
+        end
+        
+        def query_best_size_reply (s)
+          x = {}
+          x[:width], x[:height], = s.slice!(0, 5).unpack("x1SS")
+          x
         end
         
         def query_extension! (name)
@@ -2195,135 +2091,146 @@ module Alembic
           name = name.force_encoding('BINARY')
           name_len = name.bytesize
           s << [name_len, pad(name)].pack("x1Sx2A*")
-          send_request(s) do |s|
-            x = HashWithMethodMissing.new
-            x[:present], x[:major_opcode], x[:first_event], x[:first_error], = s.slice!(0, 5).unpack("x1CCCC")
-            x[:present] = x[:present] != 0
-            x
-          end
+          send_request(s, :query_extension, true)
         end
         
         def query_extension (name)
-          query_extension!(name).sync.result
+          query_extension!(name).wait
+        end
+        
+        def query_extension_reply (s)
+          x = {}
+          x[:present], x[:major_opcode], x[:first_event], x[:first_error], = s.slice!(0, 5).unpack("x1CCCC")
+          x[:present] = x[:present] != 0
+          x
         end
         
         def list_extensions! ()
           s = 99.chr.encode('BINARY')
-          send_request(s) do |s|
-            x = HashWithMethodMissing.new
-            x[:names_len], = s.slice!(0, 25).unpack("Cx24")
-            x[:names] = x[:names_len].times.map{decode_str(s)}
-            x[:names]
-          end
+          send_request(s, :list_extensions, true)
         end
         
         def list_extensions ()
-          list_extensions!().sync.result
+          list_extensions!().wait
+        end
+        
+        def list_extensions_reply (s)
+          x = {}
+          x[:names_len], = s.slice!(0, 25).unpack("Cx24")
+          x[:names] = x[:names_len].times.map{decode_str(s)}
+          x[:names]
         end
         
         def change_keyboard_mapping! (keycode_count, first_keycode, keysyms_per_keycode, keysyms)
           s = 100.chr.encode('BINARY')
           s << [keycode_count, first_keycode, keysyms_per_keycode, *keysyms].pack("CCCx2L*")
-          send_request(s)
+          send_request(s, :change_keyboard_mapping, false)
         end
         
         def change_keyboard_mapping (keycode_count, first_keycode, keysyms_per_keycode, keysyms)
-          change_keyboard_mapping!(keycode_count, first_keycode, keysyms_per_keycode, keysyms).sync.abandon
+          change_keyboard_mapping!(keycode_count, first_keycode, keysyms_per_keycode, keysyms).abandon
         end
         
         def get_keyboard_mapping! (first_keycode, count)
           s = 101.chr.encode('BINARY')
           s << [first_keycode, count].pack("x1CC")
-          send_request(s) do |s|
-            x = HashWithMethodMissing.new
-            x[:keysyms_per_keycode], *x[:keysyms] = s.unpack("Cx24L*")
-            x
-          end
+          send_request(s, :get_keyboard_mapping, true)
         end
         
         def get_keyboard_mapping (first_keycode, count)
-          get_keyboard_mapping!(first_keycode, count).sync.result
+          get_keyboard_mapping!(first_keycode, count).wait
         end
         
-        def change_keyboard_control! (value_hash = {})
+        def get_keyboard_mapping_reply (s)
+          x = {}
+          x[:keysyms_per_keycode], *x[:keysyms] = s.unpack("Cx24L*")
+          x
+        end
+        
+        def change_keyboard_control! (value_mask, value_list)
           s = 102.chr.encode('BINARY')
-          value_mask, value_list = KB.value_param(value_hash)
           s << [value_mask, *value_list.map(&:to_i)].pack("x1LL*")
-          send_request(s)
+          send_request(s, :change_keyboard_control, false)
         end
         
-        def change_keyboard_control (value_hash = {})
-          change_keyboard_control!(value_hash).sync.abandon
+        def change_keyboard_control (value_mask, value_list)
+          change_keyboard_control!(value_mask, value_list).abandon
         end
         
         def get_keyboard_control! ()
           s = 103.chr.encode('BINARY')
-          send_request(s) do |s|
-            x = HashWithMethodMissing.new
-            x[:global_auto_repeat], x[:led_mask], x[:key_click_percent], x[:bell_percent], x[:bell_pitch], x[:bell_duration], = s.slice!(0, 13).unpack("CLCCSSx2")
-            x[:auto_repeats] = s.slice!(0..32).unpack('C*')
-            x
-          end
+          send_request(s, :get_keyboard_control, true)
         end
         
         def get_keyboard_control ()
-          get_keyboard_control!().sync.result
+          get_keyboard_control!().wait
+        end
+        
+        def get_keyboard_control_reply (s)
+          x = {}
+          x[:global_auto_repeat], x[:led_mask], x[:key_click_percent], x[:bell_percent], x[:bell_pitch], x[:bell_duration], = s.slice!(0, 13).unpack("CLCCSSx2")
+          x[:auto_repeats] = s.slice!(0..32).unpack('C*')
+          x
         end
         
         def bell! (percent)
           s = 104.chr.encode('BINARY')
           s << [percent].pack("c")
-          send_request(s)
+          send_request(s, :bell, false)
         end
         
         def bell (percent)
-          bell!(percent).sync.abandon
+          bell!(percent).abandon
         end
         
         def change_pointer_control! (acceleration_numerator, acceleration_denominator, threshold, do_acceleration, do_threshold)
           s = 105.chr.encode('BINARY')
           s << [acceleration_numerator, acceleration_denominator, threshold, do_acceleration ? 1 : 0, do_threshold ? 1 : 0].pack("x1sssCC")
-          send_request(s)
+          send_request(s, :change_pointer_control, false)
         end
         
         def change_pointer_control (acceleration_numerator, acceleration_denominator, threshold, do_acceleration, do_threshold)
-          change_pointer_control!(acceleration_numerator, acceleration_denominator, threshold, do_acceleration, do_threshold).sync.abandon
+          change_pointer_control!(acceleration_numerator, acceleration_denominator, threshold, do_acceleration, do_threshold).abandon
         end
         
         def get_pointer_control! ()
           s = 106.chr.encode('BINARY')
-          send_request(s) do |s|
-            x = HashWithMethodMissing.new
-            x[:acceleration_numerator], x[:acceleration_denominator], x[:threshold], = s.slice!(0, 25).unpack("x1SSSx18")
-            x
-          end
+          send_request(s, :get_pointer_control, true)
         end
         
         def get_pointer_control ()
-          get_pointer_control!().sync.result
+          get_pointer_control!().wait
+        end
+        
+        def get_pointer_control_reply (s)
+          x = {}
+          x[:acceleration_numerator], x[:acceleration_denominator], x[:threshold], = s.slice!(0, 25).unpack("x1SSSx18")
+          x
         end
         
         def set_screen_saver! (timeout, interval, prefer_blanking, allow_exposures)
           s = 107.chr.encode('BINARY')
           s << [timeout, interval, prefer_blanking, allow_exposures].pack("x1ssCC")
-          send_request(s)
+          send_request(s, :set_screen_saver, false)
         end
         
         def set_screen_saver (timeout, interval, prefer_blanking, allow_exposures)
-          set_screen_saver!(timeout, interval, prefer_blanking, allow_exposures).sync.abandon
+          set_screen_saver!(timeout, interval, prefer_blanking, allow_exposures).abandon
         end
         
         def get_screen_saver! ()
           s = 108.chr.encode('BINARY')
-          send_request(s) do |s|
-            x = HashWithMethodMissing.new
-            x[:timeout], x[:interval], x[:prefer_blanking], x[:allow_exposures], = s.slice!(0, 25).unpack("x1SSCCx18")
-            x
-          end
+          send_request(s, :get_screen_saver, true)
         end
         
         def get_screen_saver ()
-          get_screen_saver!().sync.result
+          get_screen_saver!().wait
+        end
+        
+        def get_screen_saver_reply (s)
+          x = {}
+          x[:timeout], x[:interval], x[:prefer_blanking], x[:allow_exposures], = s.slice!(0, 25).unpack("x1SSCCx18")
+          x
         end
         
         def change_hosts! (mode, family, address)
@@ -2331,299 +2238,395 @@ module Alembic
           address = address.force_encoding('BINARY')
           address_len = address.bytesize
           s << [mode, family, address_len, pad(address)].pack("CCx1SA*")
-          send_request(s)
+          send_request(s, :change_hosts, false)
         end
         
         def change_hosts (mode, family, address)
-          change_hosts!(mode, family, address).sync.abandon
+          change_hosts!(mode, family, address).abandon
         end
         
         def list_hosts! ()
           s = 110.chr.encode('BINARY')
-          send_request(s) do |s|
-            x = HashWithMethodMissing.new
-            x[:mode], x[:hosts_len], = s.slice!(0, 25).unpack("CSx22")
-            x[:hosts] = x[:hosts_len].times.map{decode_host(s)}
-            x
-          end
+          send_request(s, :list_hosts, true)
         end
         
         def list_hosts ()
-          list_hosts!().sync.result
+          list_hosts!().wait
+        end
+        
+        def list_hosts_reply (s)
+          x = {}
+          x[:mode], x[:hosts_len], = s.slice!(0, 25).unpack("CSx22")
+          x[:hosts] = x[:hosts_len].times.map{decode_host(s)}
+          x
         end
         
         def set_access_control! (mode)
           s = 111.chr.encode('BINARY')
           s << [mode].pack("C")
-          send_request(s)
+          send_request(s, :set_access_control, false)
         end
         
         def set_access_control (mode)
-          set_access_control!(mode).sync.abandon
+          set_access_control!(mode).abandon
         end
         
         def set_close_down_mode! (mode)
           s = 112.chr.encode('BINARY')
           s << [mode].pack("C")
-          send_request(s)
+          send_request(s, :set_close_down_mode, false)
         end
         
         def set_close_down_mode (mode)
-          set_close_down_mode!(mode).sync.abandon
+          set_close_down_mode!(mode).abandon
         end
         
         def kill_client! (resource)
           s = 113.chr.encode('BINARY')
           s << [resource].pack("x1L")
-          send_request(s)
+          send_request(s, :kill_client, false)
         end
         
         def kill_client (resource)
-          kill_client!(resource).sync.abandon
+          kill_client!(resource).abandon
         end
         
         def rotate_properties! (window, delta, atoms)
           s = 114.chr.encode('BINARY')
           atoms_len = atoms.length
-          s << [Window.to_xid(self, window), atoms_len, delta, *atoms].pack("x1LSsL*")
-          send_request(s)
+          s << [window.to_i, atoms_len, delta, *atoms].pack("x1LSsL*")
+          send_request(s, :rotate_properties, false)
         end
         
         def rotate_properties (window, delta, atoms)
-          rotate_properties!(window, delta, atoms).sync.abandon
+          rotate_properties!(window, delta, atoms).abandon
         end
         
         def force_screen_saver! (mode)
           s = 115.chr.encode('BINARY')
           s << [mode].pack("C")
-          send_request(s)
+          send_request(s, :force_screen_saver, false)
         end
         
         def force_screen_saver (mode)
-          force_screen_saver!(mode).sync.abandon
+          force_screen_saver!(mode).abandon
         end
         
         def set_pointer_mapping! (map)
           s = 116.chr.encode('BINARY')
           map_len = map.length
           s << [map_len, *map].pack("CC*")
-          send_request(s) do |s|
-            x = HashWithMethodMissing.new
-            x[:status], = s.slice!(0, 1).unpack("C")
-            x[:status]
-          end
+          send_request(s, :set_pointer_mapping, true)
         end
         
         def set_pointer_mapping (map)
-          set_pointer_mapping!(map).sync.result
+          set_pointer_mapping!(map).wait
+        end
+        
+        def set_pointer_mapping_reply (s)
+          x = {}
+          x[:status], = s.slice!(0, 1).unpack("C")
+          x[:status]
         end
         
         def get_pointer_mapping! ()
           s = 117.chr.encode('BINARY')
-          send_request(s) do |s|
-            x = HashWithMethodMissing.new
-            x[:map_len], = s.slice!(0, 25).unpack("Cx24")
-            x[:map] = s.slice!(0..x[:map_len]).unpack('C*')
-            x[:map]
-          end
+          send_request(s, :get_pointer_mapping, true)
         end
         
         def get_pointer_mapping ()
-          get_pointer_mapping!().sync.result
+          get_pointer_mapping!().wait
+        end
+        
+        def get_pointer_mapping_reply (s)
+          x = {}
+          x[:map_len], = s.slice!(0, 25).unpack("Cx24")
+          x[:map] = s.slice!(0..x[:map_len]).unpack('C*')
+          x[:map]
         end
         
         def set_modifier_mapping! (keycodes_per_modifier, keycodes)
           s = 118.chr.encode('BINARY')
           s << [keycodes_per_modifier, *keycodes].pack("CC*")
-          send_request(s) do |s|
-            x = HashWithMethodMissing.new
-            x[:status], = s.slice!(0, 1).unpack("C")
-            x[:status]
-          end
+          send_request(s, :set_modifier_mapping, true)
         end
         
         def set_modifier_mapping (keycodes_per_modifier, keycodes)
-          set_modifier_mapping!(keycodes_per_modifier, keycodes).sync.result
+          set_modifier_mapping!(keycodes_per_modifier, keycodes).wait
+        end
+        
+        def set_modifier_mapping_reply (s)
+          x = {}
+          x[:status], = s.slice!(0, 1).unpack("C")
+          x[:status]
         end
         
         def get_modifier_mapping! ()
           s = 119.chr.encode('BINARY')
-          send_request(s) do |s|
-            x = HashWithMethodMissing.new
-            x[:keycodes_per_modifier], = s.slice!(0, 25).unpack("Cx24")
-            x[:keycodes] = s.slice!(0..(x[:keycodes_per_modifier] * 8)).unpack('C*')
-            x
-          end
+          send_request(s, :get_modifier_mapping, true)
         end
         
         def get_modifier_mapping ()
-          get_modifier_mapping!().sync.result
+          get_modifier_mapping!().wait
+        end
+        
+        def get_modifier_mapping_reply (s)
+          x = {}
+          x[:keycodes_per_modifier], = s.slice!(0, 25).unpack("Cx24")
+          x[:keycodes] = s.slice!(0..(x[:keycodes_per_modifier] * 8)).unpack('C*')
+          x
         end
         
         def no_operation! ()
           s = 127.chr.encode('BINARY')
-          send_request(s)
+          send_request(s, :no_operation, false)
         end
         
         def no_operation ()
-          no_operation!().sync.abandon
+          no_operation!().abandon
         end
         
-        def encode_key_press_event (detail, time, root, event, child, root_x, root_y, event_x, event_y, state, same_screen)
+        def encode_key_press_event_hash (hash)
+          detail = hash[:detail]
+          time = hash[:time]
+          root = hash[:root]
+          event = hash[:event]
+          child = hash[:child]
+          root_x = hash[:root_x]
+          root_y = hash[:root_y]
+          event_x = hash[:event_x]
+          event_y = hash[:event_y]
+          state = hash[:state]
+          same_screen = hash[:same_screen]
           s = 2.chr.encode('BINARY')
-          s << [detail, time, Window.to_xid(self, root), Window.to_xid(self, event), Window.to_xid(self, child), root_x, root_y, event_x, event_y, state, same_screen ? 1 : 0].pack("CLLLLssssSCx1")
+          s << [detail, time, root.to_i, event.to_i, child.to_i, root_x, root_y, event_x, event_y, state, same_screen ? 1 : 0].pack("CLLLLssssSCx1")
           s = s.ljust(30, "\0")
           s[2, 0] = "\0\0"
           s
         end
         
         def decode_key_press_event (s)
-          x = HashWithMethodMissing.new
+          x = {}
           x[:detail], x[:time], x[:root], x[:event], x[:child], x[:root_x], x[:root_y], x[:event_x], x[:event_y], x[:state], x[:same_screen], = s.slice!(0, 29).unpack("CLLLLssssSCx1")
-          x[:root] = Window[self, x[:root]]
-          x[:event] = Window[self, x[:event]]
-          x[:child] = Window[self, x[:child]]
+          x[:root] = find_resource(x[:root], "Window")
+          x[:event] = find_resource(x[:event], "Window")
+          x[:child] = find_resource(x[:child], "Window")
           x[:same_screen] = x[:same_screen] != 0
           x
         end
         
-        def encode_key_release_event (detail, time, root, event, child, root_x, root_y, event_x, event_y, state, same_screen)
+        def encode_key_release_event_hash (hash)
+          detail = hash[:detail]
+          time = hash[:time]
+          root = hash[:root]
+          event = hash[:event]
+          child = hash[:child]
+          root_x = hash[:root_x]
+          root_y = hash[:root_y]
+          event_x = hash[:event_x]
+          event_y = hash[:event_y]
+          state = hash[:state]
+          same_screen = hash[:same_screen]
           s = 3.chr.encode('BINARY')
-          s << [detail, time, Window.to_xid(self, root), Window.to_xid(self, event), Window.to_xid(self, child), root_x, root_y, event_x, event_y, state, same_screen ? 1 : 0].pack("CLLLLssssSCx1")
+          s << [detail, time, root.to_i, event.to_i, child.to_i, root_x, root_y, event_x, event_y, state, same_screen ? 1 : 0].pack("CLLLLssssSCx1")
           s = s.ljust(30, "\0")
           s[2, 0] = "\0\0"
           s
         end
         
         def decode_key_release_event (s)
-          x = HashWithMethodMissing.new
+          x = {}
           x[:detail], x[:time], x[:root], x[:event], x[:child], x[:root_x], x[:root_y], x[:event_x], x[:event_y], x[:state], x[:same_screen], = s.slice!(0, 29).unpack("CLLLLssssSCx1")
-          x[:root] = Window[self, x[:root]]
-          x[:event] = Window[self, x[:event]]
-          x[:child] = Window[self, x[:child]]
+          x[:root] = find_resource(x[:root], "Window")
+          x[:event] = find_resource(x[:event], "Window")
+          x[:child] = find_resource(x[:child], "Window")
           x[:same_screen] = x[:same_screen] != 0
           x
         end
         
-        def encode_button_press_event (detail, time, root, event, child, root_x, root_y, event_x, event_y, state, same_screen)
+        def encode_button_press_event_hash (hash)
+          detail = hash[:detail]
+          time = hash[:time]
+          root = hash[:root]
+          event = hash[:event]
+          child = hash[:child]
+          root_x = hash[:root_x]
+          root_y = hash[:root_y]
+          event_x = hash[:event_x]
+          event_y = hash[:event_y]
+          state = hash[:state]
+          same_screen = hash[:same_screen]
           s = 4.chr.encode('BINARY')
-          s << [detail, time, Window.to_xid(self, root), Window.to_xid(self, event), Window.to_xid(self, child), root_x, root_y, event_x, event_y, state, same_screen ? 1 : 0].pack("CLLLLssssSCx1")
+          s << [detail, time, root.to_i, event.to_i, child.to_i, root_x, root_y, event_x, event_y, state, same_screen ? 1 : 0].pack("CLLLLssssSCx1")
           s = s.ljust(30, "\0")
           s[2, 0] = "\0\0"
           s
         end
         
         def decode_button_press_event (s)
-          x = HashWithMethodMissing.new
+          x = {}
           x[:detail], x[:time], x[:root], x[:event], x[:child], x[:root_x], x[:root_y], x[:event_x], x[:event_y], x[:state], x[:same_screen], = s.slice!(0, 29).unpack("CLLLLssssSCx1")
-          x[:root] = Window[self, x[:root]]
-          x[:event] = Window[self, x[:event]]
-          x[:child] = Window[self, x[:child]]
+          x[:root] = find_resource(x[:root], "Window")
+          x[:event] = find_resource(x[:event], "Window")
+          x[:child] = find_resource(x[:child], "Window")
           x[:same_screen] = x[:same_screen] != 0
           x
         end
         
-        def encode_button_release_event (detail, time, root, event, child, root_x, root_y, event_x, event_y, state, same_screen)
+        def encode_button_release_event_hash (hash)
+          detail = hash[:detail]
+          time = hash[:time]
+          root = hash[:root]
+          event = hash[:event]
+          child = hash[:child]
+          root_x = hash[:root_x]
+          root_y = hash[:root_y]
+          event_x = hash[:event_x]
+          event_y = hash[:event_y]
+          state = hash[:state]
+          same_screen = hash[:same_screen]
           s = 5.chr.encode('BINARY')
-          s << [detail, time, Window.to_xid(self, root), Window.to_xid(self, event), Window.to_xid(self, child), root_x, root_y, event_x, event_y, state, same_screen ? 1 : 0].pack("CLLLLssssSCx1")
+          s << [detail, time, root.to_i, event.to_i, child.to_i, root_x, root_y, event_x, event_y, state, same_screen ? 1 : 0].pack("CLLLLssssSCx1")
           s = s.ljust(30, "\0")
           s[2, 0] = "\0\0"
           s
         end
         
         def decode_button_release_event (s)
-          x = HashWithMethodMissing.new
+          x = {}
           x[:detail], x[:time], x[:root], x[:event], x[:child], x[:root_x], x[:root_y], x[:event_x], x[:event_y], x[:state], x[:same_screen], = s.slice!(0, 29).unpack("CLLLLssssSCx1")
-          x[:root] = Window[self, x[:root]]
-          x[:event] = Window[self, x[:event]]
-          x[:child] = Window[self, x[:child]]
+          x[:root] = find_resource(x[:root], "Window")
+          x[:event] = find_resource(x[:event], "Window")
+          x[:child] = find_resource(x[:child], "Window")
           x[:same_screen] = x[:same_screen] != 0
           x
         end
         
-        def encode_motion_notify_event (detail, time, root, event, child, root_x, root_y, event_x, event_y, state, same_screen)
+        def encode_motion_notify_event_hash (hash)
+          detail = hash[:detail]
+          time = hash[:time]
+          root = hash[:root]
+          event = hash[:event]
+          child = hash[:child]
+          root_x = hash[:root_x]
+          root_y = hash[:root_y]
+          event_x = hash[:event_x]
+          event_y = hash[:event_y]
+          state = hash[:state]
+          same_screen = hash[:same_screen]
           s = 6.chr.encode('BINARY')
-          s << [detail, time, Window.to_xid(self, root), Window.to_xid(self, event), Window.to_xid(self, child), root_x, root_y, event_x, event_y, state, same_screen ? 1 : 0].pack("CLLLLssssSCx1")
+          s << [detail, time, root.to_i, event.to_i, child.to_i, root_x, root_y, event_x, event_y, state, same_screen ? 1 : 0].pack("CLLLLssssSCx1")
           s = s.ljust(30, "\0")
           s[2, 0] = "\0\0"
           s
         end
         
         def decode_motion_notify_event (s)
-          x = HashWithMethodMissing.new
+          x = {}
           x[:detail], x[:time], x[:root], x[:event], x[:child], x[:root_x], x[:root_y], x[:event_x], x[:event_y], x[:state], x[:same_screen], = s.slice!(0, 29).unpack("CLLLLssssSCx1")
-          x[:root] = Window[self, x[:root]]
-          x[:event] = Window[self, x[:event]]
-          x[:child] = Window[self, x[:child]]
+          x[:root] = find_resource(x[:root], "Window")
+          x[:event] = find_resource(x[:event], "Window")
+          x[:child] = find_resource(x[:child], "Window")
           x[:same_screen] = x[:same_screen] != 0
           x
         end
         
-        def encode_enter_notify_event (detail, time, root, event, child, root_x, root_y, event_x, event_y, state, mode, same_screen_focus)
+        def encode_enter_notify_event_hash (hash)
+          detail = hash[:detail]
+          time = hash[:time]
+          root = hash[:root]
+          event = hash[:event]
+          child = hash[:child]
+          root_x = hash[:root_x]
+          root_y = hash[:root_y]
+          event_x = hash[:event_x]
+          event_y = hash[:event_y]
+          state = hash[:state]
+          mode = hash[:mode]
+          same_screen_focus = hash[:same_screen_focus]
           s = 7.chr.encode('BINARY')
-          s << [detail, time, Window.to_xid(self, root), Window.to_xid(self, event), Window.to_xid(self, child), root_x, root_y, event_x, event_y, state, mode, same_screen_focus].pack("CLLLLssssSCC")
+          s << [detail, time, root.to_i, event.to_i, child.to_i, root_x, root_y, event_x, event_y, state, mode, same_screen_focus].pack("CLLLLssssSCC")
           s = s.ljust(30, "\0")
           s[2, 0] = "\0\0"
           s
         end
         
         def decode_enter_notify_event (s)
-          x = HashWithMethodMissing.new
+          x = {}
           x[:detail], x[:time], x[:root], x[:event], x[:child], x[:root_x], x[:root_y], x[:event_x], x[:event_y], x[:state], x[:mode], x[:same_screen_focus], = s.slice!(0, 29).unpack("CLLLLssssSCC")
-          x[:root] = Window[self, x[:root]]
-          x[:event] = Window[self, x[:event]]
-          x[:child] = Window[self, x[:child]]
+          x[:root] = find_resource(x[:root], "Window")
+          x[:event] = find_resource(x[:event], "Window")
+          x[:child] = find_resource(x[:child], "Window")
           x
         end
         
-        def encode_leave_notify_event (detail, time, root, event, child, root_x, root_y, event_x, event_y, state, mode, same_screen_focus)
+        def encode_leave_notify_event_hash (hash)
+          detail = hash[:detail]
+          time = hash[:time]
+          root = hash[:root]
+          event = hash[:event]
+          child = hash[:child]
+          root_x = hash[:root_x]
+          root_y = hash[:root_y]
+          event_x = hash[:event_x]
+          event_y = hash[:event_y]
+          state = hash[:state]
+          mode = hash[:mode]
+          same_screen_focus = hash[:same_screen_focus]
           s = 8.chr.encode('BINARY')
-          s << [detail, time, Window.to_xid(self, root), Window.to_xid(self, event), Window.to_xid(self, child), root_x, root_y, event_x, event_y, state, mode, same_screen_focus].pack("CLLLLssssSCC")
+          s << [detail, time, root.to_i, event.to_i, child.to_i, root_x, root_y, event_x, event_y, state, mode, same_screen_focus].pack("CLLLLssssSCC")
           s = s.ljust(30, "\0")
           s[2, 0] = "\0\0"
           s
         end
         
         def decode_leave_notify_event (s)
-          x = HashWithMethodMissing.new
+          x = {}
           x[:detail], x[:time], x[:root], x[:event], x[:child], x[:root_x], x[:root_y], x[:event_x], x[:event_y], x[:state], x[:mode], x[:same_screen_focus], = s.slice!(0, 29).unpack("CLLLLssssSCC")
-          x[:root] = Window[self, x[:root]]
-          x[:event] = Window[self, x[:event]]
-          x[:child] = Window[self, x[:child]]
+          x[:root] = find_resource(x[:root], "Window")
+          x[:event] = find_resource(x[:event], "Window")
+          x[:child] = find_resource(x[:child], "Window")
           x
         end
         
-        def encode_focus_in_event (detail, event, mode)
+        def encode_focus_in_event_hash (hash)
+          detail = hash[:detail]
+          event = hash[:event]
+          mode = hash[:mode]
           s = 9.chr.encode('BINARY')
-          s << [detail, Window.to_xid(self, event), mode].pack("CLCx3")
+          s << [detail, event.to_i, mode].pack("CLCx3")
           s = s.ljust(30, "\0")
           s[2, 0] = "\0\0"
           s
         end
         
         def decode_focus_in_event (s)
-          x = HashWithMethodMissing.new
+          x = {}
           x[:detail], x[:event], x[:mode], = s.slice!(0, 9).unpack("CLCx3")
-          x[:event] = Window[self, x[:event]]
+          x[:event] = find_resource(x[:event], "Window")
           x
         end
         
-        def encode_focus_out_event (detail, event, mode)
+        def encode_focus_out_event_hash (hash)
+          detail = hash[:detail]
+          event = hash[:event]
+          mode = hash[:mode]
           s = 10.chr.encode('BINARY')
-          s << [detail, Window.to_xid(self, event), mode].pack("CLCx3")
+          s << [detail, event.to_i, mode].pack("CLCx3")
           s = s.ljust(30, "\0")
           s[2, 0] = "\0\0"
           s
         end
         
         def decode_focus_out_event (s)
-          x = HashWithMethodMissing.new
+          x = {}
           x[:detail], x[:event], x[:mode], = s.slice!(0, 9).unpack("CLCx3")
-          x[:event] = Window[self, x[:event]]
+          x[:event] = find_resource(x[:event], "Window")
           x
         end
         
-        def encode_keymap_notify_event (keys)
+        def encode_keymap_notify_event_hash (hash)
+          keys = hash[:keys]
           s = 11.chr.encode('BINARY')
           s << [*keys].pack("C*")
           s = s.ljust(30, "\0")
@@ -2632,359 +2635,460 @@ module Alembic
         end
         
         def decode_keymap_notify_event (s)
-          x = HashWithMethodMissing.new
+          x = {}
           x[:keys] = s.slice!(0..31).unpack('C*')
           x
         end
         
-        def encode_expose_event (window, x, y, width, height, count)
+        def encode_expose_event_hash (hash)
+          window = hash[:window]
+          x = hash[:x]
+          y = hash[:y]
+          width = hash[:width]
+          height = hash[:height]
+          count = hash[:count]
           s = 12.chr.encode('BINARY')
-          s << [Window.to_xid(self, window), x, y, width, height, count].pack("x1LSSSSSx2")
+          s << [window.to_i, x, y, width, height, count].pack("x1LSSSSSx2")
           s = s.ljust(30, "\0")
           s[2, 0] = "\0\0"
           s
         end
         
         def decode_expose_event (s)
-          x = HashWithMethodMissing.new
+          x = {}
           x[:window], x[:x], x[:y], x[:width], x[:height], x[:count], = s.slice!(0, 17).unpack("x1LSSSSSx2")
-          x[:window] = Window[self, x[:window]]
+          x[:window] = find_resource(x[:window], "Window")
           x
         end
         
-        def encode_graphics_exposure_event (drawable, x, y, width, height, minor_opcode, count, major_opcode)
+        def encode_graphics_exposure_event_hash (hash)
+          drawable = hash[:drawable]
+          x = hash[:x]
+          y = hash[:y]
+          width = hash[:width]
+          height = hash[:height]
+          minor_opcode = hash[:minor_opcode]
+          count = hash[:count]
+          major_opcode = hash[:major_opcode]
           s = 13.chr.encode('BINARY')
-          s << [Drawable.to_xid(self, drawable), x, y, width, height, minor_opcode, count, major_opcode].pack("x1LSSSSSSCx3")
+          s << [drawable.to_i, x, y, width, height, minor_opcode, count, major_opcode].pack("x1LSSSSSSCx3")
           s = s.ljust(30, "\0")
           s[2, 0] = "\0\0"
           s
         end
         
         def decode_graphics_exposure_event (s)
-          x = HashWithMethodMissing.new
+          x = {}
           x[:drawable], x[:x], x[:y], x[:width], x[:height], x[:minor_opcode], x[:count], x[:major_opcode], = s.slice!(0, 21).unpack("x1LSSSSSSCx3")
-          x[:drawable] = Drawable[self, x[:drawable]]
+          x[:drawable] = find_resource(x[:drawable], "Drawable")
           x
         end
         
-        def encode_no_exposure_event (drawable, minor_opcode, major_opcode)
+        def encode_no_exposure_event_hash (hash)
+          drawable = hash[:drawable]
+          minor_opcode = hash[:minor_opcode]
+          major_opcode = hash[:major_opcode]
           s = 14.chr.encode('BINARY')
-          s << [Drawable.to_xid(self, drawable), minor_opcode, major_opcode].pack("x1LSCx1")
+          s << [drawable.to_i, minor_opcode, major_opcode].pack("x1LSCx1")
           s = s.ljust(30, "\0")
           s[2, 0] = "\0\0"
           s
         end
         
         def decode_no_exposure_event (s)
-          x = HashWithMethodMissing.new
+          x = {}
           x[:drawable], x[:minor_opcode], x[:major_opcode], = s.slice!(0, 9).unpack("x1LSCx1")
-          x[:drawable] = Drawable[self, x[:drawable]]
+          x[:drawable] = find_resource(x[:drawable], "Drawable")
           x
         end
         
-        def encode_visibility_notify_event (window, state)
+        def encode_visibility_notify_event_hash (hash)
+          window = hash[:window]
+          state = hash[:state]
           s = 15.chr.encode('BINARY')
-          s << [Window.to_xid(self, window), state].pack("x1LCx3")
+          s << [window.to_i, state].pack("x1LCx3")
           s = s.ljust(30, "\0")
           s[2, 0] = "\0\0"
           s
         end
         
         def decode_visibility_notify_event (s)
-          x = HashWithMethodMissing.new
+          x = {}
           x[:window], x[:state], = s.slice!(0, 9).unpack("x1LCx3")
-          x[:window] = Window[self, x[:window]]
+          x[:window] = find_resource(x[:window], "Window")
           x
         end
         
-        def encode_create_notify_event (parent, window, x, y, width, height, border_width, override_redirect)
+        def encode_create_notify_event_hash (hash)
+          parent = hash[:parent]
+          window = hash[:window]
+          x = hash[:x]
+          y = hash[:y]
+          width = hash[:width]
+          height = hash[:height]
+          border_width = hash[:border_width]
+          override_redirect = hash[:override_redirect]
           s = 16.chr.encode('BINARY')
-          s << [Window.to_xid(self, parent), Window.to_xid(self, window), x, y, width, height, border_width, override_redirect ? 1 : 0].pack("x1LLssSSSCx1")
+          s << [parent.to_i, window.to_i, x, y, width, height, border_width, override_redirect ? 1 : 0].pack("x1LLssSSSCx1")
           s = s.ljust(30, "\0")
           s[2, 0] = "\0\0"
           s
         end
         
         def decode_create_notify_event (s)
-          x = HashWithMethodMissing.new
+          x = {}
           x[:parent], x[:window], x[:x], x[:y], x[:width], x[:height], x[:border_width], x[:override_redirect], = s.slice!(0, 21).unpack("x1LLssSSSCx1")
-          x[:parent] = Window[self, x[:parent]]
-          x[:window] = Window[self, x[:window]]
+          x[:parent] = find_resource(x[:parent], "Window")
+          x[:window] = find_resource(x[:window], "Window")
           x[:override_redirect] = x[:override_redirect] != 0
           x
         end
         
-        def encode_destroy_notify_event (event, window)
+        def encode_destroy_notify_event_hash (hash)
+          event = hash[:event]
+          window = hash[:window]
           s = 17.chr.encode('BINARY')
-          s << [Window.to_xid(self, event), Window.to_xid(self, window)].pack("x1LL")
+          s << [event.to_i, window.to_i].pack("x1LL")
           s = s.ljust(30, "\0")
           s[2, 0] = "\0\0"
           s
         end
         
         def decode_destroy_notify_event (s)
-          x = HashWithMethodMissing.new
+          x = {}
           x[:event], x[:window], = s.slice!(0, 9).unpack("x1LL")
-          x[:event] = Window[self, x[:event]]
-          x[:window] = Window[self, x[:window]]
+          x[:event] = find_resource(x[:event], "Window")
+          x[:window] = find_resource(x[:window], "Window")
           x
         end
         
-        def encode_unmap_notify_event (event, window, from_configure)
+        def encode_unmap_notify_event_hash (hash)
+          event = hash[:event]
+          window = hash[:window]
+          from_configure = hash[:from_configure]
           s = 18.chr.encode('BINARY')
-          s << [Window.to_xid(self, event), Window.to_xid(self, window), from_configure ? 1 : 0].pack("x1LLCx3")
+          s << [event.to_i, window.to_i, from_configure ? 1 : 0].pack("x1LLCx3")
           s = s.ljust(30, "\0")
           s[2, 0] = "\0\0"
           s
         end
         
         def decode_unmap_notify_event (s)
-          x = HashWithMethodMissing.new
+          x = {}
           x[:event], x[:window], x[:from_configure], = s.slice!(0, 13).unpack("x1LLCx3")
-          x[:event] = Window[self, x[:event]]
-          x[:window] = Window[self, x[:window]]
+          x[:event] = find_resource(x[:event], "Window")
+          x[:window] = find_resource(x[:window], "Window")
           x[:from_configure] = x[:from_configure] != 0
           x
         end
         
-        def encode_map_notify_event (event, window, override_redirect)
+        def encode_map_notify_event_hash (hash)
+          event = hash[:event]
+          window = hash[:window]
+          override_redirect = hash[:override_redirect]
           s = 19.chr.encode('BINARY')
-          s << [Window.to_xid(self, event), Window.to_xid(self, window), override_redirect ? 1 : 0].pack("x1LLCx3")
+          s << [event.to_i, window.to_i, override_redirect ? 1 : 0].pack("x1LLCx3")
           s = s.ljust(30, "\0")
           s[2, 0] = "\0\0"
           s
         end
         
         def decode_map_notify_event (s)
-          x = HashWithMethodMissing.new
+          x = {}
           x[:event], x[:window], x[:override_redirect], = s.slice!(0, 13).unpack("x1LLCx3")
-          x[:event] = Window[self, x[:event]]
-          x[:window] = Window[self, x[:window]]
+          x[:event] = find_resource(x[:event], "Window")
+          x[:window] = find_resource(x[:window], "Window")
           x[:override_redirect] = x[:override_redirect] != 0
           x
         end
         
-        def encode_map_request_event (parent, window)
+        def encode_map_request_event_hash (hash)
+          parent = hash[:parent]
+          window = hash[:window]
           s = 20.chr.encode('BINARY')
-          s << [Window.to_xid(self, parent), Window.to_xid(self, window)].pack("x1LL")
+          s << [parent.to_i, window.to_i].pack("x1LL")
           s = s.ljust(30, "\0")
           s[2, 0] = "\0\0"
           s
         end
         
         def decode_map_request_event (s)
-          x = HashWithMethodMissing.new
+          x = {}
           x[:parent], x[:window], = s.slice!(0, 9).unpack("x1LL")
-          x[:parent] = Window[self, x[:parent]]
-          x[:window] = Window[self, x[:window]]
+          x[:parent] = find_resource(x[:parent], "Window")
+          x[:window] = find_resource(x[:window], "Window")
           x
         end
         
-        def encode_reparent_notify_event (event, window, parent, x, y, override_redirect)
+        def encode_reparent_notify_event_hash (hash)
+          event = hash[:event]
+          window = hash[:window]
+          parent = hash[:parent]
+          x = hash[:x]
+          y = hash[:y]
+          override_redirect = hash[:override_redirect]
           s = 21.chr.encode('BINARY')
-          s << [Window.to_xid(self, event), Window.to_xid(self, window), Window.to_xid(self, parent), x, y, override_redirect ? 1 : 0].pack("x1LLLssCx3")
+          s << [event.to_i, window.to_i, parent.to_i, x, y, override_redirect ? 1 : 0].pack("x1LLLssCx3")
           s = s.ljust(30, "\0")
           s[2, 0] = "\0\0"
           s
         end
         
         def decode_reparent_notify_event (s)
-          x = HashWithMethodMissing.new
+          x = {}
           x[:event], x[:window], x[:parent], x[:x], x[:y], x[:override_redirect], = s.slice!(0, 21).unpack("x1LLLssCx3")
-          x[:event] = Window[self, x[:event]]
-          x[:window] = Window[self, x[:window]]
-          x[:parent] = Window[self, x[:parent]]
+          x[:event] = find_resource(x[:event], "Window")
+          x[:window] = find_resource(x[:window], "Window")
+          x[:parent] = find_resource(x[:parent], "Window")
           x[:override_redirect] = x[:override_redirect] != 0
           x
         end
         
-        def encode_configure_notify_event (event, window, above_sibling, x, y, width, height, border_width, override_redirect)
+        def encode_configure_notify_event_hash (hash)
+          event = hash[:event]
+          window = hash[:window]
+          above_sibling = hash[:above_sibling]
+          x = hash[:x]
+          y = hash[:y]
+          width = hash[:width]
+          height = hash[:height]
+          border_width = hash[:border_width]
+          override_redirect = hash[:override_redirect]
           s = 22.chr.encode('BINARY')
-          s << [Window.to_xid(self, event), Window.to_xid(self, window), Window.to_xid(self, above_sibling), x, y, width, height, border_width, override_redirect ? 1 : 0].pack("x1LLLssSSSCx1")
+          s << [event.to_i, window.to_i, above_sibling.to_i, x, y, width, height, border_width, override_redirect ? 1 : 0].pack("x1LLLssSSSCx1")
           s = s.ljust(30, "\0")
           s[2, 0] = "\0\0"
           s
         end
         
         def decode_configure_notify_event (s)
-          x = HashWithMethodMissing.new
+          x = {}
           x[:event], x[:window], x[:above_sibling], x[:x], x[:y], x[:width], x[:height], x[:border_width], x[:override_redirect], = s.slice!(0, 25).unpack("x1LLLssSSSCx1")
-          x[:event] = Window[self, x[:event]]
-          x[:window] = Window[self, x[:window]]
-          x[:above_sibling] = Window[self, x[:above_sibling]]
+          x[:event] = find_resource(x[:event], "Window")
+          x[:window] = find_resource(x[:window], "Window")
+          x[:above_sibling] = find_resource(x[:above_sibling], "Window")
           x[:override_redirect] = x[:override_redirect] != 0
           x
         end
         
-        def encode_configure_request_event (stack_mode, parent, window, sibling, x, y, width, height, border_width, value_mask)
+        def encode_configure_request_event_hash (hash)
+          stack_mode = hash[:stack_mode]
+          parent = hash[:parent]
+          window = hash[:window]
+          sibling = hash[:sibling]
+          x = hash[:x]
+          y = hash[:y]
+          width = hash[:width]
+          height = hash[:height]
+          border_width = hash[:border_width]
+          value_mask = hash[:value_mask]
           s = 23.chr.encode('BINARY')
-          s << [stack_mode, Window.to_xid(self, parent), Window.to_xid(self, window), Window.to_xid(self, sibling), x, y, width, height, border_width, value_mask].pack("CLLLssSSSS")
+          s << [stack_mode, parent.to_i, window.to_i, sibling.to_i, x, y, width, height, border_width, value_mask].pack("CLLLssSSSS")
           s = s.ljust(30, "\0")
           s[2, 0] = "\0\0"
           s
         end
         
         def decode_configure_request_event (s)
-          x = HashWithMethodMissing.new
+          x = {}
           x[:stack_mode], x[:parent], x[:window], x[:sibling], x[:x], x[:y], x[:width], x[:height], x[:border_width], x[:value_mask], = s.slice!(0, 25).unpack("CLLLssSSSS")
-          x[:parent] = Window[self, x[:parent]]
-          x[:window] = Window[self, x[:window]]
-          x[:sibling] = Window[self, x[:sibling]]
+          x[:parent] = find_resource(x[:parent], "Window")
+          x[:window] = find_resource(x[:window], "Window")
+          x[:sibling] = find_resource(x[:sibling], "Window")
           x
         end
         
-        def encode_gravity_notify_event (event, window, x, y)
+        def encode_gravity_notify_event_hash (hash)
+          event = hash[:event]
+          window = hash[:window]
+          x = hash[:x]
+          y = hash[:y]
           s = 24.chr.encode('BINARY')
-          s << [Window.to_xid(self, event), Window.to_xid(self, window), x, y].pack("x1LLss")
+          s << [event.to_i, window.to_i, x, y].pack("x1LLss")
           s = s.ljust(30, "\0")
           s[2, 0] = "\0\0"
           s
         end
         
         def decode_gravity_notify_event (s)
-          x = HashWithMethodMissing.new
+          x = {}
           x[:event], x[:window], x[:x], x[:y], = s.slice!(0, 13).unpack("x1LLss")
-          x[:event] = Window[self, x[:event]]
-          x[:window] = Window[self, x[:window]]
+          x[:event] = find_resource(x[:event], "Window")
+          x[:window] = find_resource(x[:window], "Window")
           x
         end
         
-        def encode_resize_request_event (window, width, height)
+        def encode_resize_request_event_hash (hash)
+          window = hash[:window]
+          width = hash[:width]
+          height = hash[:height]
           s = 25.chr.encode('BINARY')
-          s << [Window.to_xid(self, window), width, height].pack("x1LSS")
+          s << [window.to_i, width, height].pack("x1LSS")
           s = s.ljust(30, "\0")
           s[2, 0] = "\0\0"
           s
         end
         
         def decode_resize_request_event (s)
-          x = HashWithMethodMissing.new
+          x = {}
           x[:window], x[:width], x[:height], = s.slice!(0, 9).unpack("x1LSS")
-          x[:window] = Window[self, x[:window]]
+          x[:window] = find_resource(x[:window], "Window")
           x
         end
         
-        def encode_circulate_notify_event (event, window, place)
+        def encode_circulate_notify_event_hash (hash)
+          event = hash[:event]
+          window = hash[:window]
+          place = hash[:place]
           s = 26.chr.encode('BINARY')
-          s << [Window.to_xid(self, event), Window.to_xid(self, window), place].pack("x1LLx4Cx3")
+          s << [event.to_i, window.to_i, place].pack("x1LLx4Cx3")
           s = s.ljust(30, "\0")
           s[2, 0] = "\0\0"
           s
         end
         
         def decode_circulate_notify_event (s)
-          x = HashWithMethodMissing.new
+          x = {}
           x[:event], x[:window], x[:place], = s.slice!(0, 17).unpack("x1LLx4Cx3")
-          x[:event] = Window[self, x[:event]]
-          x[:window] = Window[self, x[:window]]
+          x[:event] = find_resource(x[:event], "Window")
+          x[:window] = find_resource(x[:window], "Window")
           x
         end
         
-        def encode_circulate_request_event (event, window, place)
+        def encode_circulate_request_event_hash (hash)
+          event = hash[:event]
+          window = hash[:window]
+          place = hash[:place]
           s = 27.chr.encode('BINARY')
-          s << [Window.to_xid(self, event), Window.to_xid(self, window), place].pack("x1LLx4Cx3")
+          s << [event.to_i, window.to_i, place].pack("x1LLx4Cx3")
           s = s.ljust(30, "\0")
           s[2, 0] = "\0\0"
           s
         end
         
         def decode_circulate_request_event (s)
-          x = HashWithMethodMissing.new
+          x = {}
           x[:event], x[:window], x[:place], = s.slice!(0, 17).unpack("x1LLx4Cx3")
-          x[:event] = Window[self, x[:event]]
-          x[:window] = Window[self, x[:window]]
+          x[:event] = find_resource(x[:event], "Window")
+          x[:window] = find_resource(x[:window], "Window")
           x
         end
         
-        def encode_property_notify_event (window, atom, time, state)
+        def encode_property_notify_event_hash (hash)
+          window = hash[:window]
+          atom = hash[:atom]
+          time = hash[:time]
+          state = hash[:state]
           s = 28.chr.encode('BINARY')
-          s << [Window.to_xid(self, window), Atom.to_xid(self, atom), time, state].pack("x1LLLCx3")
+          s << [window.to_i, atom(atom), time, state].pack("x1LLLCx3")
           s = s.ljust(30, "\0")
           s[2, 0] = "\0\0"
           s
         end
         
         def decode_property_notify_event (s)
-          x = HashWithMethodMissing.new
+          x = {}
           x[:window], x[:atom], x[:time], x[:state], = s.slice!(0, 17).unpack("x1LLLCx3")
-          x[:window] = Window[self, x[:window]]
-          x[:atom] = Atom[self, x[:atom]]
+          x[:window] = find_resource(x[:window], "Window")
+          x[:atom] = find_atom(x[:atom])
           x
         end
         
-        def encode_selection_clear_event (time, owner, selection)
+        def encode_selection_clear_event_hash (hash)
+          time = hash[:time]
+          owner = hash[:owner]
+          selection = hash[:selection]
           s = 29.chr.encode('BINARY')
-          s << [time, Window.to_xid(self, owner), Atom.to_xid(self, selection)].pack("x1LLL")
+          s << [time, owner.to_i, atom(selection)].pack("x1LLL")
           s = s.ljust(30, "\0")
           s[2, 0] = "\0\0"
           s
         end
         
         def decode_selection_clear_event (s)
-          x = HashWithMethodMissing.new
+          x = {}
           x[:time], x[:owner], x[:selection], = s.slice!(0, 13).unpack("x1LLL")
-          x[:owner] = Window[self, x[:owner]]
-          x[:selection] = Atom[self, x[:selection]]
+          x[:owner] = find_resource(x[:owner], "Window")
+          x[:selection] = find_atom(x[:selection])
           x
         end
         
-        def encode_selection_request_event (time, owner, requestor, selection, target, property)
+        def encode_selection_request_event_hash (hash)
+          time = hash[:time]
+          owner = hash[:owner]
+          requestor = hash[:requestor]
+          selection = hash[:selection]
+          target = hash[:target]
+          property = hash[:property]
           s = 30.chr.encode('BINARY')
-          s << [time, Window.to_xid(self, owner), Window.to_xid(self, requestor), Atom.to_xid(self, selection), Atom.to_xid(self, target), Atom.to_xid(self, property)].pack("x1LLLLLL")
+          s << [time, owner.to_i, requestor.to_i, atom(selection), atom(target), atom(property)].pack("x1LLLLLL")
           s = s.ljust(30, "\0")
           s[2, 0] = "\0\0"
           s
         end
         
         def decode_selection_request_event (s)
-          x = HashWithMethodMissing.new
+          x = {}
           x[:time], x[:owner], x[:requestor], x[:selection], x[:target], x[:property], = s.slice!(0, 25).unpack("x1LLLLLL")
-          x[:owner] = Window[self, x[:owner]]
-          x[:requestor] = Window[self, x[:requestor]]
-          x[:selection] = Atom[self, x[:selection]]
-          x[:target] = Atom[self, x[:target]]
-          x[:property] = Atom[self, x[:property]]
+          x[:owner] = find_resource(x[:owner], "Window")
+          x[:requestor] = find_resource(x[:requestor], "Window")
+          x[:selection] = find_atom(x[:selection])
+          x[:target] = find_atom(x[:target])
+          x[:property] = find_atom(x[:property])
           x
         end
         
-        def encode_selection_notify_event (time, requestor, selection, target, property)
+        def encode_selection_notify_event_hash (hash)
+          time = hash[:time]
+          requestor = hash[:requestor]
+          selection = hash[:selection]
+          target = hash[:target]
+          property = hash[:property]
           s = 31.chr.encode('BINARY')
-          s << [time, Window.to_xid(self, requestor), Atom.to_xid(self, selection), Atom.to_xid(self, target), Atom.to_xid(self, property)].pack("x1LLLLL")
+          s << [time, requestor.to_i, atom(selection), atom(target), atom(property)].pack("x1LLLLL")
           s = s.ljust(30, "\0")
           s[2, 0] = "\0\0"
           s
         end
         
         def decode_selection_notify_event (s)
-          x = HashWithMethodMissing.new
+          x = {}
           x[:time], x[:requestor], x[:selection], x[:target], x[:property], = s.slice!(0, 21).unpack("x1LLLLL")
-          x[:requestor] = Window[self, x[:requestor]]
-          x[:selection] = Atom[self, x[:selection]]
-          x[:target] = Atom[self, x[:target]]
-          x[:property] = Atom[self, x[:property]]
+          x[:requestor] = find_resource(x[:requestor], "Window")
+          x[:selection] = find_atom(x[:selection])
+          x[:target] = find_atom(x[:target])
+          x[:property] = find_atom(x[:property])
           x
         end
         
-        def encode_colormap_notify_event (window, colormap, new, state)
+        def encode_colormap_notify_event_hash (hash)
+          window = hash[:window]
+          colormap = hash[:colormap]
+          new = hash[:new]
+          state = hash[:state]
           s = 32.chr.encode('BINARY')
-          s << [Window.to_xid(self, window), Colormap.to_xid(self, colormap), new ? 1 : 0, state].pack("x1LLCCx2")
+          s << [window.to_i, colormap.to_i, new ? 1 : 0, state].pack("x1LLCCx2")
           s = s.ljust(30, "\0")
           s[2, 0] = "\0\0"
           s
         end
         
         def decode_colormap_notify_event (s)
-          x = HashWithMethodMissing.new
+          x = {}
           x[:window], x[:colormap], x[:new], x[:state], = s.slice!(0, 13).unpack("x1LLCCx2")
-          x[:window] = Window[self, x[:window]]
-          x[:colormap] = Colormap[self, x[:colormap]]
+          x[:window] = find_resource(x[:window], "Window")
+          x[:colormap] = find_resource(x[:colormap], "Colormap")
           x[:new] = x[:new] != 0
           x
         end
         
-        def encode_client_message_event (format, window, type, data)
+        def encode_client_message_event_hash (hash)
+          format = hash[:format]
+          window = hash[:window]
+          type = hash[:type]
+          data = hash[:data]
           s = 33.chr.encode('BINARY')
-          s << [format, Window.to_xid(self, window), Atom.to_xid(self, type)].pack("CLL")
+          s << [format, window.to_i, atom(type)].pack("CLL")
           s << encode_client_message_data(''.encode('BINARY'), *data)
           s = s.ljust(30, "\0")
           s[2, 0] = "\0\0"
@@ -2992,15 +3096,18 @@ module Alembic
         end
         
         def decode_client_message_event (s)
-          x = HashWithMethodMissing.new
+          x = {}
           x[:format], x[:window], x[:type], = s.slice!(0, 9).unpack("CLL")
-          x[:window] = Window[self, x[:window]]
-          x[:type] = Atom[self, x[:type]]
+          x[:window] = find_resource(x[:window], "Window")
+          x[:type] = find_atom(x[:type])
           x[:data] = decode_client_message_data(s)
           x
         end
         
-        def encode_mapping_notify_event (request, first_keycode, count)
+        def encode_mapping_notify_event_hash (hash)
+          request = hash[:request]
+          first_keycode = hash[:first_keycode]
+          count = hash[:count]
           s = 34.chr.encode('BINARY')
           s << [request, first_keycode, count].pack("x1CCCx1")
           s = s.ljust(30, "\0")
@@ -3009,12 +3116,12 @@ module Alembic
         end
         
         def decode_mapping_notify_event (s)
-          x = HashWithMethodMissing.new
+          x = {}
           x[:request], x[:first_keycode], x[:count], = s.slice!(0, 5).unpack("x1CCCx1")
           x
         end
         
-        def encode_ge_generic_event ()
+        def encode_ge_generic_event_hash (hash)
           s = 35.chr.encode('BINARY')
           s = s.ljust(30, "\0")
           s[2, 0] = "\0\0"
@@ -3022,7 +3129,7 @@ module Alembic
         end
         
         def decode_ge_generic_event (s)
-          x = HashWithMethodMissing.new
+          x = {}
           s.slice!(0, 22)
           x
         end
@@ -3033,7 +3140,7 @@ module Alembic
         end
         
         def decode_char2b (s)
-          x = HashWithMethodMissing.new
+          x = {}
           x[:byte1], x[:byte2], = s.slice!(0, 2).unpack("CC")
           x
         end
@@ -3044,7 +3151,7 @@ module Alembic
         end
         
         def decode_point (s)
-          x = HashWithMethodMissing.new
+          x = {}
           x[:x], x[:y], = s.slice!(0, 4).unpack("ss")
           x
         end
@@ -3055,7 +3162,7 @@ module Alembic
         end
         
         def decode_rectangle (s)
-          x = HashWithMethodMissing.new
+          x = {}
           x[:x], x[:y], x[:width], x[:height], = s.slice!(0, 8).unpack("ssSS")
           x
         end
@@ -3066,7 +3173,7 @@ module Alembic
         end
         
         def decode_arc (s)
-          x = HashWithMethodMissing.new
+          x = {}
           x[:x], x[:y], x[:width], x[:height], x[:angle1], x[:angle2], = s.slice!(0, 12).unpack("ssSSss")
           x
         end
@@ -3077,7 +3184,7 @@ module Alembic
         end
         
         def decode_format (s)
-          x = HashWithMethodMissing.new
+          x = {}
           x[:depth], x[:bits_per_pixel], x[:scanline_pad], = s.slice!(0, 8).unpack("CCCx5")
           x
         end
@@ -3088,7 +3195,7 @@ module Alembic
         end
         
         def decode_visualtype (s)
-          x = HashWithMethodMissing.new
+          x = {}
           x[:visual_id], x[:klass], x[:bits_per_rgb_value], x[:colormap_entries], x[:red_mask], x[:green_mask], x[:blue_mask], = s.slice!(0, 24).unpack("LCCSLLLx4")
           x
         end
@@ -3101,7 +3208,7 @@ module Alembic
         end
         
         def decode_depth (s)
-          x = HashWithMethodMissing.new
+          x = {}
           x[:depth], x[:visuals_len], = s.slice!(0, 8).unpack("Cx1Sx4")
           x[:visuals] = x[:visuals_len].times.map{decode_visualtype(s)}
           x
@@ -3109,16 +3216,16 @@ module Alembic
         
         def encode_screen (s, root, default_colormap, white_pixel, black_pixel, current_input_masks, width_in_pixels, height_in_pixels, width_in_millimeters, height_in_millimeters, min_installed_maps, max_installed_maps, root_visual, backing_stores, save_unders, root_depth, allowed_depths)
           allowed_depths_len = allowed_depths.length
-          s << [Window.to_xid(self, root), Colormap.to_xid(self, default_colormap), white_pixel, black_pixel, current_input_masks, width_in_pixels, height_in_pixels, width_in_millimeters, height_in_millimeters, min_installed_maps, max_installed_maps, root_visual, backing_stores, save_unders ? 1 : 0, root_depth, allowed_depths_len].pack("LLLLLSSSSSSLCCCC")
+          s << [root.to_i, default_colormap.to_i, white_pixel, black_pixel, current_input_masks, width_in_pixels, height_in_pixels, width_in_millimeters, height_in_millimeters, min_installed_maps, max_installed_maps, root_visual, backing_stores, save_unders ? 1 : 0, root_depth, allowed_depths_len].pack("LLLLLSSSSSSLCCCC")
           s << allowed_depths.map{|x|encode_depth(''.encode('BINARY'), *x)}.join
           s
         end
         
         def decode_screen (s)
-          x = HashWithMethodMissing.new
+          x = {}
           x[:root], x[:default_colormap], x[:white_pixel], x[:black_pixel], x[:current_input_masks], x[:width_in_pixels], x[:height_in_pixels], x[:width_in_millimeters], x[:height_in_millimeters], x[:min_installed_maps], x[:max_installed_maps], x[:root_visual], x[:backing_stores], x[:save_unders], x[:root_depth], x[:allowed_depths_len], = s.slice!(0, 40).unpack("LLLLLSSSSSSLCCCC")
-          x[:root] = Window[self, x[:root]]
-          x[:default_colormap] = Colormap[self, x[:default_colormap]]
+          x[:root] = find_resource(x[:root], "Window")
+          x[:default_colormap] = find_resource(x[:default_colormap], "Colormap")
           x[:save_unders] = x[:save_unders] != 0
           x[:allowed_depths] = x[:allowed_depths_len].times.map{decode_depth(s)}
           x
@@ -3134,7 +3241,7 @@ module Alembic
         end
         
         def decode_setup_request (s)
-          x = HashWithMethodMissing.new
+          x = {}
           x[:byte_order], x[:protocol_major_version], x[:protocol_minor_version], x[:authorization_protocol_name_len], x[:authorization_protocol_data_len], = s.slice!(0, 12).unpack("Cx1SSSSx2")
           x[:authorization_protocol_name] = s.slice!(0, x[:authorization_protocol_name_len])
           x[:authorization_protocol_data] = s.slice!(0, x[:authorization_protocol_data_len])
@@ -3149,7 +3256,7 @@ module Alembic
         end
         
         def decode_setup_failed (s)
-          x = HashWithMethodMissing.new
+          x = {}
           x[:status], x[:reason_len], x[:protocol_major_version], x[:protocol_minor_version], x[:length], = s.slice!(0, 8).unpack("CCSSS")
           x[:reason] = s.slice!(0, x[:reason_len])
           x
@@ -3161,7 +3268,7 @@ module Alembic
         end
         
         def decode_setup_authenticate (s)
-          x = HashWithMethodMissing.new
+          x = {}
           x[:status], x[:length], = s.slice!(0, 8).unpack("Cx5S")
           x[:reason] = s.slice!(0, (x[:length] * 4))
           x
@@ -3179,7 +3286,7 @@ module Alembic
         end
         
         def decode_setup (s)
-          x = HashWithMethodMissing.new
+          x = {}
           x[:status], x[:protocol_major_version], x[:protocol_minor_version], x[:length], x[:release_number], x[:resource_id_base], x[:resource_id_mask], x[:motion_buffer_size], x[:vendor_len], x[:maximum_request_length], x[:roots_len], x[:pixmap_formats_len], x[:image_byte_order], x[:bitmap_format_bit_order], x[:bitmap_format_scanline_unit], x[:bitmap_format_scanline_pad], x[:min_keycode], x[:max_keycode], = s.slice!(0, 40).unpack("Cx1SSSLLLLSSCCCCCCCCx4")
           x[:vendor] = s.slice!(0, x[:vendor_len])
           x[:pixmap_formats] = x[:pixmap_formats_len].times.map{decode_format(s)}
@@ -3193,20 +3300,20 @@ module Alembic
         end
         
         def decode_timecoord (s)
-          x = HashWithMethodMissing.new
+          x = {}
           x[:time], x[:x], x[:y], = s.slice!(0, 8).unpack("Lss")
           x
         end
         
         def encode_fontprop (s, name, value)
-          s << [Atom.to_xid(self, name), value].pack("LL")
+          s << [atom(name), value].pack("LL")
           s
         end
         
         def decode_fontprop (s)
-          x = HashWithMethodMissing.new
+          x = {}
           x[:name], x[:value], = s.slice!(0, 8).unpack("LL")
-          x[:name] = Atom[self, x[:name]]
+          x[:name] = find_atom(x[:name])
           x
         end
         
@@ -3216,7 +3323,7 @@ module Alembic
         end
         
         def decode_charinfo (s)
-          x = HashWithMethodMissing.new
+          x = {}
           x[:left_side_bearing], x[:right_side_bearing], x[:character_width], x[:ascent], x[:descent], x[:attributes], = s.slice!(0, 12).unpack("sssssS")
           x
         end
@@ -3229,7 +3336,7 @@ module Alembic
         end
         
         def decode_str (s)
-          x = HashWithMethodMissing.new
+          x = {}
           x[:name_len], = s.slice!(0, 1).unpack("C")
           x[:name] = s.slice!(0, x[:name_len])
           x
@@ -3241,7 +3348,7 @@ module Alembic
         end
         
         def decode_segment (s)
-          x = HashWithMethodMissing.new
+          x = {}
           x[:x1], x[:y1], x[:x2], x[:y2], = s.slice!(0, 8).unpack("ssss")
           x
         end
@@ -3252,7 +3359,7 @@ module Alembic
         end
         
         def decode_coloritem (s)
-          x = HashWithMethodMissing.new
+          x = {}
           x[:pixel], x[:red], x[:green], x[:blue], x[:flags], = s.slice!(0, 12).unpack("LSSSCx1")
           x
         end
@@ -3263,7 +3370,7 @@ module Alembic
         end
         
         def decode_rgb (s)
-          x = HashWithMethodMissing.new
+          x = {}
           x[:red], x[:green], x[:blue], = s.slice!(0, 8).unpack("SSSx2")
           x
         end
@@ -3276,476 +3383,13 @@ module Alembic
         end
         
         def decode_host (s)
-          x = HashWithMethodMissing.new
+          x = {}
           x[:family], x[:address_len], = s.slice!(0, 4).unpack("Cx1S")
           x[:address] = s.slice!(0, x[:address_len])
           x
         end
-        
-        def alloc_window ()
-          Window.new(self, alloc_xid)
-        end
-        
-        def alloc_pixmap ()
-          Pixmap.new(self, alloc_xid)
-        end
-        
-        def alloc_cursor ()
-          Cursor.new(self, alloc_xid)
-        end
-        
-        def alloc_font ()
-          Font.new(self, alloc_xid)
-        end
-        
-        def alloc_gcontext ()
-          Gcontext.new(self, alloc_xid)
-        end
-        
-        def alloc_colormap ()
-          Colormap.new(self, alloc_xid)
-        end
-        
-        def alloc_atom ()
-          Atom.new(self, alloc_xid)
-        end
-        
-        def alloc_drawable ()
-          Drawable.new(self, alloc_xid)
-        end
-        
-        def alloc_fontable ()
-          Fontable.new(self, alloc_xid)
-        end
       
       end
-      
-      class Xproto::Window
-        def create_window (depth, x, y, width, height, border_width, klass, visual, value_hash = {})
-          connection.create_window(depth, self, x, y, width, height, border_width, klass, visual, value_hash)
-        end
-      end
-      
-      class Xproto::Window
-        def change_window_attributes (value_hash = {})
-          connection.change_window_attributes(self, value_hash)
-        end
-      end
-      
-      class Xproto::Window
-        def get_window_attributes ()
-          connection.get_window_attributes(self)
-        end
-      end
-      
-      class Xproto::Window
-        def destroy_window ()
-          connection.destroy_window(self)
-        end
-      end
-      
-      class Xproto::Window
-        def destroy_subwindows ()
-          connection.destroy_subwindows(self)
-        end
-      end
-      
-      class Xproto::Window
-        def change_save_set (mode)
-          connection.change_save_set(mode, self)
-        end
-      end
-      
-      class Xproto::Window
-        def reparent_window (parent, x, y)
-          connection.reparent_window(self, parent, x, y)
-        end
-      end
-      
-      class Xproto::Window
-        def map_window ()
-          connection.map_window(self)
-        end
-      end
-      
-      class Xproto::Window
-        def map_subwindows ()
-          connection.map_subwindows(self)
-        end
-      end
-      
-      class Xproto::Window
-        def unmap_window ()
-          connection.unmap_window(self)
-        end
-      end
-      
-      class Xproto::Window
-        def unmap_subwindows ()
-          connection.unmap_subwindows(self)
-        end
-      end
-      
-      class Xproto::Window
-        def configure_window (value_hash = {})
-          connection.configure_window(self, value_hash)
-        end
-      end
-      
-      class Xproto::Window
-        def circulate_window (direction)
-          connection.circulate_window(direction, self)
-        end
-      end
-      
-      class Xproto::Drawable
-        def get_geometry ()
-          connection.get_geometry(self)
-        end
-      end
-      
-      class Xproto::Window
-        def query_tree ()
-          connection.query_tree(self)
-        end
-      end
-      
-      class Xproto::Atom
-        def get_atom_name ()
-          connection.get_atom_name(self)
-        end
-      end
-      
-      class Xproto::Window
-        def change_property (mode, property, type, format, data_len, data)
-          connection.change_property(mode, self, property, type, format, data_len, data)
-        end
-      end
-      
-      class Xproto::Window
-        def delete_property (property)
-          connection.delete_property(self, property)
-        end
-      end
-      
-      class Xproto::Window
-        def get_property (delete, property, type, long_offset, long_length)
-          connection.get_property(delete, self, property, type, long_offset, long_length)
-        end
-      end
-      
-      class Xproto::Window
-        def list_properties ()
-          connection.list_properties(self)
-        end
-      end
-      
-      class Xproto::Window
-        def set_selection_owner (selection, time)
-          connection.set_selection_owner(self, selection, time)
-        end
-      end
-      
-      class Xproto::Atom
-        def get_selection_owner ()
-          connection.get_selection_owner(self)
-        end
-      end
-      
-      class Xproto::Atom
-        def convert_selection (requestor, target, property, time)
-          connection.convert_selection(requestor, self, target, property, time)
-        end
-      end
-      
-      class Xproto::Window
-        def send_event (propagate, event_mask, event)
-          connection.send_event(propagate, self, event_mask, event)
-        end
-      end
-      
-      class Xproto::Window
-        def grab_button (owner_events, event_mask, pointer_mode, keyboard_mode, confine_to, cursor, button, modifiers)
-          connection.grab_button(owner_events, self, event_mask, pointer_mode, keyboard_mode, confine_to, cursor, button, modifiers)
-        end
-      end
-      
-      class Xproto::Window
-        def ungrab_button (button, modifiers)
-          connection.ungrab_button(button, self, modifiers)
-        end
-      end
-      
-      class Xproto::Window
-        def grab_key (owner_events, modifiers, key, pointer_mode, keyboard_mode)
-          connection.grab_key(owner_events, self, modifiers, key, pointer_mode, keyboard_mode)
-        end
-      end
-      
-      class Xproto::Window
-        def ungrab_key (key, modifiers)
-          connection.ungrab_key(key, self, modifiers)
-        end
-      end
-      
-      class Xproto::Window
-        def query_pointer ()
-          connection.query_pointer(self)
-        end
-      end
-      
-      class Xproto::Window
-        def get_motion_events (start, stop)
-          connection.get_motion_events(self, start, stop)
-        end
-      end
-      
-      class Xproto::Drawable
-        def create_gc (value_hash = {})
-          connection.create_gc(self, value_hash)
-        end
-      end
-      
-      class Xproto::Gcontext
-        def change_gc (value_hash = {})
-          connection.change_gc(self, value_hash)
-        end
-      end
-      
-      class Xproto::Gcontext
-        def copy_gc (src_gc, value_mask)
-          connection.copy_gc(src_gc, self, value_mask)
-        end
-      end
-      
-      class Xproto::Gcontext
-        def set_dashes (dash_offset, dashes)
-          connection.set_dashes(self, dash_offset, dashes)
-        end
-      end
-      
-      class Xproto::Gcontext
-        def set_clip_rectangles (ordering, clip_x_origin, clip_y_origin, rectangles)
-          connection.set_clip_rectangles(ordering, self, clip_x_origin, clip_y_origin, rectangles)
-        end
-      end
-      
-      class Xproto::Gcontext
-        def free_gc ()
-          connection.free_gc(self)
-        end
-      end
-      
-      class Xproto::Window
-        def clear_area (exposures, x, y, width, height)
-          connection.clear_area(exposures, self, x, y, width, height)
-        end
-      end
-      
-      class Xproto::Drawable
-        def copy_area (src_drawable, gc, src_x, src_y, dst_x, dst_y, width, height)
-          connection.copy_area(src_drawable, self, gc, src_x, src_y, dst_x, dst_y, width, height)
-        end
-      end
-      
-      class Xproto::Drawable
-        def copy_plane (src_drawable, gc, src_x, src_y, dst_x, dst_y, width, height, bit_plane)
-          connection.copy_plane(src_drawable, self, gc, src_x, src_y, dst_x, dst_y, width, height, bit_plane)
-        end
-      end
-      
-      class Xproto::Drawable
-        def poly_point (coordinate_mode, gc, points)
-          connection.poly_point(coordinate_mode, self, gc, points)
-        end
-      end
-      
-      class Xproto::Drawable
-        def poly_line (coordinate_mode, gc, points)
-          connection.poly_line(coordinate_mode, self, gc, points)
-        end
-      end
-      
-      class Xproto::Drawable
-        def poly_segment (gc, segments)
-          connection.poly_segment(self, gc, segments)
-        end
-      end
-      
-      class Xproto::Drawable
-        def poly_rectangle (gc, rectangles)
-          connection.poly_rectangle(self, gc, rectangles)
-        end
-      end
-      
-      class Xproto::Drawable
-        def poly_arc (gc, arcs)
-          connection.poly_arc(self, gc, arcs)
-        end
-      end
-      
-      class Xproto::Drawable
-        def fill_poly (gc, shape, coordinate_mode, points)
-          connection.fill_poly(self, gc, shape, coordinate_mode, points)
-        end
-      end
-      
-      class Xproto::Drawable
-        def poly_fill_rectangle (gc, rectangles)
-          connection.poly_fill_rectangle(self, gc, rectangles)
-        end
-      end
-      
-      class Xproto::Drawable
-        def poly_fill_arc (gc, arcs)
-          connection.poly_fill_arc(self, gc, arcs)
-        end
-      end
-      
-      class Xproto::Drawable
-        def put_image (format, gc, width, height, dst_x, dst_y, left_pad, depth, data)
-          connection.put_image(format, self, gc, width, height, dst_x, dst_y, left_pad, depth, data)
-        end
-      end
-      
-      class Xproto::Drawable
-        def get_image (format, x, y, width, height, plane_mask)
-          connection.get_image(format, self, x, y, width, height, plane_mask)
-        end
-      end
-      
-      class Xproto::Drawable
-        def poly_text8 (gc, x, y, items)
-          connection.poly_text8(self, gc, x, y, items)
-        end
-      end
-      
-      class Xproto::Drawable
-        def poly_text16 (gc, x, y, items)
-          connection.poly_text16(self, gc, x, y, items)
-        end
-      end
-      
-      class Xproto::Drawable
-        def image_text8 (gc, x, y, string)
-          connection.image_text8(self, gc, x, y, string)
-        end
-      end
-      
-      class Xproto::Drawable
-        def image_text16 (gc, x, y, string)
-          connection.image_text16(self, gc, x, y, string)
-        end
-      end
-      
-      class Xproto::Window
-        def create_colormap (alloc, visual)
-          connection.create_colormap(alloc, self, visual)
-        end
-      end
-      
-      class Xproto::Colormap
-        def free_colormap ()
-          connection.free_colormap(self)
-        end
-      end
-      
-      class Xproto::Colormap
-        def copy_colormap_and_free (src_cmap)
-          connection.copy_colormap_and_free(self, src_cmap)
-        end
-      end
-      
-      class Xproto::Colormap
-        def install_colormap ()
-          connection.install_colormap(self)
-        end
-      end
-      
-      class Xproto::Colormap
-        def uninstall_colormap ()
-          connection.uninstall_colormap(self)
-        end
-      end
-      
-      class Xproto::Window
-        def list_installed_colormaps ()
-          connection.list_installed_colormaps(self)
-        end
-      end
-      
-      class Xproto::Colormap
-        def alloc_color (red, green, blue)
-          connection.alloc_color(self, red, green, blue)
-        end
-      end
-      
-      class Xproto::Colormap
-        def alloc_named_color (name)
-          connection.alloc_named_color(self, name)
-        end
-      end
-      
-      class Xproto::Colormap
-        def alloc_color_cells (contiguous, colors, planes)
-          connection.alloc_color_cells(contiguous, self, colors, planes)
-        end
-      end
-      
-      class Xproto::Colormap
-        def alloc_color_planes (contiguous, colors, reds, greens, blues)
-          connection.alloc_color_planes(contiguous, self, colors, reds, greens, blues)
-        end
-      end
-      
-      class Xproto::Colormap
-        def free_colors (plane_mask, pixels)
-          connection.free_colors(self, plane_mask, pixels)
-        end
-      end
-      
-      class Xproto::Colormap
-        def store_colors (items)
-          connection.store_colors(self, items)
-        end
-      end
-      
-      class Xproto::Colormap
-        def store_named_color (flags, pixel, name)
-          connection.store_named_color(flags, self, pixel, name)
-        end
-      end
-      
-      class Xproto::Colormap
-        def query_colors (pixels)
-          connection.query_colors(self, pixels)
-        end
-      end
-      
-      class Xproto::Colormap
-        def lookup_color (name)
-          connection.lookup_color(self, name)
-        end
-      end
-      
-      class Xproto::Cursor
-        def recolor_cursor (fore_red, fore_green, fore_blue, back_red, back_green, back_blue)
-          connection.recolor_cursor(self, fore_red, fore_green, fore_blue, back_red, back_green, back_blue)
-        end
-      end
-      
-      class Xproto::Drawable
-        def query_best_size (klass, width, height)
-          connection.query_best_size(klass, self, width, height)
-        end
-      end
-      
-      class Xproto::Window
-        def rotate_properties (delta, atoms)
-          connection.rotate_properties(self, delta, atoms)
-        end
-      end
-      
     end
   end
 end

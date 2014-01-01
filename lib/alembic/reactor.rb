@@ -1,51 +1,38 @@
-require 'singleton'
 
 module Alembic
-
+  
   class Reactor
-    include Singleton
     
-    @@running = false
+    attr_reader :connection
     
-    def run_once
-      unless @@running
-        run
-      end
+    def initialize (connection = Alembic::Connection.new)
+      @connection = connection
     end
     
-    def post_init
+    def unhandled_event (event)
+      STDERR.puts "No handler for #{event}"
+    end
+    
+    def error_event (event)
+      STDERR.puts "Unhandled #{event[:error]}: #{event[:value]}"
+      STDERR.puts "  #{event[:backtrace].join("\n  ")}"
+      STDERR.puts
     end
     
     def handle_event
-      e = c.next_event
-      if respond_to?(e.event_type)
-        #puts "handled #{e[:event_type]}"
-        __send__(e.event_type, e)
+      event = @connection.next_event
+      if respond_to?(event[:event_type])
+        __send__(event[:event_type], event)
       else
-        puts "unhandled #{e.event_type}"
+        unhandled_event(event)
       end
-    rescue => e
-      STDERR.puts "#{e.class} (#{e.message})\n  #{e.backtrace.join("\n  ")}"
     end
     
     def run
-      @@running = true
-      @connection = Alembic::Connection.new
-      post_init
-      while true
-        handle_event
-      end
-    ensure
-      @running = false
-    end
-    
-  private
-    
-    def c
-      @connection
+      handle_event while true
     end
     
   end
-
+  
 end
 
