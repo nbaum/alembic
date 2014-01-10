@@ -16,7 +16,7 @@ module Alembic
         if name === nil
           0
         elsif String === name
-          atom = @atoms[name] ||= intern_atom(false, name)
+          atom = @atoms[name] ||= intern_atom(name)
           atom.to_i
         else
           name.to_i

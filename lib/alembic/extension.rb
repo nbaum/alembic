@@ -28,3 +28,7 @@ module Alembic
   
 end
 
+Dir[File.expand_path("../protocol/*.rb", __FILE__)].each do |path|
+  require path
+end
+

@@ -12,7 +12,12 @@ module Alembic
       end
       
       def add (*nodes)
-        self.fields = nodes
+        self.fields = nodes.reject do |node|
+          Doc === node
+        end
+        nodes.each do |node|
+          self.doc = node if Doc === node
+        end 
       end
       
       def post_process

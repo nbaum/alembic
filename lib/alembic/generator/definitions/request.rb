@@ -26,10 +26,11 @@ module Alembic
       
       def caller_method
         [
+          "# :nodoc:",
           "def #{var_name.snake_case}! (#{params.join(", ")})",
           [
             *extension.extension_xname ? [
-              "s = opcodes[#{extension.extension_xname.inspect}].chr.encode('BINARY')",
+              "s = extension_opcode(#{extension.extension_xname.inspect})",
               "s << #{opcode}"
             ] : [
               "s = #{opcode}.chr.encode('BINARY')",
@@ -44,12 +45,14 @@ module Alembic
           ],
           "end",
           nil,
-          "def #{var_name.snake_case} (#{params.join(", ")})",
+          "# :doc:",
+          *format_help(doc && doc.description),
+          "def #{var_name.snake_case} (*args)",
           [
             *reply ? [
-              "#{var_name.snake_case}!(#{args.join(", ")}).wait"
+              "#{var_name.snake_case}!(*args).wait"
             ] : [
-              "#{var_name.snake_case}!(#{args.join(", ")}).abandon"
+              "#{var_name.snake_case}!(*args).abandon"
             ]
           ],
           "end",
@@ -80,6 +83,7 @@ module Alembic
       
       def compile
         [
+          "# :nodoc:",
           "def #{var_name.snake_case} (s)",
           [
             "x = {}",

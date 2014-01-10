@@ -8,8 +8,12 @@ module Alembic
       alias type name
       
       def compile_methods
-        encoder_method +
-        decoder_method
+        [
+          "# :nodoc:",
+          *encoder_method,
+          "# :nodoc:",
+          *decoder_method,
+        ]
       end
       
     end

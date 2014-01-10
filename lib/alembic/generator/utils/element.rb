@@ -3,15 +3,30 @@ module Alembic
   module Generator
     class Element
       
-      attr_accessor :extension
+      attr_accessor :extension, :doc
+      
+      def format_help (str)
+        return [] if !str
+        str.split("\n").map do |line|
+          "# #{line}"
+        end
+      end
       
       def initialize (extension, node, attrs = {})
         @extension = extension
         parse(node, attrs)
       end
       
+      def const_name
+        name
+      end
+      
       def class_name
-        name.snake_case.to_const_string
+        "#{extension.extension_name}#{name.snake_case.to_const_string}"
+      end
+      
+      def var_name
+        "#{extension.prefix}#{name}"
       end
       
       def parse (node, attrs = {})
@@ -79,14 +94,6 @@ module Alembic
       
       def hides
         []
-      end
-      
-      def var_name
-        if extension.prefix
-          extension.prefix + name
-        else
-          name
-        end
       end
       
       def lookup name

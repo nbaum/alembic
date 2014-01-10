@@ -27,6 +27,7 @@ module Alembic
       
       def encoder_method ()
         [
+          "# :nodoc:",
           "def encode_#{var_name.snake_case}_hash (hash)",
           [
             *params.map do |param|
@@ -52,13 +53,17 @@ module Alembic
       
       def compile_constants
         [
-          "self.events << [#{number}, #{var_name.snake_case.inspect}, #{no_sequence_number == 'true'}]",
+          "register_event #{extension.extension_xname.inspect}, #{number}, #{var_name.snake_case.inspect}, #{no_sequence_number != 'true'}",
         ]
       end
       
       def compile_methods
-        encoder_method +
-        decoder_method
+        [
+          "# :nodoc:",
+          *encoder_method,
+          "# :nodoc:",
+          *decoder_method,
+        ]
       end
       
     end

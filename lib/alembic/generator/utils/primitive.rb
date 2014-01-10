@@ -10,7 +10,7 @@ module Alembic
       
       def self.setup_types (extension)
         e = extension
-        %w"BOOL BYTE CARD8 CARD16 CARD32 INT8 INT16 INT32".each do |name|
+        %w"BOOL BYTE CARD8 CARD16 CARD32 INT8 INT16 INT32 float double".each do |name|
           e.items[name] = Primitive.new(self, nil).tap{|p|p.type = name}
         end
       end
@@ -33,6 +33,8 @@ module Alembic
           "INT8"   => 1,
           "INT16"  => 2,
           "INT32"  => 4,
+          "float"  => 4,
+          "double" => 8,
         }[type] || raise(type.inspect)
       end
       
@@ -60,6 +62,8 @@ module Alembic
           "INT8"   => "c",
           "INT16"  => "s",
           "INT32"  => "l",
+          "float"  => "F",
+          "double" => "D"
         }[type] || raise(type.inspect)
       end
       

@@ -14,7 +14,6 @@ module Alembic
     end
     
     def succeed (data)
-      data = @connection.__send__("#{@method}_reply", data) if @reply
       resolve true, data
     end
     
@@ -27,7 +26,8 @@ module Alembic
         @signal.wait if @resolution.nil?
       end
       if @resolution
-        return @data[0]
+        @data[1] ||= @reply ? @connection.__send__("#{@method}_reply", @data[0]) : @data[0]
+        return @data[1]
       else
         raise ServerError.error_class(@data[0]), @data[1]
       end

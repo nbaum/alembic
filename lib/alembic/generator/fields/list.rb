@@ -31,6 +31,11 @@ module Alembic
       
       def unpack_post
         expr = lookup(type).unpack_post(nil)
+        if length.is_a?(FieldRef)
+          ["x.delete(:#{length})"]
+        else
+          []
+        end +
         if expr.empty?
           []
         else
@@ -81,6 +86,21 @@ module Alembic
         elsif lookup(type).type == "CARD32"
           [
             "x[:#{name}] = s.slice!(0..4*(#{length.compile_length})).unpack('L*')",
+            *unpack_post
+          ]
+        elsif lookup(type).type == "INT8"
+          [
+            "x[:#{name}] = s.slice!(0..#{length.compile_length}).unpack('c*')",
+            *unpack_post
+          ]
+        elsif lookup(type).type == "INT16"
+          [
+            "x[:#{name}] = s.slice!(0..2*(#{length.compile_length})).unpack('s*')",
+            *unpack_post
+          ]
+        elsif lookup(type).type == "INT32"
+          [
+            "x[:#{name}] = s.slice!(0..4*(#{length.compile_length})).unpack('l*')",
             *unpack_post
           ]
         else

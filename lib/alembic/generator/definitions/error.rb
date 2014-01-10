@@ -10,7 +10,7 @@ module Alembic
       
       def compile_constants
         [
-          "self.errors << [#{number}, #{var_name.inspect}]"
+          "register_error #{extension.extension_xname.inspect}, #{number}, #{var_name.inspect}"
         ]
       end
       

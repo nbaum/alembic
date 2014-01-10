@@ -39,6 +39,19 @@ module Alembic
         end
       end
       
+      def compile_constants
+        return [] if already_compiled
+        self.already_compiled = true
+        if st = @@supertypes[name]
+          st.compile_constants
+        else
+          []
+        end + [
+          "class #{class_name} < #{(st ? st.name.capitalize : name == 'ATOM' ? 'Object' :'Resource')}",
+          "end"
+        ]
+      end
+      
     end
   end
 end

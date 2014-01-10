@@ -1,7 +1,7 @@
 
 module Alembic
   
-  class Error < Exception 
+  class Error < ::StandardError 
   end
   
   class SetupError < Error

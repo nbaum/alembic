@@ -14,14 +14,9 @@ module Alembic
         self
       end
       
-      def compile_comments
+      def compile_requirements
         [
-        ]
-      end
-      
-      def compile_constants
-        [
-          "include #{text.capitalize}"
+          "require 'alembic/protocol/#{text}'"
         ]
       end
       

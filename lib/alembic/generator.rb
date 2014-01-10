@@ -3,6 +3,7 @@ require 'alembic/generator/utils/element'
 require 'alembic/generator/utils/record'
 require 'alembic/generator/utils/primitive'
 require 'alembic/generator/utils/import'
+require 'alembic/generator/utils/doc'
 
 require 'alembic/generator/definitions/atom'
 require 'alembic/generator/definitions/enum'
@@ -29,4 +30,19 @@ require 'alembic/generator/expressions/op'
 require 'alembic/generator/expressions/value'
 
 require 'alembic/generator/extension'
+
+module Alembic
+  
+  module Generator
+    
+    def self.compile (name)
+      e = Alembic::Generator::Extension.new(name)
+      File.open("lib/alembic/protocol/#{name}.rb", "w") do |io|
+        io.puts e.compile
+      end
+    end
+    
+  end
+  
+end
 

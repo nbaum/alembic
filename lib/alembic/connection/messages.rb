@@ -60,14 +60,14 @@ module Alembic
             abort "Unexpected reply"
           end
         else
-          name, no_sequence_number = events[code & 0x7F]
+          name, sequence_number = events[code & 0x7F]
           data = read(31)
           return if !name
-          event = if no_sequence_number
-            __send__("decode_#{name}", data)
-          else
+          event = if sequence_number
             extra, seq, data = data.unpack('aSa*')
             __send__("decode_#{name}", extra + data)
+          else
+            __send__("decode_#{name}", data)
           end
           event[:synthetic] = code & 0x80 == 0x80
           event[:event_type] = name
