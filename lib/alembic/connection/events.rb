@@ -18,7 +18,7 @@ module Alembic
       
       def skip_events_like (event)
         loop do
-          if ne = check_event(event[:event_type])
+          if ne = check_event(event)
             event = ne
           else
             return event
@@ -26,16 +26,16 @@ module Alembic
         end
       end
       
-      def check_event (type = nil)
-        next_event(type, false)
+      def check_event (pattern = nil)
+        next_event(pattern, false)
       end
       
-      def next_event (type = nil, wait = true)
+      def next_event (pattern = nil, wait = true)
         synchronize do
           while true
-            if type
+            if pattern
               @event_queue.each_with_index do |ev, idx|
-                if type == ev[:event_type]
+                if pattern.all? do |key, value| value === ev[key] end
                   @event_queue.delete_at(idx)
                   return ev
                 end

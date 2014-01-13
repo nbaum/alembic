@@ -14,8 +14,8 @@ module Alembic
     errors[name] = {}
   end
   
-  def self.register_event (extension, number, *data)
-    events[extension][number] = data
+  def self.register_event (extension, number, name, seqno)
+    events[extension][number] = [name, seqno]
   end
   
   def self.register_error (extension, number, *data)

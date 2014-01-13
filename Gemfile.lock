@@ -1,0 +1,12 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    extlib (0.9.16)
+    ox (2.0.12)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  extlib
+  ox

@@ -70,7 +70,7 @@ module Alembic
             __send__("decode_#{name}", data)
           end
           event[:synthetic] = code & 0x80 == 0x80
-          event[:event_type] = name
+          event[:event_type] = name.gsub(/_event$/, '')
           queue_event event
         end
       end

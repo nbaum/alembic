@@ -34,6 +34,11 @@ module Alembic
         @resources[xid] ||= type.new(self, xid)
       end
       
+      def forget_resource (xid)
+        xid = xid.to_i
+        @resources.delete(xid)
+      end
+      
       def make_resource (type)
         find_resource(allocate_xid, type)
       end
