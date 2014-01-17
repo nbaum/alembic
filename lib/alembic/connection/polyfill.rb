@@ -50,9 +50,9 @@ module Alembic
         data_length = data.length
         case format
         when 16
-          data = data.pack("S*")
+          data = data.pack("s*")
         when 32
-          data = data.pack("L*")
+          data = data.pack("l*")
         end
         super(mode, window, property, type, format, data_length, data)
       end
@@ -72,9 +72,9 @@ module Alembic
         when 0
           r[:value] = nil
         when 16
-          r[:value] = r[:value].unpack("S*")
+          r[:value] = r[:value].unpack("s*")
         when 32
-          r[:value] = r[:value].unpack("L*")
+          r[:value] = r[:value].unpack("l*")
         end
         r
       end
